@@ -322,7 +322,6 @@
     display: inline;
     vertical-align: text-bottom;
 }
-
 /*Reposible form*/
 @media screen and (max-width:750px) {
     hml {
@@ -356,3 +355,4 @@
         border-bottom-left-radius: 20px;
     }
 }
+

@@ -1,6 +1,110 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
-<h1>Perfil</h1>
-{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <title>{% block title %}{% endblock %}</title>
 
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+
+    <input type="checkbox" id="sidebar-toggle">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="brand">
+                <span class="fa-solid fa-square-root-variable"></span>
+                <span>Smart Genius</span>
+            </h3>
+            <label for="sidebar-toggle" class="fa-solid fa-bars"></label>
+        </div>
+
+        <div class="sidebar-menu">
+            <ul>
+                {% if user.is_authenticated %}
+                <li>
+                    <a href="/contenido">
+                        <span class="fa-solid fa-book-open"></span>
+                        <span>Contenido</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="fa-solid fa-user"></span>
+                        <span>Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="fa-solid fa-layer-group"></span>
+                        <span>Mi Avance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="fa-solid fa-clipboard"></span>
+                        <span>Registro de contenido</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="fa-solid fa-file"></span>
+                        <span>Reportes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout">
+                        <span class="fa-solid fa-right-from-bracket"></span>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="main-content">
+
+        <header>
+            <div class="search-wrapper">
+
+            </div>
+
+            <div class="social-icons">
+                <span class="fa-solid fa-user"></span>
+                <span>{form.username}</span>
+            </div>
+        </header>
+
+        <main>
+
+            {% block content %}
+            {% endblock %}
+
+
+        </main>
+
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Verificar si hay elementos en la selección
+            var headerContent = $('.main-content header').children().length;
+            var mainContent = $('.main-content main').children().length;
+            
+            if (headerContent === 0 || mainContent === 0) {
+                // Redirigir a la página de inicio
+                window.location.href = '/inicio/';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
