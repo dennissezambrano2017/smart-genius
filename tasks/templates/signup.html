@@ -2,7 +2,6 @@
 {% block title %}Registro{% endblock %}
 {% block content %}
 <div class="container-fluid-signup">
-   {{error}}
    <form action="/signup/" method="POST">
       {% csrf_token %}
       <div class="container-form-signup">
@@ -20,7 +19,11 @@
                <h2>Crear una cuenta</h2>
                <div class="form-div">
                   <label >
-                     <i class="fa-regular fa-envelope" style="color: #fdb128;"></i>
+                     <i class="fa-solid fa-user" style="color: #fdb128;"></i>
+                     <input type="username" name="email" id="email" placeholder="Nombre de usuario" required>
+                  </label>
+                  <label >
+                     <i class="fa-solid fa-envelope" style="color: #fdb128;"></i>
                      <input type="email" name="username" id="username" placeholder="Correo Electronico" required>
                   </label>
                   <label >
