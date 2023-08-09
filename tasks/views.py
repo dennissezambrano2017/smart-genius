@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout,authenticate
 from django.db import IntegrityError
+from .forms import UnidadForm
 
 
 # Create your views here.
@@ -61,3 +62,7 @@ def contenido (request):
     return render(request, 'contenido.html')
 def inicio (request):
     return render(request, 'inicio.html')
+def create_unidad (request):
+    return render(request, 'create_unidad.html',{
+        'form':UnidadForm
+    })

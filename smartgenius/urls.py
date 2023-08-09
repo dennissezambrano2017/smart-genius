@@ -26,5 +26,6 @@ urlpatterns = [
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
     path('contenido/', views.contenido, name='contenido'),
-    path('inicio/', views.inicio, name='inicio')
+    path('inicio/', views.inicio, name='inicio'),
+     path('inicio/create/', views.create_unidad, name='create_unidad')
 ]

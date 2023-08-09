@@ -9,6 +9,7 @@
 
     <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style-register.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -46,9 +47,15 @@
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a >
                         <span class="fa-solid fa-clipboard"></span>
                         <span>Registro de contenido</span>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/create_unidad">Unidad</a></li>
+                            <li><a class="dropdown-item" href="#">Contenido</a></li>
+                            <li><a class="dropdown-item" href="#">Tema</a></li>
+                            <li><a class="dropdown-item" href="#">Material</a></li>
+                          </ul>
                     </a>
                 </li>
                 <li>
@@ -104,6 +111,7 @@
             }
         });
     </script>
+    
 
 </body>
 
