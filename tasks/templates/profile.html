@@ -4,29 +4,28 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style-register.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
 </head>
 
 <body>
 
-    <input type="checkbox" id="sidebar-toggle">
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3 class="brand">
-                <span class="fa-solid fa-square-root-variable"></span>
-                <span>Smart Genius</span>
+    <input type="checkbox" id="panel-izquierdo-boton">
+    <div class="panel-izquierdo">
+        <div class="panel-izquierdo-encabezados">
+            <h3>
+                <span></span>
+                <span style="font-size: x-large;">Smart Genius</span>
             </h3>
-            <label for="sidebar-toggle" class="fa-solid fa-bars"></label>
+            <label for="panel-izquierdo-boton" class="fa-solid fa-bars"></label>
         </div>
-
-        <div class="sidebar-menu">
-            <ul>
+        <div class="panel-izquierdo-opciones">
+            <ul style="padding: 0;margin: 0;">
                 {% if user.is_authenticated %}
                 <li>
                     <a href="/contenido">
@@ -47,15 +46,15 @@
                     </a>
                 </li>
                 <li>
-                    <a >
+                    <a>
                         <span class="fa-solid fa-clipboard"></span>
                         <span>Registro de contenido</span>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/create_unidad">Unidad</a></li>
+                            <li><a class="dropdown-item" href="/inicio/create/">Unidad</a></li>
                             <li><a class="dropdown-item" href="#">Contenido</a></li>
                             <li><a class="dropdown-item" href="#">Tema</a></li>
                             <li><a class="dropdown-item" href="#">Material</a></li>
-                          </ul>
+                        </ul>
                     </a>
                 </li>
                 <li>
@@ -75,10 +74,9 @@
         </div>
     </div>
 
-
     <div class="main-content">
 
-        <header>
+        <header class="encabezados-contenido">
             <div class="search-wrapper">
 
             </div>
@@ -100,18 +98,20 @@
     </div>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Verificar si hay elementos en la selección
-            var headerContent = $('.main-content header').children().length;
+            var headerContent = $('.main-content .encabezados-contenido').children().length;
             var mainContent = $('.main-content main').children().length;
-            
+
             if (headerContent === 0 || mainContent === 0) {
                 // Redirigir a la página de inicio
                 window.location.href = '/inicio/';
             }
         });
     </script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
 
 </body>
 

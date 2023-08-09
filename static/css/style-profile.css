@@ -13,16 +13,13 @@
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    text-decoration: none;
-    list-style-type: none;
     box-sizing: border-box;
 }
 
-#sidebar-toggle {
+#panel-izquierdo-boton {
     display: none;
 }
-
-.sidebar {
+.panel-izquierdo {
     height: 100%;
     width: 240px;
     position: fixed;
@@ -35,14 +32,14 @@
     transition: width 500ms;
 }
 
-.sidebar li {
+.panel-izquierdo li {
     padding: 1rem;
     margin: 5px 0;
     border-radius: 8px;
     transition: all 0.5s ease-in-out;
 }
 
-.sidebar-header {
+.panel-izquierdo-encabezados {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -50,43 +47,45 @@
     padding: 0rem 1rem;
 }
 
-.sidebar-menu {
+.panel-izquierdo-opciones {
     padding: 1rem;
 }
 
-.sidebar-menu li:hover{
+.panel-izquierdo-opciones li:hover{
     background: var(--text-orange);
 }
 
-.sidebar a {
+.panel-izquierdo a {
     color: #fff;
-    font-size: .8rem;
+    font-size: .9rem;
+    text-decoration: none;
+    list-style-type: none;
 }
 
-.sidebar a span:last-child {
+.panel-izquierdo a span:last-child {
     padding-left: .6rem;
 }
 
-#sidebar-toggle:checked ~ .sidebar {
+#panel-izquierdo-boton:checked ~ .panel-izquierdo {
     width: 60px;
 }
 
-#sidebar-toggle:checked ~ .sidebar .sidebar-header h3 span,
-#sidebar-toggle:checked ~ .sidebar li span:last-child {
+#panel-izquierdo-boton:checked ~ .panel-izquierdo .panel-izquierdo-encabezados h3 span,
+#panel-izquierdo-boton:checked ~ .panel-izquierdo li span:last-child {
     display: none;
 }
 
-#sidebar-toggle:checked ~ .sidebar .sidebar-header,
-#sidebar-toggle:checked ~ .sidebar li {
+#panel-izquierdo-boton:checked ~ .panel-izquierdo .panel-izquierdo-encabezados,
+#panel-izquierdo-boton:checked ~ .panel-izquierdo li {
     display: flex;
     justify-content: center;
 }
 
-#sidebar-toggle:checked ~ .main-content {
+#panel-izquierdo-boton:checked ~ .main-content {
     margin-left: 60px;
 }
 
-#sidebar-toggle:checked ~ .main-content header {
+#panel-izquierdo-boton:checked ~ .main-content .encabezados-contenido {
     left: 60px;
     width: calc(100% - 60px);
 }
@@ -97,7 +96,7 @@
     transition: margin-left 500ms;
 }
 
-header {
+.encabezados-contenido {
     position: fixed;
     left: 240px;
     top: 0;
@@ -155,11 +154,11 @@ main {
     margin-bottom: 1rem;
 }
 
-.sidebar-menu .dropdown-menu .dropdown-item:hover{
+.panel-izquierdo-opciones .dropdown-menu .dropdown-item:hover{
     background: var(--main-colo2);
 }
 
-.sidebar-menu .dropdown-menu .dropdown-item {
+.panel-izquierdo-opciones .dropdown-menu .dropdown-item {
     padding: 0.5rem;
     margin: 5px 0;
     border-radius: 8px;
@@ -169,18 +168,18 @@ main {
 }
 
 @media only screen and (max-width: 1200px) {
-    .sidebar {
+    .panel-izquierdo {
         width: 60px;
         z-index: 150;
     }
 
-    .sidebar .sidebar-header h3 span,
-    .sidebar li span:last-child {
+    .panel-izquierdo .panel-izquierdo-encabezados h3 span,
+    .panel-izquierdo li span:last-child {
         display: none;
     }
 
-    .sidebar .sidebar-header,
-    .sidebar li {
+    .panel-izquierdo .panel-izquierdo-encabezados,
+    .panel-izquierdo li {
         display: flex;
         justify-content: center;
     }
@@ -189,34 +188,34 @@ main {
         margin-left: 60px;
     }
 
-    .main-content header {
+    .main-content .encabezados-contenido {
         left: 60px;
         width: calc(100% - 60px);
     }
     
-    #sidebar-toggle:checked ~ .sidebar {
+    #panel-izquierdo-boton:checked ~ .panel-izquierdo {
         width: 240px;
     }
 
-    #sidebar-toggle:checked ~ .sidebar .sidebar-header h3 span,
-    #sidebar-toggle:checked ~ .sidebar li span:last-child {
+    #panel-izquierdo-boton:checked ~ .panel-izquierdo .panel-izquierdo-encabezados h3 span,
+    #panel-izquierdo-boton:checked ~ .panel-izquierdo li span:last-child {
         display: inline;
     }
 
-    #sidebar-toggle:checked ~ .sidebar .sidebar-header {
+    #panel-izquierdo-boton:checked ~ .panel-izquierdo .panel-izquierdo-encabezados {
         display: flex;
         justify-content: space-between;
     }
     
-    #sidebar-toggle:checked ~ .sidebar li {
+    #panel-izquierdo-boton:checked ~ .panel-izquierdo li {
         display: block;
     }
 
-    #sidebar-toggle:checked ~ .main-content {
+    #panel-izquierdo-boton:checked ~ .main-content {
         margin-left: 60px;
     }
 
-    #sidebar-toggle:checked ~ .main-content header {
+    #panel-izquierdo-boton:checked ~ .main-content .encabezados-contenido {
         left: 60px;
     }
 }
