@@ -1,9 +1,66 @@
 {% extends 'profile.html' %}
+{% block title %}Registro Unidad{% endblock %}
 {% block content %}
-<h2 class="dash-title">Registro de Unidad - Contenido - Tema - Material</h2>
+<h2 class="dash-title">Registro de Unidad</h2>
 
-<form action="/inicio/create/" method="POST">
-
+<form action="/inicio/create_unidad/" method="POST">
+    <div class="contenido">
+        {% csrf_token %}
+        <div class="boton-agregar" style="text-align: right; margin: 15px;">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#modalRegister-Unidad">Agregar</button>
+        </div>
+        <div class="tabla-unidad" style=" margin: 0 auto;">
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                    <tr style="text-align: center; padding: 4px 8px;">
+                        <th scope="col">Id</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider ">
+                    {% for u in entity %}
+                    <tr style="text-align: left;">
+                        <th scope="row">{{ u.id }}</th>
+                        <td>{{ u.nombre }}</td>
+                        <td style="text-align: center;">
+                            <button type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                            <button type="button" class="btn btn-warning">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                {% include 'paginator.html' %}
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="modalRegister-Unidad" tabindex="-1" aria-labelledby="modalRegister-UnidadLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalRegister-UnidadLabel">Registro de Unidad</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Nombre de la Unidad</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" maxlength="100">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 </form>
 {% endblock %}
-

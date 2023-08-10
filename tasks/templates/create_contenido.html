@@ -1,0 +1,33 @@
+{% extends 'profile.html' %}
+{% block title %}Registro Contenido{% endblock %}
+{% block content %}
+<h2 class="dash-title">Registro de Contenido</h2>
+
+<form action="/inicio/create/" method="POST">
+    <div class="contenido">
+        <div class="boton-agregar" style="text-align: right; margin: 15px;">
+            <button type="button" class="btn btn-success">Agregar</button>
+        </div>
+        <div class="tabla-unidad">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">First</th>
+                      <th scope="col">Last</th>
+                      <th scope="col">Handle</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>Otto</td>
+                      <td>@mdo</td>
+                    </tr>
+                    </tbody>
+              </table>
+        </div>
+    </div>
+</form>
+{% endblock %}

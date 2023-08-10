@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout,authenticate
 from django.db import IntegrityError
 from .forms import UnidadForm
+from .models import Unidad,Contenido,Material,Tema
+from django.core.paginator import Paginator
+from django.http import Http404
 
 
 # Create your views here.
@@ -63,6 +66,31 @@ def contenido (request):
 def inicio (request):
     return render(request, 'inicio.html')
 def create_unidad (request):
-    return render(request, 'create_unidad.html',{
+   data = {}
+   if request.method == 'POST':
+        formulario = UnidadForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+        else:
+           data['form']=formulario
+   else:
+        data['form'] = UnidadForm()
+   unidades = Unidad.objects.all()
+   page =request.GET.get('page',1)
+   try:
+       paginator = Paginator(unidades,5)
+       unidades = paginator.page(page)
+   except:
+       raise Http404
+
+   data = {
+       'entity':unidades,
+       'unidad': Unidad
+   }
+    
+   return render(request, 'create_unidad.html', data)    
+       
+def create_contenido (request):
+    return render(request, 'create_contenido.html',{
         'form':UnidadForm
     })

@@ -27,5 +27,6 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('contenido/', views.contenido, name='contenido'),
     path('inicio/', views.inicio, name='inicio'),
-     path('inicio/create/', views.create_unidad, name='create_unidad')
+    path('inicio/create_unidad/', views.create_unidad, name='create_unidad'),
+    path('inicio/create_contenido/', views.create_contenido, name='create_contenido')
 ]

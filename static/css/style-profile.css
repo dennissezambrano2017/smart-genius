@@ -37,6 +37,7 @@
     margin: 5px 0;
     border-radius: 8px;
     transition: all 0.5s ease-in-out;
+    list-style-type: none;
 }
 
 .panel-izquierdo-encabezados {
@@ -59,7 +60,6 @@
     color: #fff;
     font-size: .9rem;
     text-decoration: none;
-    list-style-type: none;
 }
 
 .panel-izquierdo a span:last-child {
@@ -152,19 +152,6 @@ main {
 .dash-title {
     color: var(--color-dark);
     margin-bottom: 1rem;
-}
-
-.panel-izquierdo-opciones .dropdown-menu .dropdown-item:hover{
-    background: var(--main-colo2);
-}
-
-.panel-izquierdo-opciones .dropdown-menu .dropdown-item {
-    padding: 0.5rem;
-    margin: 5px 0;
-    border-radius: 8px;
-    transition: all 0.5s ease-in-out;
-    font-size: 13px;
-    text-align: justify;
 }
 
 @media only screen and (max-width: 1200px) {
