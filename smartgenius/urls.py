@@ -27,6 +27,12 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('contenido/', views.contenido, name='contenido'),
     path('inicio/', views.inicio, name='inicio'),
-    path('inicio/create_unidad/', views.create_unidad, name='create_unidad'),
-    path('inicio/create_contenido/', views.create_contenido, name='create_contenido')
+    # Sección unidad
+    path('unidad/',views.vwUnidad,name='unidad'),
+    path('create_unidad/', views.create_unidad, name='create_unidad'),
+    path('edit_unidad/',views.edit_unidad,name='editar_unidad'),
+    path('obtener_unidad/', views.vwGetUnidad,name='obtener_unidad'),
+    path('buscar_unidad/',views.vwBuscarUnidad,name='buscar_unidad'),
+
+    path('create_contenido/', views.create_contenido, name='create_contenido')
 ]
