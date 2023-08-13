@@ -18,37 +18,37 @@
     <input type="checkbox" id="panel-izquierdo-boton">
     <div class="panel-izquierdo">
         <div class="panel-izquierdo-encabezados">
-            <h3 style="font-size: 20px;text-align: center;margin-top: 5px;">
+            <h3 >
                 <span class="fa-solid fa-square-root-variable"></span>
-                <span> Smart Genius</span>
+                <span>  <a href="{% url 'inicio' %}">Smart Genius</a></span>
             </h3>
             <label for="panel-izquierdo-boton" class="fa-solid fa-bars"></label>
         </div>
         <div class="panel-izquierdo-opciones">
-            <ul style="padding: 0;margin: 0;">
+            <ul>
                 {% if user.is_authenticated %}
                 {% if perms.tasks.add_unidad %}
                 <li>
                     <a class="btn-opcion {{ btnUnidad }}" href="{% url 'unidad' %}">
-                        <span class="fa-solid fa-clipboard"></span>
+                        <span class="fas fa-clipboard-check"></span>
                         <span>Unidad</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/create_contenido">
-                        <span class="fa-solid fa-clipboard"></span>
+                    <a href="{% url 'contenido' %}">
+                        <span class="fas fa-book-open"></span>
                         <span>Contenido</span>
                     </a>
                 </li>
                 <li>
                     <a href="/create">
-                        <span class="fa-solid fa-clipboard"></span>
+                        <span class="fas fa-file-alt"></span>
                         <span>Material</span>
                     </a>
                 </li>
                 <li>
                     <a href="/create_unidad">
-                        <span class="fa-solid fa-clipboard"></span>
+                        <span class="fas fa-lightbulb"></span>
                         <span>Temas</span>
                     </a>
                 </li>
@@ -98,7 +98,7 @@
 
             <div class="social-icons">
                 <span class="fa-solid fa-user"></span>
-                <span>{form.username}</span>
+                <span>{% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</span>
             </div>
         </header>
 
