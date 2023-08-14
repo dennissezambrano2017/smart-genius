@@ -67,11 +67,10 @@ def create_unidad (request):
         'form':UnidadForm
     })
 def visualizar_reporte(request):
-    
-    # if request.method == 'GET':
-        # usuarios_registrados = Usuario.objects.filter(tipo_usuario='Estudiante', estado_usuario='Activo')
+    busqueda_estudiante = request.GET.get('busqueda_estudiante')
+    if busqueda_estudiante:
+        usuarios_registrados = User.objects.filter(username__icontains=busqueda_estudiante)
+    else:
+        usuarios_registrados = User.objects.all()
 
-
-
-    usuarios_registrados = User.objects.all()
     return render(request, 'reporte.html', {'usuarios_registrados': usuarios_registrados})

@@ -6,11 +6,14 @@
 <h3>Reporte de estudiantes</h3>
 
 <div>
-  <form method="get">
-    <label for="tipo_usuario">Filtrar por tipo de usuario:</label>
-    <input type="text" required id="busqueda_estudiante" name="busqueda_estudiante">
-    <button>Aplicar</button>
-  </form>
+  <div>
+    <form method="get" style="margin-top: 10px; padding: 10px; background-color: #f2f2f2;">
+      <label for="busqueda_estudiante" style="font-weight: bold;">Filtrar por nombre de usuario:</label>
+      <input type="text" required id="busqueda_estudiante" name="busqueda_estudiante" style="width: 200px; padding: 5px; margin-right: 10px;">
+      <button style="padding: 5px 10px; background-color: #007bff; color: white; border: none; cursor: pointer;">Buscar</button>
+    </form>
+  </div>
+  
 </div>
 
 {% if usuarios_registrados %}
