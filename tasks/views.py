@@ -66,3 +66,12 @@ def create_unidad (request):
     return render(request, 'create_unidad.html',{
         'form':UnidadForm
     })
+def visualizar_reporte(request):
+    
+    # if request.method == 'GET':
+        # usuarios_registrados = Usuario.objects.filter(tipo_usuario='Estudiante', estado_usuario='Activo')
+
+
+
+    usuarios_registrados = User.objects.all()
+    return render(request, 'reporte.html', {'usuarios_registrados': usuarios_registrados})
