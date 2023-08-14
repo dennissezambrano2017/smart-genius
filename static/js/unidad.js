@@ -51,7 +51,6 @@ $(".btnObtenerUnidad").click(function () {
     });
 });
 
-
 // sobrescritura del submit del formulario modificar unidad
 $(document).on('submit', '#formModUnidad', function (e) {
     console.log('si');
@@ -104,7 +103,7 @@ function confi_delet_unidad(id)
     modal.modal('show');
     idElim=id;
 }
-// función para eliminar un administrador luego de haberse confirmado la acción
+// función para eliminar un unidad luego de haberse confirmado la acción
 function delete_unidad(){
     console.log(idElim)
     var csrftoken = getCookie('csrftoken');
@@ -126,26 +125,11 @@ function delete_unidad(){
     });
 }
 
-//
-
 function actualizarFilaTabla(idUnidad, nuevoNombre) {
     // Buscar la fila correspondiente a idUnidad en la tabla y actualizar el nombre
     var fila = $("tr[data-id='" + idUnidad + "']");
     fila.find(".nombre-unidad").text(nuevoNombre);
 }
-
-
-function mostrarAlerta(mensaje, tipo,direccion) {
-    var alertMessage = $(direccion);
-
-    alertMessage.text(mensaje).removeClass("alert-success alert-danger").addClass("alert-" + tipo).show();
-
-    // Ocultar la alerta después de un breve período de tiempo
-    setTimeout(function () {
-        alertMessage.hide();
-    }, 3000); // 3000 milisegundos (3 segundos) de espera antes de ocultar
-}
-
 
 $(document).ready(function () {
     // Obtener el valor del parámetro en la URL
@@ -154,18 +138,12 @@ $(document).ready(function () {
 
     if (showAlert === 'true') {
         // Mostrar la alerta de éxito
-        mostrarAlerta("Se regitro la Unidad correctamente.", "success","#alertMessage");
+        mostrarAlerta("Se registro la Unidad correctamente.", "success","#alertMessage");
 
         // Remover el parámetro de la URL para que no se acumule
         history.replaceState({}, document.title, window.location.pathname);
     }
 });
 
-$('#modalDelet').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // Botón que activó el modal
-    var data = button.data('id'); // ID de la unidad desde el botón
-    var modal = $(this);
-    
-    // Actualizar el valor del campo oculto en el formulario
-    modal.find('#txtIdUnidad').val(data);
-});
+
+

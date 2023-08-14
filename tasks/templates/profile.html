@@ -11,6 +11,9 @@
     <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -41,15 +44,16 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/create">
-                        <span class="fas fa-file-alt"></span>
-                        <span>Material</span>
+                    <a href="{% url 'temas' %}">
+                        
+                        <span class="fas fa-lightbulb"></span>
+                        <span>Temas</span>
                     </a>
                 </li>
                 <li>
                     <a href="/create_unidad">
-                        <span class="fas fa-lightbulb"></span>
-                        <span>Temas</span>
+                        <span class="fas fa-file-alt"></span>
+                        <span>Material</span>
                     </a>
                 </li>
                 <li>

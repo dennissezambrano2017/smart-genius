@@ -1,12 +1,20 @@
-// Función para mostrar un modal en función de los datos recibidos
-function show_modal(md_titulo, md_mensaje, md_opcHeader, md_opcFooter) {
-    $('#ventana_modal').modal({backdrop: 'static', keyboard: false})
-    document.querySelector("#md_titulo").innerHTML = "<strong>" + md_titulo + "</strong>";
-    document.querySelector("#md_mensaje").innerHTML = md_mensaje;
-    document.querySelector("#md_opcHeader").innerHTML = md_opcHeader;
-    document.querySelector("#md_opcFooter").innerHTML = md_opcFooter;
-    $('#ventana_modal').modal('show');
+function mostrarAlerta(mensaje, tipo,direccion) {
+    var alertMessage = $(direccion);
+
+    alertMessage.text(mensaje).removeClass("alert-success alert-danger").addClass("alert-" + tipo).show();
+
+    // Ocultar la alerta después de un breve período de tiempo
+    setTimeout(function () {
+        alertMessage.hide();
+    }, 3000); // 3000 milisegundos (3 segundos) de espera antes de ocultar
 }
+
+// Capturar el clic en el botón "Cancelar"
+function restablecer() {
+    console.log("Restableciendo campos...")
+    // Restablecer los valores de los campos a vacío
+    $("#nombre").val('');
+};
 // Función para crear una llave de seguridad "crsftoken" y poder realizar una petición ajax
 function getCookie(name) {
     var cookieValue = null;
