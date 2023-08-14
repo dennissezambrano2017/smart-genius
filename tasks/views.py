@@ -81,14 +81,12 @@ def visualizar_contenido(request):
     contenidos = Contenido.objects.select_related('unidad').all()
     temas = Tema.objects.select_related('contenido__unidad').all()
     materiales = Material.objects.prefetch_related('temas').all()
-    practicas = Practica.objects.select_related('tema__contenido__unidad', 'user').all()
 
     context = {
         'unidades': unidades,
         'contenidos': contenidos,
         'temas': temas,
         'materiales': materiales,
-        'practicas': practicas,
     }
 
     return render(request, 'contenido_material.html',context)
