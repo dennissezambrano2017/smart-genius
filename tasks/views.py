@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout,authenticate
 from django.db import IntegrityError
 from .forms import UnidadForm
+from .models import Unidad, Contenido,Tema,Material,Practica
 
 
 # Create your views here.
@@ -72,5 +73,22 @@ def visualizar_reporte(request):
         usuarios_registrados = User.objects.filter(username__icontains=busqueda_estudiante)
     else:
         usuarios_registrados = User.objects.all()
-
     return render(request, 'reporte.html', {'usuarios_registrados': usuarios_registrados})
+
+
+def visualizar_contenido(request):
+    unidades = Unidad.objects.all()
+    contenidos = Contenido.objects.select_related('unidad').all()
+    temas = Tema.objects.select_related('contenido__unidad').all()
+    materiales = Material.objects.prefetch_related('temas').all()
+    practicas = Practica.objects.select_related('tema__contenido__unidad', 'user').all()
+
+    context = {
+        'unidades': unidades,
+        'contenidos': contenidos,
+        'temas': temas,
+        'materiales': materiales,
+        'practicas': practicas,
+    }
+
+    return render(request, 'contenido_material.html',context)
