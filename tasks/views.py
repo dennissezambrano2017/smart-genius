@@ -8,7 +8,10 @@ from .models import Unidad, Contenido,Tema,Material
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from io import BytesIO
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 
 
 # Create your views here.
@@ -100,44 +103,58 @@ def visualizar_contenido(request):
 def generar_unidad_pdf(request, unidad_id):
     unidad = Unidad.objects.get(pk=unidad_id)
     contenidos = Contenido.objects.filter(unidad=unidad)
-    
+
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="{unidad.nombre}.pdf"'
-    
+
     buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=letter)
-    
+    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+
+    story = []
+
     # Title
-    p.setFont("Helvetica-Bold", 24)
-    p.drawString(100, 750, f"Unidad: {unidad.nombre}")
-    
-    # Contents
-    p.setFont("Helvetica", 16)
-    y_position = 700
+    title_style = getSampleStyleSheet()["Title"]
+    title_text = f"Unidad: {unidad.nombre}"
+    title_paragraph = Paragraph(title_text, title_style)
+    story.append(title_paragraph)
+    story.append(Spacer(1, 20))  # Add spacing
+
     for contenido in contenidos:
-        p.setFont("Helvetica-Bold", 18)  # Use a larger font for content headings
-        p.drawString(100, y_position, f"Contenido: {contenido.nombre}")
-        y_position -= 30  # Add more spacing after content heading
-        
+        # Content Header
+        content_style = getSampleStyleSheet()["Heading1"]
+        content_text = f"Contenido: {contenido.nombre}"
+        content_paragraph = Paragraph(content_text, content_style)
+        story.append(content_paragraph)
+        story.append(Spacer(1, 10))  # Add spacing
+
         temas = Tema.objects.filter(contenido=contenido)
+        data = []
+
         for tema in temas:
-            p.setFont("Helvetica-Bold", 14)  # Use a smaller font for topic headings
-            p.drawString(120, y_position, f"Tema: {tema.nombre}")
-            y_position -= 20  # Add more spacing after topic heading
-            
+            tema_data = [f"Tema: {tema.nombre}"]
+            data.append(tema_data)
+
             materiales = Material.objects.filter(temas=tema)
             for material in materiales:
-                p.setFont("Helvetica", 12)  # Use a smaller font for material details
-                p.drawString(140, y_position, f"Material: {material.tipo} - {material.enlace}")
-                y_position -= 15  # Add more spacing between materials
-        
-        y_position -= 20  # Add more spacing between topics
-    
-    p.save()
-    
+                material_data = [ f"Material: {material.tipo} - {material.enlace}"]
+                data.append(material_data)
+
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        story.append(table)
+        story.append(Spacer(1, 20))  # Add spacing
+
+    doc.build(story)
+
     pdf = buffer.getvalue()
     buffer.close()
-    
+
     response.write(pdf)
     return response
 
