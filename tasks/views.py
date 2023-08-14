@@ -124,7 +124,12 @@ def generar_unidad_pdf(request, unidad_id):
         content_style = getSampleStyleSheet()["Heading1"]
         content_text = f"Contenido: {contenido.nombre}"
         content_paragraph = Paragraph(content_text, content_style)
+
+        content_style = getSampleStyleSheet()["Normal"]
+        description_text = f"Descripción: {contenido.descripcion}"
+        description_paragraph = Paragraph(description_text, content_style)
         story.append(content_paragraph)
+        story.append(description_paragraph)
         story.append(Spacer(1, 10))  # Add spacing
 
         temas = Tema.objects.filter(contenido=contenido)
