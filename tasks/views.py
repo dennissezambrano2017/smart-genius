@@ -4,7 +4,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout,authenticate
 from django.db import IntegrityError
 from .forms import UnidadForm
-from .models import Unidad, Contenido,Tema,Material,Practica
+from .models import Unidad, Contenido,Tema,Material
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
 
 
 # Create your views here.
@@ -90,3 +94,52 @@ def visualizar_contenido(request):
     }
 
     return render(request, 'contenido_material.html',context)
+
+
+
+def generar_unidad_pdf(request, unidad_id):
+    unidad = Unidad.objects.get(pk=unidad_id)
+    contenidos = Contenido.objects.filter(unidad=unidad)
+    
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="{unidad.nombre}.pdf"'
+    
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Title
+    p.setFont("Helvetica-Bold", 24)
+    p.drawString(100, 750, f"Unidad: {unidad.nombre}")
+    
+    # Contents
+    p.setFont("Helvetica", 16)
+    y_position = 700
+    for contenido in contenidos:
+        p.setFont("Helvetica-Bold", 18)  # Use a larger font for content headings
+        p.drawString(100, y_position, f"Contenido: {contenido.nombre}")
+        y_position -= 30  # Add more spacing after content heading
+        
+        temas = Tema.objects.filter(contenido=contenido)
+        for tema in temas:
+            p.setFont("Helvetica-Bold", 14)  # Use a smaller font for topic headings
+            p.drawString(120, y_position, f"Tema: {tema.nombre}")
+            y_position -= 20  # Add more spacing after topic heading
+            
+            materiales = Material.objects.filter(temas=tema)
+            for material in materiales:
+                p.setFont("Helvetica", 12)  # Use a smaller font for material details
+                p.drawString(140, y_position, f"Material: {material.tipo} - {material.enlace}")
+                y_position -= 15  # Add more spacing between materials
+        
+        y_position -= 20  # Add more spacing between topics
+    
+    p.save()
+    
+    pdf = buffer.getvalue()
+    buffer.close()
+    
+    response.write(pdf)
+    return response
+
+   
+        

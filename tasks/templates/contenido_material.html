@@ -6,13 +6,12 @@
 
 <h1>Contenido y Recursos</h1>
 
-  <!-- Agrega un botón de impresión -->
-  <button onclick="imprimirContenido()">Imprimir</button>
 
 
 {% for unidad in unidades %}
 <div style="border: 1px solid #ddd; margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);">
   <h2 style="font-size: 1.5em; margin-bottom: 10px;">Unidad: {{ unidad.nombre }}</h2>
+  <a href="{% url 'imprimir_unidad' unidad.id %}" target="_blank" style="text-decoration: none; background-color: #007bff; color: #fff; padding: 5px 10px; border-radius: 5px;margin-left: 57em;">Imprimir Unidad</a>
 
   {% for contenido in contenidos %}
     {% if contenido.unidad == unidad %}
@@ -48,13 +47,5 @@
   {% endfor %}
 </div>
 {% endfor %}
-
-<script>
-    function imprimirContenido() {
-      window.print();
-    }
-  </script>
-  
-
 
 {% endblock %}
