@@ -208,11 +208,103 @@ main {
 
 
 .fixed-column-width .descripcion,
-    .fixed-column-width .descripcion-contenido {
-        width: 350px; /* Cambia este valor al ancho deseado para las columnas */
-        word-wrap: break-word;
-    }
+.fixed-column-width .descripcion-contenido {
+    width: 350px;
+    /* Cambia este valor al ancho deseado para las columnas */
+    word-wrap: break-word;
+}
 
+.caja-contenido {
+    border: 1px solid #ddd;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.caja-contenido h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.caja-contenido .btnDescarga {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.caja-contenido .btnImprimir {
+    text-decoration: none;
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-left: auto;
+}
+
+.caja-contenido-adentro {
+    border: 1px solid #ddd;
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.caja-tema {
+    border: 1px solid #e5e5e5;
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
+
+.caja-tema h4 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.caja-recursos {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+}
+
+.caja-recursos h5 {
+    font-size: 1em;
+    margin-bottom: 5px;
+}
+
+.caja-recursos ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    font-size: 0.9em;
+}
+
+.caja-contenido-adentro h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.caja-description {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.caja-description p {
+    font-size: 0.9em;
+}
+
+.encabezados-tabla{
+    text-align: center; padding: 4px 8px;
+}
+
+.cuerpo-tabal{
+    text-align: left;
+}
 /* Consulta de medios para ajustar el diseño responsivo */
 @media (max-width: 768px) {
     .circle-progress {

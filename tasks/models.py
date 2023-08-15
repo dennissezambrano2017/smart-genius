@@ -50,7 +50,7 @@ class Material(models.Model):
     ejercicios = models.ManyToManyField(Ejercicio)  # Relación muchos a muchos con Ejercicio
 
     def __str__(self):
-        return f"Material - {self.tema.nombre}"
+        return f"Material - {self.enlace}"
 
 
 class Puntuacion(models.Model):

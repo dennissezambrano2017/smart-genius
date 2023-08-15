@@ -1,19 +1,17 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import UnidadForm
 from .models import Unidad, Contenido, Material, Tema,Ejercicio
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404, JsonResponse, HttpResponse
+from django.http import  JsonResponse, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from reportlab.pdfgen import canvas
 from io import BytesIO
 from reportlab.lib.pagesizes import letter, landscape
-from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 
 
@@ -405,12 +403,19 @@ def vwEliminarTema(request):
 
 def visualizar_reporte(request):
     busqueda_estudiante = request.GET.get('busqueda_estudiante')
+    
     if busqueda_estudiante:
-        usuarios_registrados = User.objects.filter(
-            username__icontains=busqueda_estudiante)
+        usuarios_no_administradores = User.objects.filter(
+            is_staff=False, username__icontains=busqueda_estudiante
+        )
     else:
-        usuarios_registrados = User.objects.all()
-    return render(request, 'reporte.html', {'usuarios_registrados': usuarios_registrados})
+        usuarios_no_administradores = User.objects.filter(is_staff=False)
+    
+    paginator = Paginator(usuarios_no_administradores, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'reporte.html', {'page_obj': page_obj})
 
 
 def visualizar_contenido(request):
@@ -427,7 +432,7 @@ def visualizar_contenido(request):
         'materiales': materiales,
         'ejercicios': ejercicios,
     }
-
+    print(materiales)
     return render(request, 'contenido_material.html', context)
 
 
@@ -444,45 +449,54 @@ def generar_unidad_pdf(request, unidad_id):
     story = []
 
     for contenido in contenidos:
-        # Content Header
         content_style = getSampleStyleSheet()["Heading1"]
         content_text = f"Contenido: {contenido.nombre}"
         content_paragraph = Paragraph(content_text, content_style)
-
+        story.append(content_paragraph)
+        
         content_style = getSampleStyleSheet()["Normal"]
         description_text = f"Descripción: {contenido.descripcion}"
         description_paragraph = Paragraph(description_text, content_style)
-        story.append(content_paragraph)
         story.append(description_paragraph)
         story.append(Spacer(1, 10))  # Add spacing
 
         temas = Tema.objects.filter(contenido=contenido)
 
         for tema in temas:
-            story.append(Spacer(1, 20))  # Add spacing
+            story.append(Spacer(1, 10))  # Add spacing
 
-            tema_data = [f"Tema: {tema.nombre}"]
+            
+            content_style = getSampleStyleSheet()["Title"]
+            content_text = f"Tema: {tema.nombre}"
+            content_paragraph = Paragraph(content_text, content_style)
+            story.append(content_paragraph)
+
+            tema_data = [f"Recursos"]
             data = [tema_data]
 
-            materiales = Material.objects.filter(tema=tema)
-            for material in materiales:
-                material_data = [
-                    [f"Material - Enlace: {material.enlace}"],
-                    [f"Material - Archivo PDF: {material.archivo_pdf.url}"],
-                    [f"Material - Ejercicios: {', '.join([str(ejercicio) for ejercicio in material.ejercicios.all()])}"]
-                ]
-                data.extend(material_data)
+            material = Material.objects.filter(tema=tema).first()
+            if material:
+                enlace_data = [f"Enlace: {material.enlace}"]
+                pdf_data = [f"Archivo PDF: {material.archivo_pdf}"]
+                ejercicios_data = ["Ejercicios:"]
+                ejercicios = Ejercicio.objects.filter(tema=tema)
+                for ejercicio in ejercicios:
+                    ejercicios_data.append(f"- {ejercicio.enunciado}")
+                
+                data.extend([enlace_data, pdf_data])
+                ejercicios_data = "\n".join(ejercicios_data)
+                data.append([ejercicios_data])
 
-            table = Table(data)
-            table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-                ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                ('BACKGROUND', (0, 0), (-1, 0), colors.green),  # Color de fondo para el tema
-            ]))
-            story.append(table)
+                table = Table(data)
+                table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                    ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ]))
+                story.append(table)
 
     doc.build(story)
 

@@ -21,7 +21,7 @@
   <div class="col-md-12 tabla-unidad mt-3">
     <table class="table table-bordered">
       <thead class="table-primary fixed-column-width">
-        <tr style="text-align: center; padding: 4px 8px;">
+        <tr class="encabezados-tabla">
           <th scope="col">Id</th>
           <th scope="col">Nombre</th>
           <th class="descripcion" scope="col">Descripción</th>
@@ -32,7 +32,7 @@
       <tbody class="table-group-divider ">
         {% if contenido %}
         {% for u in contenido %}
-        <tr style="text-align: left;" data-id="{{ u.id }}">
+        <tr class="cuerpo-tabla" data-id="{{ u.id }}">
           <th scope="row">{{ u.id }}</th>
           <td class="nombre-contenido">{{ u.nombre }}</td>
           <td class="descripcion-contenido">{{ u.descripcion }}</td>
