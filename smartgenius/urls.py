@@ -30,28 +30,34 @@ urlpatterns = [
     path('inicio/', views.inicio, name='inicio'),
 
     # Sección unidad
-    path('unidad/',views.vwUnidad,name='unidad'),
+    path('unidad/', views.vwUnidad, name='unidad'),
     path('create_unidad/', views.create_unidad, name='create_unidad'),
-    path('edit_unidad/',views.edit_unidad,name='editar_unidad'),
-    path('obtener_unidad/', views.vwGetUnidad,name='obtener_unidad'),
-    path('buscar_unidad/',views.vwBuscarUnidad,name='buscar_unidad'),
-    path('eliminar_unidad/',views.vwEliminarUnidad,name='eliminar_unidad'),
+    path('edit_unidad/', views.edit_unidad, name='editar_unidad'),
+    path('obtener_unidad/', views.vwGetUnidad, name='obtener_unidad'),
+    path('buscar_unidad/', views.vwBuscarUnidad, name='buscar_unidad'),
+    path('eliminar_unidad/', views.vwEliminarUnidad, name='eliminar_unidad'),
 
     # Sección contenido
-    path('contenido/',views.vwcontenido,name='contenido'),
-    path('obtener_unidades/',views.vwObtener_Unidad,name='unidad_contenido'),
+    path('contenido/', views.vwcontenido, name='contenido'),
+    path('obtener_unidades/', views.vwObtener_Unidad, name='unidad_contenido'),
     path('create_contenido/', views.create_contenido, name='create_contenido'),
-    path('unidad_seleccionada/', views.vwGetUnidad_Contenido,name='unidad_seleccionada'),
-    path('edit_contenido/',views.vwEditar_Contenido,name='editar_contenido'),
-    path('eliminar_contenido/',views.vwEliminarContenido,name='eliminar_contenido'),
+    path('unidad_seleccionada/', views.vwGetUnidad_Contenido, name='unidad_seleccionada'),
+    path('edit_contenido/', views.vwEditar_Contenido, name='editar_contenido'),
+    path('eliminar_contenido/', views.vwEliminarContenido, name='eliminar_contenido'),
 
     # Sección contenido
-    path('temas/',views.vwTemas,name='temas'),
-    path('obtener_contenido/',views.vwObtener_Contenido,name='contenido_tema'),
+    path('temas/', views.vwTemas, name='temas'),
+    path('obtener_contenido/', views.vwObtener_Contenido, name='contenido_tema'),
     path('create_tema/', views.vwCreate_tema, name='create_tema'),
-    path('contenido_seleccionada/', views.vwGetContenido_Tema,name='contenido_seleccionada'),
-    path('edit_tema/',views.vwEditar_Tema,name='editar_tema'),
-    path('eliminar_tema/',views.vwEliminarTema,name='eliminar_tema'),
+    path('contenido_seleccionada/', views.vwGetContenido_Tema, name='contenido_seleccionada'),
+    path('edit_tema/', views.vwEditar_Tema, name='editar_tema'),
+    path('eliminar_tema/', views.vwEliminarTema, name='eliminar_tema'),
+
+    # Sección reportes
+    path('inicio/create/', views.create_unidad, name='create_unidad'),
+    path('reporte/', views.visualizar_reporte, name='visualizar_reporte'),
+    path('aula/', views.visualizar_contenido, name='aula_documento'),
+    path('imprimir_unidad/<int:unidad_id>/', views.generar_unidad_pdf, name='imprimir_unidad'),
 ]
 
 if settings.DEBUG:

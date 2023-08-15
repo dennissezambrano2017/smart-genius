@@ -6,9 +6,15 @@ from django.db import IntegrityError
 from .forms import UnidadForm
 from .models import Unidad, Contenido, Material, Tema
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse,HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from reportlab.pdfgen import canvas
+from io import BytesIO
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 
 
 # Create your views here.
@@ -356,9 +362,94 @@ def vwEliminarTema(request):
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error al modificar la unidad, por favor intente nuevamente.'})
     
+def visualizar_reporte(request):
+    busqueda_estudiante = request.GET.get('busqueda_estudiante')
+    if busqueda_estudiante:
+        usuarios_registrados = User.objects.filter(username__icontains=busqueda_estudiante)
+    else:
+        usuarios_registrados = User.objects.all()
+    return render(request, 'reporte.html', {'usuarios_registrados': usuarios_registrados})
 
+
+def visualizar_contenido(request):
+    unidades = Unidad.objects.all()
+    contenidos = Contenido.objects.select_related('unidad').all()
+    temas = Tema.objects.select_related('contenido__unidad').all()
+    materiales = Material.objects.prefetch_related('temas').all()
+
+    context = {
+        'unidades': unidades,
+        'contenidos': contenidos,
+        'temas': temas,
+        'materiales': materiales,
+    }
+
+    return render(request, 'contenido_material.html',context)
+
+
+
+def generar_unidad_pdf(request, unidad_id):
+    unidad = Unidad.objects.get(pk=unidad_id)
+    contenidos = Contenido.objects.filter(unidad=unidad)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="{unidad.nombre}.pdf"'
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+
+    story = []
+
+    # Title
+    title_style = getSampleStyleSheet()["Title"]
+    title_text = f"Unidad: {unidad.nombre}"
+    title_paragraph = Paragraph(title_text, title_style)
+    story.append(title_paragraph)
+    story.append(Spacer(1, 20))  # Add spacing
+
+    for contenido in contenidos:
+        # Content Header
+        content_style = getSampleStyleSheet()["Heading1"]
+        content_text = f"Contenido: {contenido.nombre}"
+        content_paragraph = Paragraph(content_text, content_style)
+
+        content_style = getSampleStyleSheet()["Normal"]
+        description_text = f"Descripción: {contenido.descripcion}"
+        description_paragraph = Paragraph(description_text, content_style)
+        story.append(content_paragraph)
+        story.append(description_paragraph)
+        story.append(Spacer(1, 10))  # Add spacing
+
+        temas = Tema.objects.filter(contenido=contenido)
+        data = []
+
+        for tema in temas:
+            tema_data = [f"Tema: {tema.nombre}"]
+            data.append(tema_data)
+
+            materiales = Material.objects.filter(temas=tema)
+            for material in materiales:
+                material_data = [ f"Material: {material.tipo} - {material.enlace}"]
+                data.append(material_data)
+
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        story.append(table)
+        story.append(Spacer(1, 20))  # Add spacing
+
+    doc.build(story)
+
+    pdf = buffer.getvalue()
+    buffer.close()
+
+    response.write(pdf)
+    return response
+
+   
         
-
-
-
-
