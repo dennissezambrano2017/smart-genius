@@ -31,8 +31,8 @@
             {% for material in materiales %}
               {% for material_tema in material.temas.all %}
                 {% if material_tema == tema %}
-                    <p>{{ material.contenido_material }}</p>
-                    <li><a href="{{ material.enlace }}" target="_blank">{{ material.tipo }}: {{ material.enlace }}</a></li>
+                <p>{{ material }}</p>
+                <a href="{{ material.enlace }}" target="_blank">{{ material.enlace }}</a>
 
                 {% endif %}
               {% endfor %}

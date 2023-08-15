@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import UnidadForm
-from .models import Unidad, Contenido, Material, Tema
+from .models import Unidad, Contenido, Material, Tema,Ejercicio
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, JsonResponse, HttpResponse
 from django.contrib import messages
@@ -418,12 +418,14 @@ def visualizar_contenido(request):
     contenidos = Contenido.objects.select_related('unidad').all()
     temas = Tema.objects.select_related('contenido__unidad').all()
     materiales = Material.objects.prefetch_related('tema').all()
+    ejercicios = Ejercicio.objects.select_related('tema').all()
 
     context = {
         'unidades': unidades,
         'contenidos': contenidos,
         'temas': temas,
         'materiales': materiales,
+        'ejercicios': ejercicios,
     }
 
     return render(request, 'contenido_material.html', context)
