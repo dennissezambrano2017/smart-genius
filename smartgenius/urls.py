@@ -27,5 +27,8 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('contenido/', views.contenido, name='contenido'),
     path('inicio/', views.inicio, name='inicio'),
-     path('inicio/create/', views.create_unidad, name='create_unidad')
+     path('inicio/create/', views.create_unidad, name='create_unidad'),
+     path('reporte/', views.visualizar_reporte, name='visualizar_reporte'),
+     path('aula/', views.visualizar_contenido, name='aula_documento'),
+     path('imprimir_unidad/<int:unidad_id>/', views.generar_unidad_pdf, name='imprimir_unidad'),
 ]
