@@ -53,8 +53,10 @@ urlpatterns = [
     path('edit_tema/', views.vwEditar_Tema, name='editar_tema'),
     path('eliminar_tema/', views.vwEliminarTema, name='eliminar_tema'),
 
+    # Sección contenido - Alumno
+    path('contenido_alumno/', views.vwContenidoAlumno, name='contenido_alu'),
     # Sección material
-    path('marterial/', views.vwMaterial, name='material'),
+    path('material/', views.vwMaterial, name='material'),
 
     # Sección reportes
     path('inicio/create/', views.create_unidad, name='create_unidad'),
