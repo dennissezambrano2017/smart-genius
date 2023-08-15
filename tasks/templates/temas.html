@@ -54,7 +54,7 @@
         <!-- Mostrar los enlaces de paginación -->
         <div class="d-flex justify-content-center mt-3" class="page-link">
             <div class="pagination">
-                {% if tema.has_previous %}
+                {% if temas.has_previous %}
                 <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
                 <li class="page-item"><a class="page-link" href="?page={{ temas.previous_page_number }}">Anterior</a>
                 </li>
@@ -63,7 +63,7 @@
                 <li class="page-item"><a class="page-link">
                         Página {{ temas.number }} de {{ temas.paginator.num_pages }}</a></li>
 
-                {% if tema.has_next %}
+                {% if temas.has_next %}
                 <li class="page-item"><a class="page-link" href="?page={{ temas.next_page_number }}">Sigiente</a></li>
                 <li class="page-item"><a class="page-link" href="?page={{ temas.paginator.num_pages }}">Ultimo</a></li>
                 {% endif %}

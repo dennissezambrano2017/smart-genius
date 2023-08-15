@@ -1,47 +1,68 @@
 {% extends 'profile.html' %}
 
-{% block title %}Contenido{% endblock %}
+{% block title %}Reporte{% endblock %}
 
 {% block content %}
 <h3>Reporte de estudiantes</h3>
 
-<div>
-  <div>
-    <form method="get" style="margin-top: 10px; padding: 10px; background-color: #f2f2f2;">
-      <label for="busqueda_estudiante" style="font-weight: bold;">Filtrar por nombre de usuario:</label>
-      <input type="text" required id="busqueda_estudiante" name="busqueda_estudiante" style="width: 200px; padding: 5px; margin-right: 10px;">
-      <button style="padding: 5px 10px; background-color: #007bff; color: white; border: none; cursor: pointer;">Buscar</button>
-    </form>
-  </div>
-  
+<div class="row pl-5 w-100">
+  <form method="get">
+    <div class="form-group justify-content-center">
+      <div class="col-sm-12">
+        <label for="busqueda_estudiante">Filtrar por nombre de usuario:</label>
+        <input type="text" required id="busqueda_estudiante" name="busqueda_estudiante"/>
+        <button class="btn btn-primary">
+          <i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+      </div>
+    </div>
+  </form>
 </div>
+<div class="row">
+  <div class="col-md-12 tabla-unidad mt-3">
+    <table class="table table-bordered">
+      <thead class="table-primary fixed-column-width">
+        <tr class="encabezados-tabla">
+          <th>Nº</th>
+          <th>Nombre de usuario</th>
+          <th>Tipo de Usuario</th>
+          <th>Estado del Usuario</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider ">
+        {% if page_obj %}
+        {% for usuario in page_obj %}
+        <tr class="cuerpo-tabla">
+          <td>{{ forloop.counter }}</td>
+          <td>{{ usuario.username }}</td>
+          <td>Estudiante</td>
+          <td>Activo</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <p>No se encontraron estudiantes registrados.</p>
+      </tbody>
+    </table>
+    <!-- Mostrar los enlaces de paginación -->
+    <div class="d-flex justify-content-center mt-3" class="page-link">
+      <div class="pagination">
+          {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+          {% endif %}
 
-{% if usuarios_registrados %}
-<table style="width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
-  <thead>
-    <tr style="background-color: #f2f2f2;">
-      <th style="padding: 10px; border: 1px solid #ccc;">Nº</th>
-      <th style="padding: 10px; border: 1px solid #ccc;">Nombre de usuario</th>
-      <th style="padding: 10px; border: 1px solid #ccc;">Tipo de Usuario</th>
-      <th style="padding: 10px; border: 1px solid #ccc;">Estado del Usuario</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for usuario in usuarios_registrados %}
-    <tr style="background-color: #ffffff;">
-      <td style="padding: 10px; border: 1px solid #ccc;">{{ forloop.counter }}</td>
-      <td style="padding: 10px; border: 1px solid #ccc;">{{ usuario.username }}</td>
-      <td style="padding: 10px; border: 1px solid #ccc;">Estudiante</td>
-      <td style="padding: 10px; border: 1px solid #ccc;">Activo</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No se encontraron estudiantes registrados.</p>
+          <li class="page-item"><a class="page-link">
+              Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</a></li>
+
+          {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Último</a></li>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endif %}
 
 
 
 {% endblock %}
-
