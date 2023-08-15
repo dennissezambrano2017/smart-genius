@@ -3,7 +3,7 @@ $(document).on('submit', '#formRgTema', function (e) {
 
     var nombre = $('#nombreTema').val();
     var contenido_id = $('#selectRegisterTema').val();
-    console.log(nombre + contenido_id)
+    //console.log(nombre + contenido_id)
     $.ajax({
         type: 'POST',
         url: '/create_tema/',

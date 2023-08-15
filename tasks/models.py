@@ -31,6 +31,8 @@ class Ejercicio(models.Model):
     enunciado = models.TextField()
     opciones = models.JSONField()  # Almacena las opciones de respuesta como un JSON
     respuesta_correcta = models.IntegerField()  # Respuesta correcta en el campo 'opciones'
+    def __str__(self):
+        return f"{self.enunciado}"
 
 def validate_pdf_extension(value):
     if not value.name.endswith('.pdf'):

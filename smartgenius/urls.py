@@ -53,6 +53,9 @@ urlpatterns = [
     path('edit_tema/', views.vwEditar_Tema, name='editar_tema'),
     path('eliminar_tema/', views.vwEliminarTema, name='eliminar_tema'),
 
+    # Sección material
+    path('marterial/', views.vwMaterial, name='material'),
+
     # Sección reportes
     path('inicio/create/', views.create_unidad, name='create_unidad'),
     path('reporte/', views.visualizar_reporte, name='visualizar_reporte'),
