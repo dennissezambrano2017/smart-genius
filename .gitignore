@@ -39,3 +39,4 @@ tasks/__pycache__/models.cpython-310.pyc
 tasks/__pycache__/views.cpython-310.pyc
 tasks/migrations/__pycache__/0002_alter_contenido_id_alter_material_id_and_more.cpython-310.pyc
 tasks/migrations/__pycache__/0003_ejercicio_puntuacion_and_more.cpython-310.pyc
+db.sqlite3
