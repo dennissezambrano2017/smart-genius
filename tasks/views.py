@@ -498,3 +498,9 @@ def vwContenidoAlumno(request):
     }
 
     return render(request, 'contenido_alumno.html', context)
+
+def vwPerfilAlumno(request):
+    return render(request, 'perfil_alumno.html')
+
+def vwAvanceAlumno(request):
+    return render(request, 'avance_alumno.html')
