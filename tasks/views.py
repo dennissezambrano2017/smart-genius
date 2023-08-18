@@ -504,9 +504,6 @@ def generar_unidad_pdf(request, unidad_id):
     buffer.close()
 
     response.write(pdf)
-<<<<<<< HEAD
-    return response
-=======
     return response
 
 def vwContenidoAlumno(request):
@@ -523,4 +520,3 @@ def vwPerfilAlumno(request):
 
 def vwAvanceAlumno(request):
     return render(request, 'avance_alumno.html')
->>>>>>> Alexander
