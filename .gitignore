@@ -28,3 +28,8 @@ tasks/migrations/__pycache__/0001_initial.cpython-310.pyc
 tasks/migrations/__pycache__/0002_alter_contenido_id_alter_material_id_and_more.cpython-310.pyc
 tasks/migrations/__pycache__/0003_ejercicio_puntuacion_and_more.cpython-310.pyc
 tasks/migrations/__pycache__/__init__.cpython-310.pyc
+smartgenius/__pycache__/__init__.cpython-310.pyc
+smartgenius/__pycache__/wsgi.cpython-310.pyc
+tasks/migrations/__pycache__/0001_initial.cpython-310.pyc
+tasks/migrations/__pycache__/__init__.cpython-310.pyc
+db.sqlite3
