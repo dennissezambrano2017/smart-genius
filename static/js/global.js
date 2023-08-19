@@ -9,12 +9,13 @@ function mostrarAlerta(mensaje, tipo,direccion) {
     }, 3000); // 3000 milisegundos (3 segundos) de espera antes de ocultar
 }
 
+
 // Capturar el clic en el botón "Cancelar"
 function restablecer() {
     console.log("Restableciendo campos...")
-    // Restablecer los valores de los campos a vacío
+    // Restablecer los valores de los campos a sus valores iniciales
     $("#nombre").val('');
-};
+}
 // Función para crear una llave de seguridad "crsftoken" y poder realizar una petición ajax
 function getCookie(name) {
     var cookieValue = null;
