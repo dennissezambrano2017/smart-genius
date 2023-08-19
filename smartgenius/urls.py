@@ -65,6 +65,19 @@ urlpatterns = [
     # Sección ejercicio
     path('create_ejercicio/', views.vwCreate_ejercicio, name='create_ejercicio'),
     path('eliminar_ejercicio/', views.vwEliminarEjercicio, name='eliminar_ejercicio'),
+
+     # Sección contenido - Alumno
+    path('contenido_alumno/', views.vwContenidoAlumno, name='contenido_alu'),
+    # Sección material
+    path('marterial/', views.vwMaterial, name='material'),
+    path('material/', views.vwMaterial, name='material'),
+
+    #Sección perfil - Alumno
+    path('perfil_alumno/', views.vwPerfilAlumno, name='perfil_alu'),
+
+    #Sección avance - Alumno
+    path('avance_alumno/', views.vwAvanceAlumno, name="avance_alu"),
+
     # Sección reportes
     path('inicio/create/', views.create_unidad, name='create_unidad'),
     path('reporte/', views.visualizar_reporte, name='visualizar_reporte'),
