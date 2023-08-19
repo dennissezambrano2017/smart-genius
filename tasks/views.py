@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect,get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from io import BytesIO
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet 
 from reportlab.lib import colors
 from django.core.files.base import ContentFile
 import json
@@ -19,7 +19,6 @@ import json
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
-
 
 def signup(request):
     if request.method == 'GET':
@@ -45,16 +44,6 @@ def signup(request):
             'error': 'Contraseña no coinciden'
         })
 
-
-def profile(request):
-    return render(request, 'profile.html')
-
-
-def signout(request):
-    logout(request)
-    return redirect('home')
-
-
 def signin(request):
     error = None
     if request.method == 'POST':
@@ -78,11 +67,19 @@ def signin(request):
         'error': error,
     })
 
+@login_required
+def profile(request):
+    return render(request, 'profile.html')
 
+@login_required
+def signout(request):
+    logout(request)
+    return redirect('home')
+
+@login_required
 def inicio(request):
     return render(request, 'inicio.html')
 # Vista que renderiza la plantilla que lista los unidades registrados
-
 
 @login_required
 def vwUnidad(request):
@@ -287,7 +284,7 @@ def vwEliminarContenido(request):
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error al eliminar el contenido, por favor intente nuevamente.'})
 
-
+@login_required
 def vwTemas(request):
     tema_list = Tema.objects.all()  # Obtener todos los registros de unidades
 
@@ -307,7 +304,7 @@ def vwTemas(request):
 
     return render(request, 'temas.html', {'temas': temas, 'btnUnidad': 'activado'})
 
-
+@login_required
 def vwObtener_Contenido(request):
     contenido = Contenido.objects.all().values('id', 'nombre')
     return JsonResponse(list(contenido), safe=False)
@@ -329,7 +326,7 @@ def vwCreate_tema(request):
             return JsonResponse({'result': 'success', 'message': 'Tema registrado exitosamente.'})
         except Exception as e:
             return JsonResponse({'result': 'error', 'message': 'Error en registrar contenido'}, status=400)
-
+@login_required
 def vwGetContenido_Tema(request):
     if request.method == 'GET':
         try:
@@ -348,7 +345,7 @@ def vwGetContenido_Tema(request):
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error en buscar la información del contenido'})
 
-
+@login_required
 def vwEditar_Tema(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombreTemaModi')
@@ -380,9 +377,9 @@ def vwEliminarTema(request):
             return JsonResponse({'result': '1', 'message': 'Se elimino correctamente'})
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error al modificar la unidad, por favor intente nuevamente.'})
-
+@login_required
 def vwMaterial(request):
-    material_list = Material.objects.all().order_by('enlace')  # Obtener todos los registros de unidades
+    material_list = Material.objects.all().order_by('tema')  # Obtener todos los registros de unidades
 
     # Configuración del paginador para mostrar 5 unidades por página
     paginator = Paginator(material_list, 5)
@@ -397,9 +394,11 @@ def vwMaterial(request):
     except EmptyPage:
         # Si el número de página está fuera de rango, mostrar la última página
         material = paginator.page(paginator.num_pages)
+    # Encontrar los materiales que no tienen ejercicios relacionados
+    materials_without_exercises = Material.objects.filter(ejercicio__isnull=True)
 
-    return render(request, 'material.html', {'material': material, 'btnMaterial': 'activado'})
-
+    return render(request, 'material.html', {'material': material, 'materials_without_exercises': materials_without_exercises})
+@login_required
 def vwGetMaterial_Tema(request):
     if request.method == 'GET':
         try:
@@ -423,7 +422,7 @@ def vwGetMaterial_Tema(request):
             return JsonResponse(data)
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error en buscar la información del contenido'})
-        
+@login_required       
 def vwGetMaterial_ejercicio(request):
     if request.method == 'GET':
         try:
@@ -440,12 +439,13 @@ def vwGetMaterial_ejercicio(request):
             return JsonResponse(data)
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error en buscar la información del contenido'})
-
+@login_required
 def vwObtener_Temas(request):
     temas_registrados = Material.objects.values_list('tema__id', flat=True)
     print(temas_registrados)
     temas_no_registrados = Tema.objects.exclude(id__in=temas_registrados).values('id', 'nombre')
     return JsonResponse(list(temas_no_registrados), safe=False)
+@login_required
 def vwCreate_material(request):
     if request.method == 'POST':
         enlace = request.POST.get('enlace')
@@ -463,7 +463,7 @@ def vwCreate_material(request):
             return JsonResponse({'result': 'success', 'message': 'Tema registrado exitosamente.'})
         except Exception as e:
             return JsonResponse({'result': 'error', 'message': 'Error en registrar contenido'}, status=400)
-
+@login_required
 def vwCreate_ejercicio(request):
     if request.method == 'POST':
         
@@ -483,7 +483,7 @@ def vwCreate_ejercicio(request):
             return JsonResponse({'result': 'success', 'message': 'Ejercicio registrado exitosamente.'})
         except Exception as e:
             return JsonResponse({'result': 'error', 'message': 'Error en registrar el ejercicio'}, status=400)
-    
+@login_required    
 def vwEliminarEjercicio(request):
     if request.method == 'POST':
         try:
@@ -492,7 +492,16 @@ def vwEliminarEjercicio(request):
             return JsonResponse({'result': '1', 'message': 'Se elimino correctamente'})
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error al modificar la unidad, por favor intente nuevamente.'})
-
+@login_required
+def vwEliminarMaterial(request):
+    if request.method == 'POST':
+        try:
+            unMaterial = Material.objects.get(pk=request.POST['idMaterial'])
+            unMaterial.delete()
+            return JsonResponse({'result': '1', 'message': 'Se elimino correctamente'})
+        except Exception as e:
+            return JsonResponse({'result': '0', 'message': 'Error al modificar la unidad, por favor intente nuevamente.'})
+@login_required
 def visualizar_reporte(request):
     busqueda_estudiante = request.GET.get('busqueda_estudiante')
     
@@ -509,7 +518,7 @@ def visualizar_reporte(request):
     
     return render(request, 'reporte.html', {'page_obj': page_obj})
 
-
+@login_required
 def visualizar_contenido(request):
     unidades = Unidad.objects.all()
     contenidos = Contenido.objects.select_related('unidad').all()
@@ -527,7 +536,7 @@ def visualizar_contenido(request):
     print(materiales)
     return render(request, 'contenido_material.html', context)
 
-
+@login_required
 def generar_unidad_pdf(request, unidad_id):
     unidad = Unidad.objects.get(pk=unidad_id)
     contenidos = Contenido.objects.filter(unidad=unidad)
@@ -597,3 +606,6 @@ def generar_unidad_pdf(request, unidad_id):
 
     response.write(pdf)
     return response
+
+
+

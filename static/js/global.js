@@ -9,6 +9,7 @@ function mostrarAlerta(mensaje, tipo,direccion) {
     }, 3000); // 3000 milisegundos (3 segundos) de espera antes de ocultar
 }
 
+
 // Capturar el clic en el botón "Cancelar"
 function restablecer() {
     console.log("Restableciendo campos...")

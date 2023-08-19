@@ -20,6 +20,7 @@ from tasks import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
@@ -59,6 +60,7 @@ urlpatterns = [
     path('ejercicio_material/',views.vwGetMaterial_ejercicio, name='ejercicio_material'),
     path('obtener_temas/', views.vwObtener_Temas, name='obtener_temas'),
     path('create_material/', views.vwCreate_material, name='create_material'),
+    path('eliminar_material/', views.vwEliminarMaterial, name='eliminar_material'),
 
     # Sección ejercicio
     path('create_ejercicio/', views.vwCreate_ejercicio, name='create_ejercicio'),
@@ -69,6 +71,7 @@ urlpatterns = [
     path('aula/', views.visualizar_contenido, name='aula_documento'),
     path('imprimir_unidad/<int:unidad_id>/', views.generar_unidad_pdf, name='imprimir_unidad'),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
