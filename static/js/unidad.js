@@ -53,9 +53,7 @@ $(".btnObtenerUnidad").click(function () {
 
 // sobrescritura del submit del formulario modificar unidad
 $(document).on('submit', '#formModUnidad', function (e) {
-    console.log('si');
     var data = new FormData(this);
-    console.log('data');
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -79,7 +77,6 @@ $(document).on('submit', '#formModUnidad', function (e) {
             // Actualizar la fila de la tabla con los nuevos datos
             var idUnidad = $("#txtIdUnidad").val(); // Obtiene el ID de la unidad del formulario
             var nuevoNombre = $("#txtEdUnidadNombre").val(); // Obtiene el nuevo nombre de la unidad del formulario
-            console.log($("#txtEdUnidadNombre").val())
             actualizarFilaTabla(idUnidad, nuevoNombre);
 
         } else {
@@ -105,7 +102,6 @@ function confi_delet_unidad(id)
 }
 // función para eliminar un unidad luego de haberse confirmado la acción
 function delete_unidad(){
-    console.log(idElim)
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         url: '/eliminar_unidad/', 

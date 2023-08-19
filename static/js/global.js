@@ -12,9 +12,9 @@ function mostrarAlerta(mensaje, tipo,direccion) {
 // Capturar el clic en el botón "Cancelar"
 function restablecer() {
     console.log("Restableciendo campos...")
-    // Restablecer los valores de los campos a vacío
+    // Restablecer los valores de los campos a sus valores iniciales
     $("#nombre").val('');
-};
+}
 // Función para crear una llave de seguridad "crsftoken" y poder realizar una petición ajax
 function getCookie(name) {
     var cookieValue = null;

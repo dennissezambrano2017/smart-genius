@@ -26,14 +26,6 @@ class Tema(models.Model):
     def __str__(self):
         return self.nombre
 
-class Ejercicio(models.Model):
-    tema = models.ForeignKey(Tema, on_delete=models.CASCADE)
-    enunciado = models.TextField()
-    opciones = models.JSONField()  # Almacena las opciones de respuesta como un JSON
-    respuesta_correcta = models.IntegerField()  # Respuesta correcta en el campo 'opciones'
-    def __str__(self):
-        return f"{self.enunciado}"
-
 def validate_pdf_extension(value):
     if not value.name.endswith('.pdf'):
         raise ValidationError("El archivo debe ser un PDF.")
@@ -47,11 +39,17 @@ class Material(models.Model):
     archivo_pdf = models.FileField(upload_to='pdfs/', validators=[validate_pdf_extension, validate_pdf_size],
                                    default='default.pdf')
     tema = models.ForeignKey(Tema, on_delete=models.CASCADE)  # Relación de uno a muchos con Tema
-    ejercicios = models.ManyToManyField(Ejercicio)  # Relación muchos a muchos con Ejercicio
 
     def __str__(self):
-        return f"Material - {self.enlace}"
+        return self.tema.nombre
 
+class Ejercicio(models.Model):
+    enunciado = models.TextField()
+    opciones = models.JSONField()  # Almacena las opciones de respuesta como un JSON
+    respuesta_correcta = models.IntegerField()  # Respuesta correcta en el campo 'opciones'
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, default=1)  # Relación con Material
+    def __str__(self):
+        return f"{self.enunciado}"
 
 class Puntuacion(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)

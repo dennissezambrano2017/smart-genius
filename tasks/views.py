@@ -13,7 +13,8 @@ from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-
+from django.core.files.base import ContentFile
+import json
 
 # Create your views here.
 def home(request):
@@ -329,26 +330,6 @@ def vwCreate_tema(request):
         except Exception as e:
             return JsonResponse({'result': 'error', 'message': 'Error en registrar contenido'}, status=400)
 
-
-def vwMaterial(request):
-    material_list = Material.objects.all()  # Obtener todos los registros de unidades
-
-    # Configuración del paginador para mostrar 5 unidades por página
-    paginator = Paginator(material_list, 5)
-
-    page = request.GET.get('page')  # Obtener el número de página de la URL
-
-    try:
-        temas = paginator.page(page)
-    except PageNotAnInteger:
-        # Si el número de página no es un número, mostrar la primera página
-        temas = paginator.page(1)
-    except EmptyPage:
-        # Si el número de página está fuera de rango, mostrar la última página
-        temas = paginator.page(paginator.num_pages)
-
-    return render(request, 'material.html', {'material': temas, 'btnMaterial': 'activado'})
-
 def vwGetContenido_Tema(request):
     if request.method == 'GET':
         try:
@@ -400,6 +381,117 @@ def vwEliminarTema(request):
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error al modificar la unidad, por favor intente nuevamente.'})
 
+def vwMaterial(request):
+    material_list = Material.objects.all().order_by('enlace')  # Obtener todos los registros de unidades
+
+    # Configuración del paginador para mostrar 5 unidades por página
+    paginator = Paginator(material_list, 5)
+
+    page = request.GET.get('page')  # Obtener el número de página de la URL
+
+    try:
+        material = paginator.page(page)
+    except PageNotAnInteger:
+        # Si el número de página no es un número, mostrar la primera página
+        material = paginator.page(1)
+    except EmptyPage:
+        # Si el número de página está fuera de rango, mostrar la última página
+        material = paginator.page(paginator.num_pages)
+
+    return render(request, 'material.html', {'material': material, 'btnMaterial': 'activado'})
+
+def vwGetMaterial_Tema(request):
+    if request.method == 'GET':
+        try:
+            material_id = request.GET.get('idMaterial');
+            material= Material.objects.get(pk=material_id);
+
+            temas = Tema.objects.filter(material=material)
+            temas_data = [{'id': tema.id, 'nombre': tema.nombre} for tema in temas]
+
+            ejercicios = Ejercicio.objects.filter(material=material)
+            ejercicio_data = [{'id': ejercicio.id, 'enunciado': ejercicio.enunciado} for ejercicio in ejercicios]
+            data = {
+                'result': '1',
+                'material_id': material_id,
+                'enlace': material.enlace,
+                'pdf': material.archivo_pdf.url,
+                'temas': temas_data,
+                'ejercicios': ejercicio_data,
+            }
+            print(data)
+            return JsonResponse(data)
+        except Exception as e:
+            return JsonResponse({'result': '0', 'message': 'Error en buscar la información del contenido'})
+        
+def vwGetMaterial_ejercicio(request):
+    if request.method == 'GET':
+        try:
+            ejercicio_id = request.GET.get('ejercicioId');
+            ejercicio = Ejercicio.objects.get(pk=ejercicio_id);  # Usa el modelo Ejercicio
+            print(ejercicio_id)
+            data = {
+                'result': '1',
+                'enunciado': ejercicio.enunciado,
+                'opciones': ejercicio.opciones,
+                'resp_correct': ejercicio.respuesta_correcta
+            }
+            print(data)
+            return JsonResponse(data)
+        except Exception as e:
+            return JsonResponse({'result': '0', 'message': 'Error en buscar la información del contenido'})
+
+def vwObtener_Temas(request):
+    temas_registrados = Material.objects.values_list('tema__id', flat=True)
+    print(temas_registrados)
+    temas_no_registrados = Tema.objects.exclude(id__in=temas_registrados).values('id', 'nombre')
+    return JsonResponse(list(temas_no_registrados), safe=False)
+def vwCreate_material(request):
+    if request.method == 'POST':
+        enlace = request.POST.get('enlace')
+        archivo = request.FILES.get('archivo_pdf')
+        tema_id = request.POST.get('tema_id')
+        if not enlace or not archivo or not tema_id:
+            return JsonResponse({'result': 'error', 'message': 'Por favor ingrese todo los datos'})
+        try:
+            print('si')
+            tema = Tema.objects.get(pk=tema_id)
+            # Guardar el archivo en el modelo Material
+            material = Material(enlace=enlace, tema=tema)
+            material.archivo_pdf.save(archivo.name, ContentFile(archivo.read()), save=True)
+
+            return JsonResponse({'result': 'success', 'message': 'Tema registrado exitosamente.'})
+        except Exception as e:
+            return JsonResponse({'result': 'error', 'message': 'Error en registrar contenido'}, status=400)
+
+def vwCreate_ejercicio(request):
+    if request.method == 'POST':
+        
+        enunciado = request.POST.get('enunciado')
+        opciones_json = request.POST.get('opciones')
+        respuesta = request.POST.get('respuesta')
+        material_id = request.POST.get('material_id')
+        if not enunciado or not opciones_json or not respuesta:
+            return JsonResponse({'result': 'error', 'message': 'Por favor ingrese los datos faltantes de la pregunta'})
+        try:
+            print(enunciado,opciones_json,respuesta,material_id)
+            material = Material.objects.get(pk=material_id)
+            opciones = json.loads(opciones_json)  # Deserializar la cadena JSON a un array Python
+
+            ejercicio = Ejercicio(enunciado=enunciado, opciones=opciones, respuesta_correcta=respuesta, material=material)
+            ejercicio.save()
+            return JsonResponse({'result': 'success', 'message': 'Ejercicio registrado exitosamente.'})
+        except Exception as e:
+            return JsonResponse({'result': 'error', 'message': 'Error en registrar el ejercicio'}, status=400)
+    
+def vwEliminarEjercicio(request):
+    if request.method == 'POST':
+        try:
+            unEjer = Ejercicio.objects.get(pk=request.POST['idEjercicio'])
+            unEjer.delete()
+            return JsonResponse({'result': '1', 'message': 'Se elimino correctamente'})
+        except Exception as e:
+            return JsonResponse({'result': '0', 'message': 'Error al modificar la unidad, por favor intente nuevamente.'})
 
 def visualizar_reporte(request):
     busqueda_estudiante = request.GET.get('busqueda_estudiante')
@@ -423,8 +515,8 @@ def visualizar_contenido(request):
     contenidos = Contenido.objects.select_related('unidad').all()
     temas = Tema.objects.select_related('contenido__unidad').all()
     materiales = Material.objects.prefetch_related('tema').all()
-    ejercicios = Ejercicio.objects.select_related('tema').all()
-
+    ejercicios = Ejercicio.objects.select_related('material').all()
+    print(unidades,contenidos,temas,materiales,ejercicios)    
     context = {
         'unidades': unidades,
         'contenidos': contenidos,
@@ -477,9 +569,9 @@ def generar_unidad_pdf(request, unidad_id):
             material = Material.objects.filter(tema=tema).first()
             if material:
                 enlace_data = [f"Enlace: {material.enlace}"]
-                pdf_data = [f"Archivo PDF: {material.archivo_pdf}"]
+                pdf_data = [f"Archivo PDF: {material.archivo_pdf.url}"]
                 ejercicios_data = ["Ejercicios:"]
-                ejercicios = Ejercicio.objects.filter(tema=tema)
+                ejercicios = Ejercicio.objects.filter(material=material)
                 for ejercicio in ejercicios:
                     ejercicios_data.append(f"- {ejercicio.enunciado}")
                 
