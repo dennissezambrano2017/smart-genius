@@ -17,9 +17,8 @@
 /*form Home*/
 .seccion_2 {
     width: 100%;
-    height: 80vb;
+    height: 80vh;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
 }
@@ -106,7 +105,7 @@
     text-align: justify;
 }
 
-.box_footer h2 {
+.box_footer h4 {
     margin-bottom: 30px;
     color: #343434;
     font-weight: 700;
@@ -353,6 +352,12 @@
         padding: 20px;
         border-top-right-radius: 0px;
         border-bottom-left-radius: 20px;
+    }
+}
+/* Aplicar estilo específico para tamaños de pantalla pequeños */
+@media (max-width: 768px) {
+    .seccion_2 {
+        flex-direction: column-reverse; /* Cambio de dirección en tamaños pequeños */
     }
 }
 

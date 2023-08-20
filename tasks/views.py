@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate,update_session_auth_hash
 from django.db import IntegrityError
 from .models import Unidad, Contenido, Material, Tema,Ejercicio
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -14,6 +14,8 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Table, Table
 from reportlab.lib.styles import getSampleStyleSheet 
 from reportlab.lib import colors
 from django.core.files.base import ContentFile
+from django.views.decorators.http import require_POST
+from django.core.exceptions import PermissionDenied
 import json
 
 # Create your views here.
@@ -66,6 +68,71 @@ def signin(request):
         'form': form,
         'error': error,
     })
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        new_password = request.POST['contraseña']
+        user = request.user
+
+        user.set_password(new_password)
+        user.save()
+        update_session_auth_hash(request, user)  # Actualiza la sesión de autenticación
+
+        return JsonResponse({'result': '1', 'message': 'Cambio de contraseña correctamente'})
+
+    return JsonResponse({'result': '0', 'message': 'Error al modificar la contraseña, por favor intente nuevamente.'})
+
+@login_required
+def edit_usuario(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            username_id=request.POST.get('usuario_id')
+            nuevo_username  = request.POST.get('user')
+            nombres = request.POST.get('nombres')
+            apellidos = request.POST.get('apellidos')
+            email = request.POST.get('email')
+            try:
+                usuario = get_object_or_404(User, username=username_id)
+                print(username_id,nuevo_username,nombres,apellidos,email)
+                # Verifica si el usuario que se quiere editar es el mismo que el usuario autenticado
+                if usuario == request.user:
+                    # Comprobamos si el nuevo username está disponible
+                    if nuevo_username != usuario.username and User.objects.filter(username=nuevo_username).exists():
+                        return JsonResponse({'result': '0', 'message': 'El nombre de usuario ya está en uso.'})
+
+                    # Si el nuevo username es diferente, actualizamos el username
+                    if email != usuario.username:
+                        usuario.username = email
+                    usuario.first_name = nombres
+                    usuario.last_name = apellidos
+                    usuario.email = nuevo_username
+                    usuario.save()
+                    return JsonResponse({'result': '1'})
+                else:
+                    raise PermissionDenied("No tienes permisos para editar este usuario.")
+            except Exception as e:
+                return JsonResponse({'result': '0', 'message': str(e)})
+        else:
+            raise PermissionDenied("Debes estar autenticado para editar un usuario.")
+@login_required
+def get_user_data(request):
+    if request.method == "GET" and "username" in request.GET:
+        username = request.GET["username"]
+        
+        try:
+            user = User.objects.get(username=username)
+            user_data = {
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email
+            }
+            return JsonResponse(user_data)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado.'}, status=404)
+    else:
+        return JsonResponse({'error': 'Petición inválida.'}, status=400)
 
 @login_required
 def profile(request):
