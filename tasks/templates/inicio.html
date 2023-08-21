@@ -1,5 +1,62 @@
 {% extends 'profile.html' %}
 {% block title %}Inicio{% endblock %}
 {% block content %}
-<h2 class="dash-title">Inicio</h2>
+<di class="container by-5">
+    {% csrf_token %}
+    <h4>Bienvenid@ a Smart Genius {% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</h4>
+
+    
+    <!-- Barra de progreso circular -->
+    <div class="circle-progress">
+        {% if user.is_authenticated %}
+        {% if perms.tasks.add_unidad %}
+        <div class="circle-container">
+            <div class="circle">
+                <i class="fas fa-clipboard-check circle-icon"></i>
+            </div>
+            <div class="circle-label">Unidades</div>
+        </div>
+        <div class="circle-container">
+            <div class="circle">
+                <i class="fas fa-book-open circle-icon"></i>
+            </div>
+            <div class="circle-label">Contenidos</div>
+        </div>
+        <div class="circle-container">
+            <div class="circle">
+                <i class="fas fa-file-alt circle-icon"></i>
+            </div>
+            <div class="circle-label">Materiales</div>
+        </div>
+        <div class="circle-container">
+            <div class="circle">
+                <i class="fas fa-lightbulb circle-icon"></i>
+            </div>
+            <div class="circle-label">Temas</div>
+        </div>
+        {% else %}
+        <div class="circle-container">
+            <div class="circle">
+                <i class="fa-solid fa-book-open circle-icon"></i>
+            </div>
+            <div class="circle-label">Contenido</div>
+        </div>
+        <div class="circle-container">
+            <div class="circle">
+                <i class="fa-solid fa-user circle-icon"></i>
+            </div>
+            <div class="circle-label">Perfil</div>
+        </div>
+        <div class="circle-container">
+            <div class="circle">
+                <i class="fa-solid fa-layer-group circle-icon"></i>
+            </div>
+            <div class="circle-label">Mi Avance</div>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+
+
+</div>
 {% endblock %}

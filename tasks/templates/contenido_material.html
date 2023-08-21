@@ -9,43 +9,73 @@
 
 
 {% for unidad in unidades %}
-<div style="border: 1px solid #ddd; margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);">
-  <h2 style="font-size: 1.5em; margin-bottom: 10px;">Unidad: {{ unidad.nombre }}</h2>
-  <a href="{% url 'imprimir_unidad' unidad.id %}" target="_blank" style="text-decoration: none; background-color: #007bff; color: #fff; padding: 5px 10px; border-radius: 5px;margin-left: 57em;">Imprimir Unidad</a>
+<div class="caja-contenido">
+  <h2>Unidad: {{ unidad.nombre }}</h2>
+  <div class="btnDescarga">
+
+    <a class="btnImprimir" href="{% url 'imprimir_unidad' unidad.id %}" target="_blank">
+      <i class="fa-solid fa-file-arrow-down"></i>
+      Descargar Unidad</a>
+  </div>
+
 
   {% for contenido in contenidos %}
-    {% if contenido.unidad == unidad %}
-    <div style="border: 1px solid #ddd; margin: 15px 0; padding: 15px; background-color: #fff; border-radius: 8px;">
-      <h3 style="font-size: 1.2em; margin-bottom: 10px;">Contenido: {{ contenido.nombre }}</h3>
-      <div style="margin: 15px 0; padding: 10px; background-color: #f5f5f5; border-radius: 8px;">
-        <p style="font-size: 0.9em;">➣ Descripción del Contenido: {{ contenido.descripcion }}</p>
-      </div>
-      
+  {% if contenido.unidad == unidad %}
+  <div class="caja-contenido-adentro">
+    <h3>Contenido: {{ contenido.nombre }}</h3>
+    <div class="caja-description">
+      <p>➣ Descripción del Contenido: {{ contenido.descripcion }}</p>
       {% for tema in temas %}
-        {% if tema.contenido.unidad == unidad and tema.contenido == contenido %}
-        <div style="border: 1px solid #e5e5e5; margin: 15px 0; padding: 15px; background-color: #f0f0f0; border-radius: 8px;">
-          <h4 style="font-size: 1.1em; margin-bottom: 10px;">Tema: {{ tema.nombre }}</h4>
-          <div style="margin: 15px 0; padding: 10px; background-color: #ffffff; border-radius: 8px;">
-            <h5 style="font-size: 1em; margin-bottom: 5px;">Recursos planificados</h5>
-            <ul style="list-style-type: disc; margin-left: 20px; font-size: 0.9em;">
-            {% for material in materiales %}
-              {% for material_tema in material.temas.all %}
-                {% if material_tema == tema %}
-                    <p>{{ material.contenido_material }}</p>
-                    <li><a href="{{ material.enlace }}" target="_blank">{{ material.tipo }}: {{ material.enlace }}</a></li>
+      {% if tema.contenido == contenido %}
+      <div class="caja-tema">
+        <h4>Tema: {{ tema.nombre }}</h4>
+        <div class="caja-recursos">
+          <h5>Recursos planificados</h5>
+          <h5>Enlace</h5>
+          <ul>
 
-                {% endif %}
-              {% endfor %}
+            {% for material in materiales %}
+            {% if material.tema == tema %}
+            <li>
+              {% if material.enlace %}
+              <a href="{{ material.enlace }}" target="_blank">{{ material.enlace }}</a>
+              {% endif %}
+            </li>
+            {% endif %}
             {% endfor %}
-            </ul>
-          </div>
+          </ul>
+          <h5>Archivo Pdf</h5>
+          <ul>
+            {% for material in materiales %}
+            {% if material.tema == tema %}
+            <li>
+              {% if material.archivo_pdf %}
+              <a href="{{ material.archivo_pdf.url }}" target="_blank">Ver PDF</a>
+              {% endif %}
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+          <h5>Ejercicios</h5>
+          <ul>
+            {% for ejercicio in ejercicios %}
+            {% if ejercicio.material.tema == tema %}
+            <li>
+              {% if ejercicio.enunciado %}
+              {{ ejercicio.enunciado }}
+              {% endif %}
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
         </div>
-        {% endif %}
+      </div>
+      {% endif %}
       {% endfor %}
     </div>
     {% endif %}
+    {% endfor %}
+  </div>
   {% endfor %}
-</div>
-{% endfor %}
 
-{% endblock %}
+  {% endblock %}

@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from tasks import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,10 +28,66 @@ urlpatterns = [
     path('profile/', views.profile, name='perfil'),
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
-    path('contenido/', views.contenido, name='contenido'),
     path('inicio/', views.inicio, name='inicio'),
-     path('inicio/create/', views.create_unidad, name='create_unidad'),
-     path('reporte/', views.visualizar_reporte, name='visualizar_reporte'),
-     path('aula/', views.visualizar_contenido, name='aula_documento'),
-     path('imprimir_unidad/<int:unidad_id>/', views.generar_unidad_pdf, name='imprimir_unidad'),
+    path('cambiar_contrasena/', views.change_password, name='cambiar_contrasena'),
+    path('get_user_data/', views.get_user_data, name='get_user_data'),
+    path('edit_perfil/', views.edit_usuario, name='edit_perfil'),
+
+    # Sección unidad
+    path('unidad/', views.vwUnidad, name='unidad'),
+    path('create_unidad/', views.create_unidad, name='create_unidad'),
+    path('edit_unidad/', views.edit_unidad, name='editar_unidad'),
+    path('obtener_unidad/', views.vwGetUnidad, name='obtener_unidad'),
+    path('buscar_unidad/', views.vwBuscarUnidad, name='buscar_unidad'),
+    path('eliminar_unidad/', views.vwEliminarUnidad, name='eliminar_unidad'),
+
+    # Sección contenido
+    path('contenido/', views.vwcontenido, name='contenido'),
+    path('obtener_unidades/', views.vwObtener_Unidad, name='unidad_contenido'),
+    path('create_contenido/', views.create_contenido, name='create_contenido'),
+    path('unidad_seleccionada/', views.vwGetUnidad_Contenido, name='unidad_seleccionada'),
+    path('edit_contenido/', views.vwEditar_Contenido, name='editar_contenido'),
+    path('eliminar_contenido/', views.vwEliminarContenido, name='eliminar_contenido'),
+
+    # Sección contenido
+    path('temas/', views.vwTemas, name='temas'),
+    path('obtener_contenido/', views.vwObtener_Contenido, name='contenido_tema'),
+    path('create_tema/', views.vwCreate_tema, name='create_tema'),
+    path('contenido_seleccionada/', views.vwGetContenido_Tema, name='contenido_seleccionada'),
+    path('edit_tema/', views.vwEditar_Tema, name='editar_tema'),
+    path('eliminar_tema/', views.vwEliminarTema, name='eliminar_tema'),
+
+    # Sección material
+    path('marterial/', views.vwMaterial, name='material'),
+    path('material_seleccionada/', views.vwGetMaterial_Tema, name='material_seleccionada'),
+    path('ejercicio_material/',views.vwGetMaterial_ejercicio, name='ejercicio_material'),
+    path('obtener_temas/', views.vwObtener_Temas, name='obtener_temas'),
+    path('create_material/', views.vwCreate_material, name='create_material'),
+    path('eliminar_material/', views.vwEliminarMaterial, name='eliminar_material'),
+
+    # Sección ejercicio
+    path('create_ejercicio/', views.vwCreate_ejercicio, name='create_ejercicio'),
+    path('eliminar_ejercicio/', views.vwEliminarEjercicio, name='eliminar_ejercicio'),
+
+     # Sección contenido - Alumno
+    path('contenido_alumno/', views.vwContenidoAlumno, name='contenido_alu'),
+    # Sección material
+    path('marterial/', views.vwMaterial, name='material'),
+    path('material/', views.vwMaterial, name='material'),
+
+    #Sección perfil - Alumno
+    path('perfil_alumno/', views.vwPerfilAlumno, name='perfil_alu'),
+
+    #Sección avance - Alumno
+    path('avance_alumno/', views.vwAvanceAlumno, name="avance_alu"),
+
+    # Sección reportes
+    path('inicio/create/', views.create_unidad, name='create_unidad'),
+    path('reporte/', views.visualizar_reporte, name='visualizar_reporte'),
+    path('aula/', views.visualizar_contenido, name='aula_documento'),
+    path('imprimir_unidad/<int:unidad_id>/', views.generar_unidad_pdf, name='imprimir_unidad'),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
