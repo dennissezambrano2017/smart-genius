@@ -515,6 +515,22 @@ def vwContenidoAlumno(request):
 
     return render(request, 'contenido_alumno.html', context)
 
+def vwTemaAlumno(request):
+    id = request.POST.get('id')
+    temas = Tema.objects.filter(contenido_id=id)
+    materiales = Material.objects.prefetch_related('tema').all()
+    ejercicios = Ejercicio.objects.select_related('tema').all()
+
+    context = {
+        'id_contenido': id,
+        'temas': temas,
+        'materiales': materiales,
+        'ejercicios': ejercicios,
+    }
+    print(temas)
+
+    return render(request, 'tema_alumno.html', context)
+
 def vwPerfilAlumno(request):
     return render(request, 'perfil_alumno.html')
 

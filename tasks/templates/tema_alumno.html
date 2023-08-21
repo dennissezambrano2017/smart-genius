@@ -1,0 +1,116 @@
+{% extends 'profile.html' %}
+{% load static %}
+{% block title %}Contenido{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style-tema-alu.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div>
+    <span class="fw-bold fs-4" style="color: #fdb128">TEMAS</span>
+</div>
+
+{% comment %} Esquema de los botones {% endcomment %}
+{% comment %} {% if temas %}
+<div class="btn-group d-flex flex-wrap gap-2 mt-3" role="group" aria-label="Basic radio toggle button group">
+    {% for tema in temas %}
+    <button class="btn btn-outline-primary rounded-2 btn-tema" name="btn-{{tema.id}}" id="{{tema.id}}">
+        <span>{{tema.nombre}}</span>
+    </button>
+    {% endfor %}
+</div> {% endcomment %}
+
+{% if temas %}
+<div class="btn-group mt-2">
+    <button type="button" class="btn-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <span>Seleccione un tema</span>
+    </button>
+    <ul class="dropdown-menu">
+        {% for tema in temas %}
+        <li><a class="dropdown-item btn-tema" id="btn-{{tema.id}}" href="#"><span>{{tema.nombre}}</span></a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% comment %} Estructura del contenido por temas {% endcomment %}
+<div class="rounded mt-4 border-gray h-auto">
+    <div class="row m-3">
+        <div class="list-group col-3">
+            <a href="#" class="enlace list-group-item list-group-item-action active">
+                <span>Recursos</span>
+            </a>
+            <a href="#" class="enlace list-group-item list-group-item-action">
+                <span>Contenido</span>
+            </a>
+            <a href="#" class="enlace list-group-item list-group-item-action">
+                <span>Práctica</span>
+            </a>
+            <div class="d-flex justify-content-center mt-3">
+                <img
+                     style="width: 150px; height: 150px;" 
+                     src="{% static '../static/img/notebook-class.svg' %}">
+            </div>
+        </div>
+        <div class="border-gray col-9 rounded">
+            {% comment %} Visor PDF {% endcomment %}
+            {% comment %} <iframe class="w-100 h-100 rounded" 
+                    src="https://www3.gobiernodecanarias.org/medusa/edublog/ceiparganaalta/wp-content/uploads/sites/87/2020/04/21-historia-del-comic.pdf" 
+                    frameborder="0"></iframe> {% endcomment %}
+
+            {% comment %} Reproductor de videos {% endcomment %}
+            <div id="carouselVideo" class="carousel slide h-100">
+                <div class="carousel-indicators bg-black">
+                    <button type="button" data-bs-target="#carouselVideo" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselVideo" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselVideo" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner d-flex justify-content-center align-items-center">
+                    <div class="carousel-item active">
+                        <h1>Hola-1</h1>
+                    </div>
+                    <div class="carousel-item">
+                        <h1>Hola-2</h1>
+                    </div>
+                    <div class="carousel-item">
+                        <h1>Hola-3</h1>
+                    </div>
+                    {% comment %} <div class="carousel-item active">
+                        <video src="https://www.youtube.com/watch?v=Fi7JQqzxUBE" width="300" height="300"></video>
+                    </div>
+                    <div class="carousel-item">
+                        <video src="https://www.youtube.com/watch?v=9C6Y0NzuIis" width="300" height="300"></video>
+                    </div>
+                    <div class="carousel-item">
+                        <video src="https://www.youtube.com/watch?v=A_RenJKflQY" width="300" height="300"></video>
+                    </div> {% endcomment %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselVideo" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-black" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselVideo" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-black" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="ilustracion d-flex justify-content-center align-items-center mt-5">
+    <img style="width: 200px; height: 200px;" 
+        src="{% static '../static/img/not-data.svg' %}">
+</div>
+<p class="text-center mt-3 fw-bold fs-6" style="color: #fdb128">
+    No se encontraron resultados.
+</p>
+{% endif %}
+
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/tema_alumno.js'%}"></script>
+{% endblock js %}

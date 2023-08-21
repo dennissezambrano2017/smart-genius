@@ -55,13 +55,9 @@ urlpatterns = [
 
     # Sección contenido - Alumno
     path('contenido_alumno/', views.vwContenidoAlumno, name='contenido_alu'),
-    # Sección material
+    path('contenido_alumno/temas/', views.vwTemaAlumno, name='temas_alu'),
     path('material/', views.vwMaterial, name='material'),
-
-    #Sección perfil - Alumno
     path('perfil_alumno/', views.vwPerfilAlumno, name='perfil_alu'),
-
-    #Sección avance - Alumno
     path('avance_alumno/', views.vwAvanceAlumno, name="avance_alu"),
     
     # Sección reportes

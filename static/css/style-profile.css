@@ -305,6 +305,7 @@ main {
 .cuerpo-tabal{
     text-align: left;
 }
+
 /* Consulta de medios para ajustar el diseño responsivo */
 @media (max-width: 768px) {
     .circle-progress {

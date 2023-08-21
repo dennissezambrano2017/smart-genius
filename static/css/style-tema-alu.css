@@ -1,0 +1,19 @@
+.border-gray {
+    border: 1px solid gray;
+}
+
+.btn-white {
+    background-color: white;
+    border: none;
+    padding: 8px;
+    width: 300px;
+    border-radius: 10px;
+}
+
+.btn-white:hover {
+    background-color: #b6caf0;
+}
+
+.dropdown-item:hover {
+    background-color: #b6caf0;
+}
