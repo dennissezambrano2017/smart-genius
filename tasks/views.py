@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate,update_session_auth_hash
 from django.db import IntegrityError
-from .models import Unidad, Contenido, Material, Tema,Ejercicio
+from .models import Unidad, Contenido, Material, Tema,Ejercicio,Puntuacion
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import  JsonResponse, HttpResponse
 from django.contrib import messages
