@@ -161,7 +161,8 @@ main {
     margin-top: 60px;
     background: #f1f5f9;
     min-height: 90vh;
-    padding: 1rem 3rem;
+    padding: 1rem 3rem;    
+    height: 100vh;
 }
 
 .dash-title {
@@ -375,7 +376,7 @@ main {
 @media only screen and (max-width: 450px) {
     main {
         padding-left: 1rem;
-        padding-right: 1rem;
+        padding-right: 1rem;  
     }
 }
 

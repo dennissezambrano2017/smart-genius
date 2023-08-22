@@ -17,7 +17,7 @@ $(".btn-tema").click(function (e) {
                //pdfViewer.setDocument(pdf);
                 // Actualizar la URL del visor de PDF
                 $('#pdfViewer').attr('src', pdf);
-                $('#youView').attr('src', enlace);
+                //$('#pdfViewer').attr('src', enlace);
                 console.log(enlace,pdf,preguntas);
             } else {
                 console.log('Material no encontrado para el tema dado');
