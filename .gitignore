@@ -58,3 +58,4 @@ tasks/__pycache__/models.cpython-310.pyc
 tasks/__pycache__/views.cpython-310.pyc
 tasks/migrations/__pycache__/0004_remove_ejercicio_tema.cpython-310.pyc
 tasks/migrations/__pycache__/0005_remove_material_ejercicios_ejercicio_material.cpython-310.pyc
+db.sqlite3
