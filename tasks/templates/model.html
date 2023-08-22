@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/brain/0.6.3/brain.js'></script>
+</head>
+<body>
+    <h1>Recomendación de Enlaces basada en Temas</h1>
+    <label for="tema">Ingresa un tema:</label>
+    <input type="text" id="tema">
+    <button onclick="recomendarEnlace()">Recomendar Enlace</button>
+    <div id='recommendation'></div>
+
+    <script>
+        // Conjunto de datos de entrenamiento con temas y enlaces relacionados
+        var trainingData = [
+            { input: { tema: "Propiedades de los números reales" }, output: { enlaceId: 1 } },
+            { input: { tema: "Propiedades de orden de los números reales" }, output: { enlaceId: 2 } },
+            // Agrega más ejemplos de entrenamiento aquí
+        ];
+
+        var enlaces = {
+            1: "https://www.youtube.com/watch?v=sdU6Vi1FfYU&pp=ygUiUHJvcGllZGFkZXMgZGUgbG9zIG7Dum1lcm9zIHJlYWxlcw%3D%3D",
+            2: "https://www.youtube.com/watch?v=8_GPVE1SBLw&pp=ygUrUHJvcGllZGFkZXMgZGUgb3JkZW4gZGUgbG9zIG7Dum1lcm9zIHJlYWxlcw%3D%3D",
+            // Agrega más enlaces aquí
+        };
+
+        var net = new brain.NeuralNetwork();
+
+        // Entrenamos la red neuronal con los datos de entrenamiento
+        net.train(trainingData);
+
+        // Función para recomendar un enlace basado en el tema ingresado
+        function recomendarEnlace() {
+            var temaInput = document.getElementById('tema').value;
+            var recommendationDiv = document.getElementById('recommendation');
+
+            var input = { tema: temaInput };
+            var prediction = net.run(input);
+
+            var enlaceRecomendado = enlaces[prediction.enlaceId];
+            console.log(enlaceRecomendado)
+            recommendationDiv.innerHTML = `Recomendación: <a href="${enlaceRecomendado}" target="_blank">${enlaceRecomendado}</a>`;
+        }
+    </script>
+</body>
+</html>

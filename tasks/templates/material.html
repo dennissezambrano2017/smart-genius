@@ -66,7 +66,7 @@
                             <i class="fa-solid fa-eye"></i>
                         </button>
                         <button type="button" vid="{{ m.id }}" class="btnEditMaterial btn btn-warning"
-                            data-bs-toggle="modal" data-bs-target="#modalView-material">
+                            data-bs-toggle="modal" data-bs-target="#modalEdit-material">
                             <i class="fa-solid fa-pen"></i>
                         </button>
                     </td>
@@ -248,7 +248,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"
                         onclick="restablecer()">
                         <i class="fa fa-ban"></i>
                         Cancelar
@@ -415,17 +415,16 @@
     </form>
 </div>
 
-<!-- Modal Editar -->
+<!-- Modal Editar Material -->
 <div class="modal fade" id="modalEdit-material" tabindex="-1" aria-labelledby="modalEdit-materialLabel"
     aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <form method="POST" class="was-validated" id="formViewMaterial" novalidate>
+    <form method="POST" class="was-validated" id="formEditarMaterial" novalidate>
         {% csrf_token %}
-        <input type="hidden" id="txtIdMaterial" name="txtIdMaterial">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="modalEdit-materialLabel">Información del material</h1>
-                    <button type="button" class="btnEditMaterial btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btnEditMaterial btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div id="alertContainer" class="position-absolute top-0 end-0"
                         style="padding-top: 20px;padding-right: 10px;">
                         <div id="alertMessage" class="alert" style="display: none;"></div>
@@ -452,7 +451,7 @@
                             <div class="col-md-6">
                                 <label for="pdfFileEdit" class="form-label" aria-describedby="Archivo">Archivo pdf:</label>
                                 <div id="pdfFileEdit" class="form-text"></div>
-                                <input type="file" class="form-control" id="inputGroupFile01" required>
+                                <input type="file" class="form-control" id="inputGroupFile02" required>
                             </div>
                         </div>
                     </div>
@@ -486,8 +485,10 @@
                         <i class="fa fa-ban"></i>
                         Cancelar
                     </button>
-                    <div id="alerta">
-                    </div>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="fas fa-save"></i>
+                        Guardar
+                    </button>
                 </div>
             </div>
         </div>

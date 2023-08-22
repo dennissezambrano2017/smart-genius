@@ -22,6 +22,9 @@ import json
 def home(request):
     return render(request, 'home.html')
 
+def model(request):
+    return render(request, 'model.html')
+
 def signup(request):
     if request.method == 'GET':
         return render(request, 'signup.html', {
@@ -94,7 +97,6 @@ def edit_usuario(request):
             email = request.POST.get('email')
             try:
                 usuario = get_object_or_404(User, username=username_id)
-                print(username_id,nuevo_username,nombres,apellidos,email)
                 # Verifica si el usuario que se quiere editar es el mismo que el usuario autenticado
                 if usuario == request.user:
                     # Comprobamos si el nuevo username está disponible
@@ -323,7 +325,6 @@ def vwEditar_Contenido(request):
         descripcion = request.POST.get('descripcionEdContenido')
         unidad_id = request.POST.get('selectModContenido')
         contenido_id = request.POST.get('txtIdContenido')
-        print(nombre, descripcion, unidad_id)
         if not nombre:
             return JsonResponse({'result': '0', 'message': 'Por favor ingrese un nombre para el contenido.'})
         try:
@@ -382,11 +383,9 @@ def vwCreate_tema(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         contenido_id = request.POST.get('contenido_id')
-        print(nombre, contenido_id)
         if not nombre or not contenido_id:
             return JsonResponse({'result': 'error', 'message': 'Por favor ingrese un nombre para el tema'})
         try:
-            print('si')
             contenido = Contenido.objects.get(pk=contenido_id)
             tema = Tema(nombre=nombre, contenido=contenido)
             tema.save()
@@ -418,7 +417,6 @@ def vwEditar_Tema(request):
         nombre = request.POST.get('nombreTemaModi')
         contenido_id = request.POST.get('selectRegisterTemaModi')
         tema_id = request.POST.get('txtIdTema')
-        print(nombre, contenido_id, tema_id)
         if not nombre:
             return JsonResponse({'result': '0', 'message': 'Por favor ingrese un nombre para el tema.'})
         try:
@@ -477,39 +475,50 @@ def vwGetMaterial_Tema(request):
 
             ejercicios = Ejercicio.objects.filter(material=material)
             ejercicio_data = [{'id': ejercicio.id, 'enunciado': ejercicio.enunciado} for ejercicio in ejercicios]
+            excluded_topic_ids = [tema['id'] for tema in temas_data]
+            temas_with_material = Tema.objects.filter(material__isnull=False).exclude(id__in=excluded_topic_ids).distinct()
+
+            temas_list = [{'id': tema.id, 'nombre': tema.nombre} for tema in temas_with_material]
+
+
+            registered_temas = Material.objects.values_list('tema_id', flat=True).distinct()
+            all_temas = Tema.objects.all()
+            
+            unregistered_temas = all_temas.exclude(id__in=registered_temas)
+
+            temas_list_ = [{'id': tema.id, 'nombre': tema.nombre} for tema in unregistered_temas]
+            combined_temas_list = temas_data + temas_list_
+
             data = {
                 'result': '1',
                 'material_id': material_id,
                 'enlace': material.enlace,
                 'pdf': material.archivo_pdf.url,
                 'temas': temas_data,
+                'temas_list': combined_temas_list,
                 'ejercicios': ejercicio_data,
             }
-            print(data)
             return JsonResponse(data)
         except Exception as e:
-            return JsonResponse({'result': '0', 'message': 'Error en buscar la información del contenido'})
+            return JsonResponse({'result': '0', 'message': 'Error en buscar la información del contenido'}) 
 @login_required       
 def vwGetMaterial_ejercicio(request):
     if request.method == 'GET':
         try:
             ejercicio_id = request.GET.get('ejercicioId');
             ejercicio = Ejercicio.objects.get(pk=ejercicio_id);  # Usa el modelo Ejercicio
-            print(ejercicio_id)
             data = {
                 'result': '1',
                 'enunciado': ejercicio.enunciado,
                 'opciones': ejercicio.opciones,
                 'resp_correct': ejercicio.respuesta_correcta
             }
-            print(data)
             return JsonResponse(data)
         except Exception as e:
             return JsonResponse({'result': '0', 'message': 'Error en buscar la información del contenido'})
 @login_required
 def vwObtener_Temas(request):
     temas_registrados = Material.objects.values_list('tema__id', flat=True)
-    print(temas_registrados)
     temas_no_registrados = Tema.objects.exclude(id__in=temas_registrados).values('id', 'nombre')
     return JsonResponse(list(temas_no_registrados), safe=False)
 @login_required
@@ -521,7 +530,6 @@ def vwCreate_material(request):
         if not enlace or not archivo or not tema_id:
             return JsonResponse({'result': 'error', 'message': 'Por favor ingrese todo los datos'})
         try:
-            print('si')
             tema = Tema.objects.get(pk=tema_id)
             # Guardar el archivo en el modelo Material
             material = Material(enlace=enlace, tema=tema)
@@ -541,7 +549,6 @@ def vwCreate_ejercicio(request):
         if not enunciado or not opciones_json or not respuesta:
             return JsonResponse({'result': 'error', 'message': 'Por favor ingrese los datos faltantes de la pregunta'})
         try:
-            print(enunciado,opciones_json,respuesta,material_id)
             material = Material.objects.get(pk=material_id)
             opciones = json.loads(opciones_json)  # Deserializar la cadena JSON a un array Python
 
@@ -592,7 +599,6 @@ def visualizar_contenido(request):
     temas = Tema.objects.select_related('contenido__unidad').all()
     materiales = Material.objects.prefetch_related('tema').all()
     ejercicios = Ejercicio.objects.select_related('material').all()
-    print(unidades,contenidos,temas,materiales,ejercicios)    
     context = {
         'unidades': unidades,
         'contenidos': contenidos,
@@ -600,7 +606,6 @@ def visualizar_contenido(request):
         'materiales': materiales,
         'ejercicios': ejercicios,
     }
-    print(materiales)
     return render(request, 'contenido_material.html', context)
 
 @login_required
@@ -682,6 +687,28 @@ def vwContenidoAlumno(request):
     }
 
     return render(request, 'contenido_alumno.html', context)
+
+def vwEdit_Material (request):
+    if request.method == 'POST':
+        material_id = request.POST.get('material_id')
+        enlace = request.POST.get('enlace')
+        archivo = request.FILES.get('archivo_pdf')
+        tema_id = request.POST.get('tema_id')
+        if not material_id or not enlace or not archivo:
+            return JsonResponse({'result': '0', 'message': 'Por favor ingrese los datos corresponciente.'})
+        try:
+            material = Material.objects.get(pk=material_id)
+            material.enlace = enlace
+            if archivo:
+                material.archivo_pdf = archivo
+            material.tema_id = tema_id
+            material.save()
+            return JsonResponse({'result': '1', 'message': 'El tema se modificó exitosamente.'})
+        except Exception as e:
+            return JsonResponse({'result': '0', 'message': 'Error al modificar el tema, por favor intente nuevamente.'})
+    else:
+        # Si no es una solicitud POST, puedes manejarlo de acuerdo a tus necesidades
+        return JsonResponse({'result': '0', 'message': 'Método no permitido.'})
 
 def vwPerfilAlumno(request):
     return render(request, 'perfil_alumno.html')
