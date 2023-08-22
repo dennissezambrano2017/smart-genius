@@ -20,6 +20,7 @@ from tasks import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
@@ -28,6 +29,9 @@ urlpatterns = [
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
     path('inicio/', views.inicio, name='inicio'),
+    path('cambiar_contrasena/', views.change_password, name='cambiar_contrasena'),
+    path('get_user_data/', views.get_user_data, name='get_user_data'),
+    path('edit_perfil/', views.edit_usuario, name='edit_perfil'),
 
     # Sección unidad
     path('unidad/', views.vwUnidad, name='unidad'),
@@ -53,19 +57,34 @@ urlpatterns = [
     path('edit_tema/', views.vwEditar_Tema, name='editar_tema'),
     path('eliminar_tema/', views.vwEliminarTema, name='eliminar_tema'),
 
-    # Sección contenido - Alumno
+    # Sección material
+    path('marterial/', views.vwMaterial, name='material'),
+    path('material_seleccionada/', views.vwGetMaterial_Tema, name='material_seleccionada'),
+    path('ejercicio_material/',views.vwGetMaterial_ejercicio, name='ejercicio_material'),
+    path('obtener_temas/', views.vwObtener_Temas, name='obtener_temas'),
+    path('create_material/', views.vwCreate_material, name='create_material'),
+    path('eliminar_material/', views.vwEliminarMaterial, name='eliminar_material'),
+
+    # Sección ejercicio
+    path('create_ejercicio/', views.vwCreate_ejercicio, name='create_ejercicio'),
+    path('eliminar_ejercicio/', views.vwEliminarEjercicio, name='eliminar_ejercicio'),
+
+     # Sección contenido - Alumno
     path('contenido_alumno/', views.vwContenidoAlumno, name='contenido_alu'),
     path('contenido_alumno/temas/', views.vwTemaAlumno, name='temas_alu'),
+    # Sección material
+    path('marterial/', views.vwMaterial, name='material'),
     path('material/', views.vwMaterial, name='material'),
     path('perfil_alumno/', views.vwPerfilAlumno, name='perfil_alu'),
     path('avance_alumno/', views.vwAvanceAlumno, name="avance_alu"),
-    
+
     # Sección reportes
     path('inicio/create/', views.create_unidad, name='create_unidad'),
     path('reporte/', views.visualizar_reporte, name='visualizar_reporte'),
     path('aula/', views.visualizar_contenido, name='aula_documento'),
     path('imprimir_unidad/<int:unidad_id>/', views.generar_unidad_pdf, name='imprimir_unidad'),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

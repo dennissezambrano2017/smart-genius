@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
@@ -16,16 +16,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     {% block css %}
     {% endblock css %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js"></script>
 </head>
 
 <body>
 
     <input type="checkbox" id="panel-izquierdo-boton">
     <div class="panel-izquierdo">
+        {% csrf_token %}
         <div class="panel-izquierdo-encabezados">
-            <h3 >
+            <h3>
                 <span class="fa-solid fa-square-root-variable"></span>
-                <span>  <a href="{% url 'inicio' %}">Smart Genius</a></span>
+                <span> <a href="{% url 'inicio' %}">Smart Genius</a></span>
             </h3>
             <label for="panel-izquierdo-boton" class="fa-solid fa-bars"></label>
         </div>
@@ -47,25 +49,25 @@
                 </li>
                 <li>
                     <a href="{% url 'temas' %}">
-                        
+
                         <span class="fas fa-lightbulb"></span>
                         <span>Temas</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'contenido_alu' %}">
+                    <a href="{% url 'material' %}">
                         <span class="fas fa-file-alt"></span>
                         <span>Material</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/reporte">
+                    <a href="{% url 'visualizar_reporte' %}">
                         <span class="fa-solid fa-clipboard-user"></span>
                         <span>Reportes Estudiantes</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/aula">
+                    <a href="{% url 'aula_documento' %}">
                         <span class="fa-solid fa-file"></span>
                         <span>Reportes Contenido</span>
                     </a>
@@ -91,7 +93,7 @@
                 </li>
                 {% endif %}
                 <li>
-                    <a href="/logout">
+                    <a href="{% url 'logout' %}">
                         <span class="fa-solid fa-right-from-bracket"></span>
                         <span>Cerrar Sesión</span>
                     </a>
@@ -134,6 +136,12 @@
                 // Redirigir a la página de inicio
                 window.location.href = '/inicio/';
             }
+            $("li").click(function () {
+                var link = $(this).find("a").attr("href");
+                if (link) {
+                    window.location.href = link;
+                }
+            });
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
