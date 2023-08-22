@@ -731,13 +731,13 @@ def obtener_ejercicios(request):
 @login_required
 def visualizar_puntuacion_filtrada(request):
     usuario_actual = request.user
+    unidades = Unidad.objects.all()
+    puntuaciones = Puntuacion.objects.filter(usuario=usuario_actual).select_related('ejercicio__material__tema')
     
     ejercicio_id = request.GET.get('ejercicio_id')
     if ejercicio_id:
         puntuaciones = puntuaciones.filter(ejercicio_id=ejercicio_id, usuario=usuario_actual)
-    else:
-        unidades = Unidad.objects.all()
-        puntuaciones = Puntuacion.objects.filter(usuario=usuario_actual).select_related('ejercicio__material__tema')
+    
     context = {
         'unidades': unidades,
         'puntuaciones': puntuaciones,
