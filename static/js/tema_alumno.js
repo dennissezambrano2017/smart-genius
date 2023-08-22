@@ -9,6 +9,7 @@ $(".btn-tema").click(function (e) {
         success: function (data) {
             if (data.result === '1') {
                 var enlace = data.enlace;
+                var shortLink=enlace.substring(32);
                 var pdf = data.pdf;
                 var preguntas = data.preguntas;
                 // Ajustar la ruta para que coincida con la estructura de carpetas
@@ -17,8 +18,7 @@ $(".btn-tema").click(function (e) {
                //pdfViewer.setDocument(pdf);
                 // Actualizar la URL del visor de PDF
                 $('#pdfViewer').attr('src', pdf);
-                $('#youView').attr('src', enlace);
-                console.log(enlace,pdf,preguntas);
+                $('#videoViewer').attr('src', 'https://www.youtube.com/embed/' + shortLink);
             } else {
                 console.log('Material no encontrado para el tema dado');
             }
