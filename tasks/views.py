@@ -432,7 +432,6 @@ def vwEditar_Tema(request):
         # Si no es una solicitud POST, puedes manejarlo de acuerdo a tus necesidades
         return JsonResponse({'result': '0', 'message': 'Método no permitido.'})
 
-
 @login_required
 def vwEliminarTema(request):
     if request.method == 'POST':
@@ -724,6 +723,33 @@ def vwEdit_Material (request):
     else:
         # Si no es una solicitud POST, puedes manejarlo de acuerdo a tus necesidades
         return JsonResponse({'result': '0', 'message': 'Método no permitido.'})
+
+def get_material_by_tema_id(request):
+    if request.method == 'GET':
+        try:
+            tema_id = request.GET.get('tema_id')
+            
+            # Buscar el material relacionado con el tema
+            material = Material.objects.filter(tema_id=tema_id).first()
+            
+            if material:
+                # Obtener preguntas relacionadas con el material
+                preguntas = Ejercicio.objects.filter(material=material)
+                
+                preguntas_data = [{'id': pregunta.id, 'enunciado': pregunta.enunciado} for pregunta in preguntas]
+
+                data = {
+                    'result': '1',
+                    'enlace': material.enlace,
+                    'pdf': material.archivo_pdf.url,
+                    'preguntas': preguntas_data,
+                }
+                return JsonResponse(data)
+            else:
+                return JsonResponse({'result': '0', 'message': 'No se encontró material para el tema dado'})
+
+        except Exception as e:
+            return JsonResponse({'result': '0', 'message': 'Error en buscar la información del material por tema'})
 
 def vwPerfilAlumno(request):
     return render(request, 'perfil_alumno.html')

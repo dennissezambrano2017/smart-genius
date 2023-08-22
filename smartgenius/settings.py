@@ -18,6 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_URL = '/pdfs/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'pdfs')
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 
 
 # Quick-start development settings - unsuitable for production

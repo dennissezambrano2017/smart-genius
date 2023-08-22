@@ -73,7 +73,7 @@ urlpatterns = [
 
      # Sección contenido - Alumno
     path('contenido_alumno/', views.vwContenidoAlumno, name='contenido_alu'),
-    
+    path('getcontenido_alumno/', views.get_material_by_tema_id,name='getcontenido_alumno'),
     #Sección perfil - Alumno
     path('contenido_alumno/temas/', views.vwTemaAlumno, name='temas_alu'),
     path('perfil_alumno/', views.vwPerfilAlumno, name='perfil_alu'),
