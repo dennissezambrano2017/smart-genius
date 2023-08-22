@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate,update_session_auth_hash
 from django.db import IntegrityError
-from .models import Unidad, Contenido, Material, Tema,Ejercicio
+from .models import Unidad, Contenido, Material, Tema,Ejercicio,Puntuacion
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import  JsonResponse, HttpResponse
 from django.contrib import messages
@@ -688,5 +688,63 @@ def vwPerfilAlumno(request):
 
 def vwAvanceAlumno(request):
     return render(request, 'avance_alumno.html')
+
+@login_required
+def visualizar_puntuacion(request):
+    usuario_actual = request.user
+    unidades = Unidad.objects.all()
+
+    puntuaciones = Puntuacion.objects.filter(usuario=usuario_actual).select_related('ejercicio__material__tema')
+
+    context = {
+        'unidades': unidades,
+        'puntuaciones': puntuaciones,
+    }
+
+    return render(request, 'avance_alumno.html', context)
+
+def obtener_contenidos(request):
+    if request.method == 'GET':
+        unidad_id = request.GET.get('unidad_id')
+        contenidos = Contenido.objects.filter(unidad_id=unidad_id).values('id', 'nombre')
+        return JsonResponse(list(contenidos), safe=False)
+    
+def obtener_temas_contenido(request):
+    if request.method == 'GET':
+        contenido_id = request.GET.get('contenido_id')
+        temas = Tema.objects.filter(contenido_id=contenido_id).values('id', 'nombre')
+        return JsonResponse(list(temas), safe=False)
+    
+
+def obtener_materiales(request):
+    if request.method == 'GET':
+        tema_id = request.GET.get('tema_id')
+        materiales = Material.objects.filter(tema_id=tema_id).values('id', 'enlace')
+        return JsonResponse(list(materiales), safe=False)
+    
+def obtener_ejercicios(request):
+    if request.method == 'GET':
+        material_id = request.GET.get('material_id')
+        ejercicios = Ejercicio.objects.filter(material_id=material_id).values('id', 'enunciado')
+        return JsonResponse(list(ejercicios), safe=False)
+    
+@login_required
+def visualizar_puntuacion_filtrada(request):
+    usuario_actual = request.user
+    
+    ejercicio_id = request.GET.get('ejercicio_id')
+    if ejercicio_id:
+        puntuaciones = puntuaciones.filter(ejercicio_id=ejercicio_id, usuario=usuario_actual)
+    else:
+        unidades = Unidad.objects.all()
+        puntuaciones = Puntuacion.objects.filter(usuario=usuario_actual).select_related('ejercicio__material__tema')
+    context = {
+        'unidades': unidades,
+        'puntuaciones': puntuaciones,
+    }
+
+    return render(request, 'avance_alumno.html', context)
+
+    
 
 

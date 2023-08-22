@@ -71,6 +71,15 @@ urlpatterns = [
 
      # Sección contenido - Alumno
     path('contenido_alumno/', views.vwContenidoAlumno, name='contenido_alu'),
+    path('avance_alumno/', views.visualizar_puntuacion, name='avance_alu'),
+    path('obtener_contenidos/', views.obtener_contenidos, name='obtener_contenidos'),
+    path('obtener_temas_contenido/', views.obtener_temas_contenido, name='obtener_temas_contenido'),
+    path('obtener_ejercicios/', views.obtener_ejercicios, name='obtener_ejercicios'),
+    path('obtener_materiales/', views.obtener_materiales, name='obtener_materiales'),
+    path('visualizar_puntuacion_filtrada/', views.visualizar_puntuacion_filtrada, name='visualizar_puntuacion_filtrada'),
+
+
+
     # Sección material
     path('marterial/', views.vwMaterial, name='material'),
     path('material/', views.vwMaterial, name='material'),
