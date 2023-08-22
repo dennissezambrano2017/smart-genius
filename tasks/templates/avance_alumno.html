@@ -1,6 +1,76 @@
 {% extends 'profile.html' %}
 {% block title %}Mi Avance{% endblock %}
-
+{% load static %}
 {% block content %}
 <span class="fw-bold fs-4" style="color: #fdb128">MI AVANCE</span>
+    <div class="row">
+        <div class="col-md-4" style="margin-bottom: 10px;">
+            <select id="unidad-select" class="form-select" aria-label="Unidad select" onchange="cargarContenidos()">
+                <option value="">Selecciona una unidad</option>
+                {% for unidad in unidades %}
+                    <option value="{{ unidad.id }}">{{ unidad.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="col-md-4">
+            <select id="contenido-select" class="form-select" aria-label="Contenido select" onchange="cargarTemas()">
+                <option selected>Selecciona un contenido</option>
+            </select>
+        </div>
+    
+        <div class="col-md-4">
+            <select id="tema-select" class="form-select" aria-label="Tema select" onchange="cargarMateriales()">
+                <option selected>Selecciona un tema</option>
+            </select>
+        </div>
+        <div class="col-md-4" style="margin-bottom: 10px;">
+            <select id="material-select" class="form-select" aria-label="Material select" onchange="cargarEjercicios()">
+                <option selected>Selecciona un material</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select id="ejercicio-select" class="form-select" aria-label="Ejercicio select">
+                <option selected>Selecciona un ejercicio</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary" onclick="filtrarPuntuacion()">Filtrar Puntuación</button>
+        </div>
+    </div>
+    
+
+
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tema</th>
+                <th>Ejercicio</th>
+                <th>Puntaje</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for puntuacion in puntuaciones %}
+            <tr>
+                <td>{{ puntuacion.ejercicio.material.tema }}</td>
+                <td>{{ puntuacion.ejercicio }}</td>
+                <td>{{ puntuacion.puntaje }}</td>
+                <td>{{ puntuacion.fecha }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    {% block javascript %}
+    <script src="{% static 'js/avance.js'%}"></script>
+    {% endblock %}
+
 {% endblock %}
+
+
+
+
