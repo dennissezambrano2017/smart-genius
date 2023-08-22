@@ -56,3 +56,5 @@ class Puntuacion(models.Model):
     ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
     puntaje = models.DecimalField(max_digits=5, decimal_places=2)
+    def __str__(self):
+        return f"{self.usuario}"

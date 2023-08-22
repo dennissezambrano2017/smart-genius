@@ -24,6 +24,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('model/', views.model, name='model'),
     path('signup/', views.signup, name='Registro'),
     path('profile/', views.profile, name='perfil'),
     path('logout/', views.signout, name='logout'),
@@ -58,12 +59,13 @@ urlpatterns = [
     path('eliminar_tema/', views.vwEliminarTema, name='eliminar_tema'),
 
     # Sección material
-    path('marterial/', views.vwMaterial, name='material'),
+    path('material/', views.vwMaterial, name='material'),
     path('material_seleccionada/', views.vwGetMaterial_Tema, name='material_seleccionada'),
     path('ejercicio_material/',views.vwGetMaterial_ejercicio, name='ejercicio_material'),
     path('obtener_temas/', views.vwObtener_Temas, name='obtener_temas'),
     path('create_material/', views.vwCreate_material, name='create_material'),
     path('eliminar_material/', views.vwEliminarMaterial, name='eliminar_material'),
+    path('edit_material/', views.vwEdit_Material, name='edit_material'),
 
     # Sección ejercicio
     path('create_ejercicio/', views.vwCreate_ejercicio, name='create_ejercicio'),
@@ -71,6 +73,10 @@ urlpatterns = [
 
      # Sección contenido - Alumno
     path('contenido_alumno/', views.vwContenidoAlumno, name='contenido_alu'),
+
+
+
+    #Sección perfil - Alumno
     path('contenido_alumno/temas/', views.vwTemaAlumno, name='temas_alu'),
     # Sección material
     path('marterial/', views.vwMaterial, name='material'),

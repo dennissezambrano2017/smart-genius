@@ -1,4 +1,5 @@
 var idMaterial = 0;
+var idTema = 0;
 var opcionesDetalle = [];
 var botonAgregado = false;
 var botonAgregadoEdit = false;
@@ -91,8 +92,6 @@ $(".btnViewMaterial").click(function () {
                     var viewButtonCell = $("<td>").css("text-align", "center")
                         .append(viewButton, deleteButton);
 
-
-
                     // Agregar las celdas a la fila
                     newRow.append(idCell, enunciadoCell, viewButtonCell);
 
@@ -100,13 +99,8 @@ $(".btnViewMaterial").click(function () {
                     tablaEjercicios.append(newRow);
                 });
             } else {
-                //console.log(materialId)
                 tablaEjercicios.append('<p>No se encontraron ejercicios registrados.</p>');
-
-
             }
-
-
         } else {
             console.log('Error en la obtención de datos');
         }
@@ -191,7 +185,6 @@ function delete_material() {
 // función para eliminar un contenido luego de haberse confirmado la acción
 function delete_ejercicio() {
     var csrftoken = getCookie('csrftoken');
-    console.log(idElim)
     $.ajax({
         url: '/eliminar_ejercicio/',
         type: 'POST',
@@ -219,7 +212,6 @@ function btnViewEjercicio(id) {
     // Activar el modal
     modal.modal('show');
     var csrftoken = getCookie('csrftoken');
-    console.log("si entyre")
     $.ajax({
         url: '/ejercicio_material/',
         type: 'GET',
@@ -229,10 +221,8 @@ function btnViewEjercicio(id) {
         },
         dataType: 'json',
     }).done(function (d) {
-        //console.log(d)
         if (d.result == '1') {
             $("#ejercicioEnunciado").val(d.enunciado);
-            // console.log(d.opciones);
             if (d.opciones.length > 0) {
                 var opcionesText = ""; // Variable para almacenar el texto de las opciones
 
@@ -249,7 +239,7 @@ function btnViewEjercicio(id) {
                 textarea.attr("rows", d.opciones.length);
 
                 // Insertar la respuesta correcta en el input correspondiente
-                respuestaCorrectaInput.val((d.resp_correct+1) + ".- " + d.opciones[d.resp_correct]);
+                respuestaCorrectaInput.val((d.resp_correct + 1) + ".- " + d.opciones[d.resp_correct]);
             }
 
         } else {
@@ -317,14 +307,13 @@ $(document).on('submit', '#formRgejercicio', function (e) {
     var respuesta = $('#preguntaCorrecta').val();
 
     var opci = JSON.stringify(opcionesDetalle);
-    console.log(enunciado, opci)
     $.ajax({
         type: 'POST',
         url: '/create_ejercicio/',
         data: {
             "enunciado": enunciado,
             "opciones": opci,
-            "respuesta": (respuesta-1),
+            "respuesta": (respuesta - 1),
             "material_id": idMaterial,
             csrfmiddlewaretoken: csrftoken
         },
@@ -355,8 +344,7 @@ $(document).on('submit', '#formRgejercicio', function (e) {
             }
         },
         error: function () {
-            console.log("data.message");
-            // mostrarAlerta(data.message, "danger", "#alertMessageRegister")
+            mostrarAlerta(data.message, "danger", "#alertMessageRegister")
         }
     });
 });
@@ -367,7 +355,6 @@ $(document).on('submit', '#formRgEditejercicio', function (e) {
     var respuesta = $('#preguntaCorrectaEdit').val();
 
     var opci = JSON.stringify(opcionesDetalle);
-    console.log(enunciado, opci)
     $.ajax({
         type: 'POST',
         url: '/create_ejercicio/',
@@ -405,8 +392,7 @@ $(document).on('submit', '#formRgEditejercicio', function (e) {
             }
         },
         error: function () {
-            console.log("data.message");
-            // mostrarAlerta(data.message, "danger", "#alertMessageRegister")
+            mostrarAlerta(data.message, "danger", "#alertMessageRegister")
         }
     });
 });
@@ -416,19 +402,19 @@ $(".btnAñadirOpciones").click(function () {
     var opcion2 = $('#preguntaOpcionEdit').val();
     if (opcion.trim() !== '') {
         opcionesDetalle.push(opcion);
-        actualizarOpcionesMostradas('#preguntaOpcion','#preguntaOpciones');
+        actualizarOpcionesMostradas('#preguntaOpcion', '#preguntaOpciones');
         $('#preguntaOpcion').val("");
         autosize.update($('#preguntaOpciones'));
     }
     if (opcion2.trim() !== '') {
         opcionesDetalle.push(opcion2);
-        actualizarOpcionesMostradas('#preguntaOpcionEdit','#preguntaOpcionesEdit');
+        actualizarOpcionesMostradas('#preguntaOpcionEdit', '#preguntaOpcionesEdit');
         $('#preguntaOpcionEdit').val("");
         autosize.update($('#preguntaOpcionesEdit'));
     }
 });
 
-function actualizarOpcionesMostradas(op,opci) {
+function actualizarOpcionesMostradas(op, opci) {
     var listaOpciones = opcionesDetalle.map(function (opcion, index) {
         return (index + 1) + '.- ' + opcion;
     }).join('\n'); // Unir las opciones con saltos de línea
@@ -495,19 +481,18 @@ $(".btnEditMaterial").click(function () {
 
             // Limpiar las opciones previas (si las hay)
             selectUnidad.empty();
-
-            // Recorrer los temas y agregarlos como opciones al select
-            d.temas.forEach(function (tema) {
+            var temaSeleccionadoId = d.temas[0].id;
+            idTema=temaSeleccionadoId
+            d.temas_list.forEach(function (tema) {
                 // Crear la opción y establecer los atributos
                 var option = $('<option>', {
                     value: tema.id,
                     text: tema.nombre
                 });
                 // Si la unidad actual es la preseleccionada, establecer el atributo "selected"
-                if (tema.id === d.material_id) {
+                if (tema.id === temaSeleccionadoId) {
                     option.prop("selected", true);
                 }
-
                 // Agregar la opción al select
                 selectUnidad.append(option);
             });
@@ -545,10 +530,8 @@ $(".btnEditMaterial").click(function () {
                     tablaEjercicios.append(newRow);
                 });
             } else {
-                //console.log(materialId)
                 tablaEjercicios.append('<p>No se encontraron ejercicios registrados.</p>');
             }
-
 
         } else {
             console.log('Error en la obtención de datos');
@@ -557,3 +540,52 @@ $(".btnEditMaterial").click(function () {
         console.log('Error en la solicitud AJAX');
     });
 });
+$(document).on('submit', '#formEditarMaterial', function (e) {
+    
+
+    var material_id = idMaterial;
+    var enlace = $('#nombreEnlaceEdit').val();
+    var archivoInput = document.getElementById('inputGroupFile02');
+    var archivo = archivoInput.files[0];
+    var tema_id = idTema;
+
+    var formData = new FormData();
+    formData.append('material_id', material_id);
+    formData.append('enlace', enlace);
+    formData.append('archivo_pdf', archivo);
+    formData.append('tema_id', tema_id);
+    formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+
+    $.ajax({
+        type: 'POST',
+        url: '/edit_material/',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function (data) {
+            if (data.result === '1') {
+                // Mostrar la alerta de éxito después de completar la modificación
+                mostrarAlerta("Se modificó el material correctamente.", "success", "#alertMessage");
+
+                // Redirigir a la página adecuada si es necesario
+                // window.location.href = '/ruta-de-redireccion/';
+            } else {
+                mostrarAlerta(data.message, "danger", "#alertMessageModify");
+            }
+        },
+        error: function () {
+            console.log("Error en la solicitud AJAX");
+        }
+    });
+});
+
+
+function actualizarFila_(selectorFila, selectorNombre, selectorUnidad, nuevoNombre, Seleccionada) {
+    // Buscar la fila correspondiente en la tabla
+    var fila = $(selectorFila);
+
+    // Actualizar las celdas con los nuevos datos
+    fila.find(selectorNombre).text(nuevoNombre);
+    fila.find(selectorUnidad).text(Seleccionada);
+}
