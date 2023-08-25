@@ -699,9 +699,9 @@ def vwTemaAlumno(request):
         'materiales': materiales,
         'ejercicios': ejercicios,
     }
-    print(temas)
 
     return render(request, 'tema_alumno.html', context)
+
 def vwEdit_Material (request):
     if request.method == 'POST':
         material_id = request.POST.get('material_id')
