@@ -1,5 +1,6 @@
-
+var tema='';
 var dataPreguntas = [];
+var totalpreguntas=0;
 $(".btn-tema").click(function (e) { 
     e.preventDefault();
     var id_tema = $(this).attr('id');
@@ -33,6 +34,7 @@ $(".btn-tema").click(function (e) {
 
     // Colocar el nombre del tema
     var name_tema = $(this).text();
+    tema=name_tema;
     $('#viewText').empty();
     $('#viewText').append("<h4 style='font-weight: bold; color: #fdb128;'>" + name_tema + "</h4>");
 });
@@ -54,10 +56,13 @@ let npreguntas = [];
 
 let preguntas_hechas = 0;
 let preguntas_correctas = 0;
+let preguntas_incorrectas = 0;
 
 function escogerPreguntaAleatoria() {
+    
     getDataDB = dataPreguntas;
     console.log(getDataDB)
+    totalpreguntas=getDataDB.length;
     let n;
     if (preguntas_aleatorias) {
         n = Math.floor(Math.random() * getDataDB.length);
@@ -75,13 +80,14 @@ function escogerPreguntaAleatoria() {
             if (mostrar_pantalla_practica_terminada) {
                 swal.fire({
                     title: "Práctica finalizado",
-                    text: "Puntuación: " + preguntas_correctas + "/" + (preguntas_hechas - 1),
+                    text: "Puntuación: " + ((preguntas_correctas/totalpreguntas)*10) + " / 10",
                     icon: "success"
                 });
             }
             if (reiniciar_puntos_al_reiniciar_la_practica) {
                 preguntas_correctas = 0
                 preguntas_hechas = 0
+                preguntas_incorrectas = 0;
             }
             npreguntas = [];
         }
@@ -97,8 +103,10 @@ function escogerPregunta(params, n) {
     $("#pregunta").html(pregunta.enunciado);
     // $("#numero").html(n);
     let pc = preguntas_correctas;
+    var puntaje=(pc/totalpreguntas)*10;
+    console.log(pc,preguntas_correctas,totalpreguntas)
     if (preguntas_hechas > 1) {
-        $("#puntaje").html(pc + " / " + (preguntas_hechas - 1));
+        $("#puntaje").html("Puntaje: " + puntaje.toFixed(2) + " / 10");
     } else {
         $("#puntaje").html("");
     }
@@ -106,6 +114,9 @@ function escogerPregunta(params, n) {
 }
 
 function desordenarRespuestas(pregunta) {
+    if(preguntas_correctas==0 && preguntas_incorrectas==0)
+        $("#puntaje").html("Puntaje: 0.00 / 10");
+
     posibles_respuestas = [
         pregunta.opciones[0], //respuesta incorrecta
         pregunta.opciones[1], //respuesta incorrecta
@@ -136,6 +147,7 @@ function oprimir_btn(i) {
         btn_correspondiente[i].css("background", "lightgreen");
     } else {
         btn_correspondiente[i].css("background", "pink");
+        preguntas_incorrectas++;
     }
     for (let j = 0; j < 4; j++) {
         if (posibles_respuestas[j] == pregunta.opciones[pregunta.resp_correcta]) {
@@ -143,10 +155,18 @@ function oprimir_btn(i) {
             break;
         }
     }
-    setTimeout(function () {
-    reiniciar();
-    suspender_botones = false;
-    }, 2000);
+    if(preguntas_incorrectas==3)
+    {
+        console.log('ejecutar la recomendacion')
+        $('#exampleModal').modal('show'); // Mostrar el modal automáticamente
+    }
+    else{
+        setTimeout(function () {
+            reiniciar();
+            suspender_botones = false;
+        }, 2000);
+    }
+    
 }
 
 function reiniciar() {
@@ -169,5 +189,56 @@ $("#list-questions-list").click(function (e) {
     npreguntas = [];
     preguntas_hechas = 0;
     preguntas_correctas = 0;
+    preguntas_incorrectas = 0;
     escogerPreguntaAleatoria();
+});
+var openModalButton = document.getElementById('openModalButton');
+openModalButton.addEventListener('click', function () {
+    var search = tema;
+    console.log(search)
+    $.ajax({
+        type: 'POST',
+        url: '/recomendacion/',
+        data: {
+            'search': search,
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function (data) {
+            // Actualizar el contenido del modal con los videos obtenidos
+            var modalContent = $('.modal-body .container .row');
+            modalContent.empty(); // Limpiar el contenido anterior
+
+            for (var i = 0; i < data.videos.length; i++) {
+                var video = data.videos[i];
+                var videoHTML = `
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img class="bd-placeholder-img card-img-top" width="100%"
+                            src="${video.thumbnail}" preserveAspectRatio="xMidYMid slice"
+                            focusable="false" role="img" aria-label="Placeholder: Thumbnail">
+                        </img>
+                        <div class="card-body">
+                            <p class="card-text">${video.title}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary view-button"
+                                data-video-url="${video.url}">Mirar</button>
+                                </div>
+                                <small class="text-muted">${video.duration} mins</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                modalContent.append(videoHTML);
+            }
+            // Agregar evento de clic a los botones de vista
+            $('.view-button').click(function () {
+                var videoUrl = $(this).data('video-url');
+                window.open(videoUrl, '_blank'); // Abrir en nueva pestaña
+            });
+        },error: function (xhr, textStatus, errorThrown) {
+            console.log('Error:', errorThrown);
+        }
+    });
 });

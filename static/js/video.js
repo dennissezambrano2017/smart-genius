@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     var openModalButton = document.getElementById('openModalButton');
     openModalButton.addEventListener('click', function () {
-        var search = "factorial";
+        var search = "Potenciación de números reales con exponente entero";
         console.log(search)
         $.ajax({
             type: 'POST',

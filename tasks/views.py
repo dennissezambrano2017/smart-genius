@@ -869,8 +869,7 @@ def buscar_youtube(request):
         context = {
             'videos' : videos
         }
-        return JsonResponse(context)
-    return render(request, 'recomendation_video.html')
+    return JsonResponse(context)
     
 
 
