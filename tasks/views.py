@@ -17,6 +17,10 @@ from django.core.files.base import ContentFile
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 import json
+from django.conf import settings
+from isodate import parse_duration
+import requests
+import random
 
 # Create your views here.
 def home(request):
@@ -813,6 +817,60 @@ def visualizar_puntuacion_filtrada(request):
 
     return render(request, 'avance_alumno.html', context)
 
+def buscar_youtube(request):
+    videos = []
+
+    if request.method == 'POST':
+        search_url = 'https://www.googleapis.com/youtube/v3/search'
+        video_url = 'https://www.googleapis.com/youtube/v3/videos'
+        print(request.POST.get('search'))
+        search_params = {
+            'part' : 'snippet',
+            'q' : request.POST.get('search'),
+            'key' : settings.YOUTUBE_DATA_API_KEY,
+            'maxResults' : 9,
+            'type' : 'video'
+        }
+
+        r = requests.get(search_url, params=search_params)
+
+        results = r.json()['items']
+
+        video_ids = []
+        for result in results:
+            video_ids.append(result['id']['videoId'])
+
+        # Seleccionar aleatoriamente tres IDs de video de los 20 obtenidos
+        selected_video_ids = random.sample(video_ids, 3)
+
+        video_params = {
+            'key' : settings.YOUTUBE_DATA_API_KEY,
+            'part' : 'snippet,contentDetails',
+            'id' : ','.join(selected_video_ids),
+            'maxResults' : 9
+        }
+
+        r = requests.get(video_url, params=video_params)
+
+        results = r.json()['items']
+
+        
+        for result in results:
+            video_data = {
+                'title' : result['snippet']['title'],
+                'id' : result['id'],
+                'url' : f'https://www.youtube.com/watch?v={ result["id"] }',
+                'duration' : int(parse_duration(result['contentDetails']['duration']).total_seconds() // 60),
+                'thumbnail' : result['snippet']['thumbnails']['high']['url']
+            }
+
+            videos.append(video_data)
+        print(videos)
+        context = {
+            'videos' : videos
+        }
+        return JsonResponse(context)
+    return render(request, 'recomendation_video.html')
     
 
 
