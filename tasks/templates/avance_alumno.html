@@ -25,11 +25,6 @@
             </select>
         </div>
         <div class="col-md-4" style="margin-bottom: 10px;">
-            <select id="material-select" class="form-select" aria-label="Material select" onchange="cargarEjercicios()">
-                <option selected>Selecciona un material</option>
-            </select>
-        </div>
-        <div class="col-md-4">
             <select id="ejercicio-select" class="form-select" aria-label="Ejercicio select">
                 <option selected>Selecciona un ejercicio</option>
             </select>
@@ -38,10 +33,6 @@
             <button type="button" class="btn btn-primary" onclick="filtrarPuntuacion()">Filtrar Puntuación</button>
         </div>
     </div>
-    
-
-
-
 
     <table class="table table-striped">
         <thead>
@@ -50,6 +41,7 @@
                 <th>Ejercicio</th>
                 <th>Puntaje</th>
                 <th>Fecha</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -59,11 +51,44 @@
                 <td>{{ puntuacion.ejercicio }}</td>
                 <td>{{ puntuacion.puntaje }}</td>
                 <td>{{ puntuacion.fecha }}</td>
+                <td><button type="button" data-vid="{{ puntuacion.ejercicio.id }}" class="btnViewMaterial btn btn-secondary"
+                    data-bs-toggle="modal" data-bs-target="#modalView-material" id="btn_visualizar_ejercicio" >
+                    <i class="fa-solid fa-eye"></i>
+                </button></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
+    <div class="modal fade" id="modalView-material" tabindex="-1" aria-labelledby="modalRegister-UnidadLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <form method="POST" class="was-validated" id="formRgUnidad" novalidate>
+        {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalRegister-UnidadLabel">Ejercicio</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="enunciado" class="form-label">Enunciado del ejercicio</label>
+                        <input type="text" class="form-control" id="enunciado" name="enunciado" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="opciones" class="form-label">Opciones del ejercicio</label>
+                        <input type="text" class="form-control" id="opciones" name="opciones" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="respuesta" class="form-label">Opción seleccionada</label>
+                        <input type="text" class="form-control" id="respuesta" name="respuesta" disabled>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </form>
+</div>
 
     {% block javascript %}
     <script src="{% static 'js/avance.js'%}"></script>

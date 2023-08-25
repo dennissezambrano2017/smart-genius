@@ -800,6 +800,12 @@ def obtener_ejercicios(request):
         ejercicios = Ejercicio.objects.filter(material_id=material_id).values('id', 'enunciado')
         return JsonResponse(list(ejercicios), safe=False)
     
+def obtener_ejercicios_visualizacion(request):
+    if request.method == 'GET':
+        ejercicio_id = request.GET.get('ejercicio_id')
+        ejercicios = Ejercicio.objects.filter(id=ejercicio_id).values('id', 'enunciado','opciones','respuesta_correcta')
+        return JsonResponse(list(ejercicios), safe=False)
+    
 @login_required
 def visualizar_puntuacion_filtrada(request):
     usuario_actual = request.user

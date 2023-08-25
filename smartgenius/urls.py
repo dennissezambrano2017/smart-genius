@@ -80,6 +80,7 @@ urlpatterns = [
     path('obtener_ejercicios/', views.obtener_ejercicios, name='obtener_ejercicios'),
     path('obtener_materiales/', views.obtener_materiales, name='obtener_materiales'),
     path('visualizar_puntuacion_filtrada/', views.visualizar_puntuacion_filtrada, name='visualizar_puntuacion_filtrada'),
+    path('visualizar_ejercicio_user/', views.obtener_ejercicios_visualizacion, name='visualizar_ejercicio_user'),
 
 
 
