@@ -736,7 +736,7 @@ def get_material_by_tema_id(request):
                 # Obtener preguntas relacionadas con el material
                 preguntas = Ejercicio.objects.filter(material=material)
                 
-                preguntas_data = [{'id': pregunta.id, 'enunciado': pregunta.enunciado} for pregunta in preguntas]
+                preguntas_data = [{'id': pregunta.id, 'enunciado': pregunta.enunciado, 'opciones': pregunta.opciones, 'resp_correcta': pregunta.respuesta_correcta} for pregunta in preguntas]
 
                 data = {
                     'result': '1',
