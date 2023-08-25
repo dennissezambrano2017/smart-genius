@@ -1,5 +1,5 @@
 
-var response;
+var dataPreguntas = [];
 $(".btn-tema").click(function (e) { 
     e.preventDefault();
     var id_tema = $(this).attr('id');
@@ -20,7 +20,7 @@ $(".btn-tema").click(function (e) {
                 // Actualizar la URL del visor de PDF
                 $('#pdfViewer').attr('src', pdf);
                 $('#videoViewer').attr('src', 'https://www.youtube.com/embed/' + shortLink);
-                escogerPreguntaAleatoria(data.preguntas)
+                dataPreguntas = data.preguntas
 
             } else {
                 console.log('Material no encontrado para el tema dado');
@@ -37,9 +37,10 @@ $(".btn-tema").click(function (e) {
     $('#viewText').append("<h4 style='font-weight: bold; color: #fdb128;'>" + name_tema + "</h4>");
 });
 
+
 let preguntas_aleatorias = true;
-let mostrar_pantalla_juego_términado = true;
-let reiniciar_puntos_al_reiniciar_el_juego = true;
+let mostrar_pantalla_practica_terminada = true;
+let reiniciar_puntos_al_reiniciar_la_practica = true;
 
 let pregunta;
 let posibles_respuestas;
@@ -54,11 +55,12 @@ let npreguntas = [];
 let preguntas_hechas = 0;
 let preguntas_correctas = 0;
 
-function escogerPreguntaAleatoria(interprete_bp) {
-    console.log(interprete_bp)
+function escogerPreguntaAleatoria() {
+    getDataDB = dataPreguntas;
+    console.log(getDataDB)
     let n;
     if (preguntas_aleatorias) {
-        n = Math.floor(Math.random() * interprete_bp.length);
+        n = Math.floor(Math.random() * getDataDB.length);
         console.log(n)
     } else {
         n = 0;
@@ -66,55 +68,51 @@ function escogerPreguntaAleatoria(interprete_bp) {
 
     while (npreguntas.includes(n)) {
         n++;
-        if (n >= interprete_bp.length) {
+        if (n >= getDataDB.length) {
             n = 0;
         }
-        if (npreguntas.length == interprete_bp.length) {
-            if (mostrar_pantalla_juego_términado) {
+        if (npreguntas.length == getDataDB.length) {
+            if (mostrar_pantalla_practica_terminada) {
                 swal.fire({
-                    title: "Juego finalizado",
+                    title: "Práctica finalizado",
                     text: "Puntuación: " + preguntas_correctas + "/" + (preguntas_hechas - 1),
                     icon: "success"
                 });
             }
-            if (reiniciar_puntos_al_reiniciar_el_juego) {
+            if (reiniciar_puntos_al_reiniciar_la_practica) {
                 preguntas_correctas = 0
                 preguntas_hechas = 0
             }
-                npreguntas = [];
+            npreguntas = [];
         }
     }
     npreguntas.push(n);
-    console.log(npreguntas)
     preguntas_hechas++;
-    console.log(preguntas_hechas)
 
-    escogerPregunta(interprete_bp, n);
+    escogerPregunta(getDataDB, n);
 }
 
 function escogerPregunta(params, n) {
     pregunta = params[n];
-    console.log(pregunta)
     $("#pregunta").html(pregunta.enunciado);
-    $("#numero").html(n);
+    // $("#numero").html(n);
     let pc = preguntas_correctas;
     if (preguntas_hechas > 1) {
-    $("#puntaje").html(pc + "/" + (preguntas_hechas - 1));
+        $("#puntaje").html(pc + " / " + (preguntas_hechas - 1));
     } else {
-    $("#puntaje").html("");
+        $("#puntaje").html("");
     }
-
     desordenarRespuestas(pregunta);
 }
 
 function desordenarRespuestas(pregunta) {
-    console.log(pregunta)
     posibles_respuestas = [
         pregunta.opciones[0], //respuesta incorrecta
         pregunta.opciones[1], //respuesta incorrecta
         pregunta.opciones[2], //respuesta incorrecta
-        pregunta.opciones[pregunta.resp_correcta] //respuesta correcta
+        pregunta.opciones[3] //respuesta correcta
     ];
+
     posibles_respuestas.sort(function () {
         return Math.random() - 0.5;
     });
@@ -132,6 +130,7 @@ function oprimir_btn(i) {
         return;
     }
     suspender_botones = true;
+    //Compara las respuestas seleccionada con la respuesta correcta
     if (posibles_respuestas[i] == pregunta.opciones[pregunta.resp_correcta]) {
         preguntas_correctas++;
         btn_correspondiente[i].css("background", "lightgreen");
@@ -147,12 +146,28 @@ function oprimir_btn(i) {
     setTimeout(function () {
     reiniciar();
     suspender_botones = false;
-    }, 3000);
+    }, 2000);
 }
 
-// function reiniciar() {
-//   for (const btn of btn_correspondiente) {
-//     btn.css("background", "white");
-//   }
-//   escogerPreguntaAleatoria(preguntas);
-// }
+function reiniciar() {
+    // Restablecer botones y cualquier otro estado necesario
+    for (const btn of btn_correspondiente) {
+        btn.css("background", "white");
+    }
+    
+    // Llamar a la función para escoger una nueva pregunta aleatoria
+    escogerPreguntaAleatoria();
+}
+
+$("#list-questions-list").click(function (e) {
+    e.preventDefault(); // Prevenir el comportamiento predeterminado del enlace
+    preguntas_aleatorias = true;
+    mostrar_pantalla_practica_terminada = true;
+    reiniciar_puntos_al_reiniciar_la_practica = true;
+    pregunta = "";
+    posibles_respuestas;
+    npreguntas = [];
+    preguntas_hechas = 0;
+    preguntas_correctas = 0;
+    escogerPreguntaAleatoria();
+});
