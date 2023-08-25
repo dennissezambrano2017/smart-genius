@@ -1,3 +1,15 @@
+/* * {
+    transition: all 0.3s;
+} */
+
+.panel {
+    background: #ffd899;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
 .border-gray {
     border: 1px solid gray;
 }
@@ -16,4 +28,18 @@
 
 .dropdown-item:hover {
     background-color: #b6caf0;
+}
+
+.opc {
+    background: white;
+    width: 60%;
+    max-width: 550px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.opc:hover {
+    transform: scale(1.05);
+    background-color: gainsboro;
 }
