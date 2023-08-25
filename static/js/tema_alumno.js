@@ -108,11 +108,11 @@ function escogerPregunta(params, n) {
 }
 
 function desordenarRespuestas(pregunta) {
+    console.log(pregunta)
     posibles_respuestas = [
         pregunta.opciones[0], //respuesta incorrecta
         pregunta.opciones[1], //respuesta incorrecta
         pregunta.opciones[2], //respuesta incorrecta
-        pregunta.opciones[3], //respuesta incorrecta
         pregunta.opciones[pregunta.resp_correcta] //respuesta correcta
     ];
     posibles_respuestas.sort(function () {
