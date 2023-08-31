@@ -83,6 +83,7 @@ function escogerPreguntaAleatoria() {
                     text: "Puntuación: " + ((preguntas_correctas/totalpreguntas)*10) + " / 10",
                     icon: "success"
                 });
+                console.log(tema,username,preguntas_correctas,totalpreguntas)
             }
             if (reiniciar_puntos_al_reiniciar_la_practica) {
                 preguntas_correctas = 0

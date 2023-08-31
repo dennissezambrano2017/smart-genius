@@ -3,99 +3,59 @@
 {% load static %}
 {% block content %}
 <span class="fw-bold fs-4" style="color: #fdb128">MI AVANCE</span>
-    <div class="row">
-        <div class="col-md-4" style="margin-bottom: 10px;">
-            <select id="unidad-select" class="form-select" aria-label="Unidad select" onchange="cargarContenidos()">
-                <option value="">Selecciona una unidad</option>
-                {% for unidad in unidades %}
-                    <option value="{{ unidad.id }}">{{ unidad.nombre }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    
-        <div class="col-md-4">
-            <select id="contenido-select" class="form-select" aria-label="Contenido select" onchange="cargarTemas()">
-                <option selected>Selecciona un contenido</option>
-            </select>
-        </div>
-    
-        <div class="col-md-4">
-            <select id="tema-select" class="form-select" aria-label="Tema select" onchange="cargarMateriales()">
-                <option selected>Selecciona un tema</option>
-            </select>
-        </div>
-        <div class="col-md-4" style="margin-bottom: 10px;">
-            <select id="ejercicio-select" class="form-select" aria-label="Ejercicio select">
-                <option selected>Selecciona un ejercicio</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <button type="button" class="btn btn-primary" onclick="filtrarPuntuacion()">Filtrar Puntuación</button>
-        </div>
+<span  id="name">{% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</span>
+<div class="d-flex">
+    <div class="p-2 flex-fill" style="max-width: 200px">
+        <select id="unidad-select" class="form-select" aria-label="Unidad select" onchange="cargarContenidos()">
+            <option value="">Selecciona una unidad</option>
+            {% for unidad in unidades %}
+            <option value="{{ unidad.id }}">{{ unidad.nombre }}</option>
+            {% endfor %}
+        </select>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Tema</th>
-                <th>Ejercicio</th>
-                <th>Puntaje</th>
-                <th>Fecha</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for puntuacion in puntuaciones %}
-            <tr>
-                <td>{{ puntuacion.ejercicio.material.tema }}</td>
-                <td>{{ puntuacion.ejercicio }}</td>
-                <td>{{ puntuacion.puntaje }}</td>
-                <td>{{ puntuacion.fecha }}</td>
-                <td><button type="button" data-vid="{{ puntuacion.ejercicio.id }}" class="btnViewMaterial btn btn-secondary"
-                    data-bs-toggle="modal" data-bs-target="#modalView-material" id="btn_visualizar_ejercicio" >
-                    <i class="fa-solid fa-eye"></i>
-                </button></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="p-2 flex-fill" style="max-width: 300px">
+        <select id="contenido-select" class="form-select" aria-label="Contenido select" onchange="cargarTemas()">
+            <option selected>Selecciona un contenido</option>
+        </select>
+    </div>
 
-    <div class="modal fade" id="modalView-material" tabindex="-1" aria-labelledby="modalRegister-UnidadLabel"
-    aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <form method="POST" class="was-validated" id="formRgUnidad" novalidate>
-        {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalRegister-UnidadLabel">Ejercicio</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="enunciado" class="form-label">Enunciado del ejercicio</label>
-                        <input type="text" class="form-control" id="enunciado" name="enunciado" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="opciones" class="form-label">Opciones del ejercicio</label>
-                        <input type="text" class="form-control" id="opciones" name="opciones" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="respuesta" class="form-label">Opción seleccionada</label>
-                        <input type="text" class="form-control" id="respuesta" name="respuesta" disabled>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </form>
+    <div class="p-2 flex-fill" style="max-width: 300px">
+        <select id="tema-select" class="form-select" aria-label="Tema select">
+            <option selected>Selecciona un tema</option>
+        </select>
+    </div>
+    <div class="p-2 flex-fill" style="max-width: 200px">
+        <button id="filtrar" type="button" class="btn btn-primary" onclick="filtrarPuntuacion()" disabled>Filtrar Puntuación</button>
+    </div>
 </div>
 
-    {% block javascript %}
-    <script src="{% static 'js/avance.js'%}"></script>
-    {% endblock %}
-
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tema</th>
+            <th>Resultado corecto</th>
+            <th>Puntaje</th>
+            <th style="text-align: center;">Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if puntuaciones %}{% for puntuacion in puntuaciones %}
+        <tr>
+            <td>{{ puntuacion.tema }}</td>
+            <td style="text-align: center;">{{ puntuacion.preguntas_respondidas }}</td>
+            <td style="text-align: center;">{{ puntuacion.puntaje }}</td>
+            <td>{{ puntuacion.fecha }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <p>¡Aún no hay progreso! Cuando veamos alguna actividad, los progresos se mostrarán aquí.</p>
+        {% endif %}
+        <p id="mensaje-vacio" style="display: none;">¡Aún no hay progreso con el tema seleccionado! Cuando veamos alguna actividad, los progresos se mostrarán aquí.</p>
+    </tbody>
+</table>
+{% block javascript %}
+<script src="{% static 'js/avance.js'%}"></script>
 {% endblock %}
 
-
-
-
+{% endblock %}

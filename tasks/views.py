@@ -766,7 +766,7 @@ def visualizar_puntuacion(request):
     usuario_actual = request.user
     unidades = Unidad.objects.all()
 
-    puntuaciones = Puntuacion.objects.filter(usuario=usuario_actual).select_related('ejercicio__material__tema')
+    puntuaciones = Puntuacion.objects.filter(usuario=usuario_actual).select_related('tema')
 
     context = {
         'unidades': unidades,
@@ -822,6 +822,25 @@ def visualizar_puntuacion_filtrada(request):
     }
 
     return render(request, 'avance_alumno.html', context)
+
+def obtener_puntuacion_por_tema(request):
+    tema_id = request.GET.get('tema_id')
+    
+    # Filtra las puntuaciones por el tema_id proporcionado
+    puntuaciones = Puntuacion.objects.filter(tema_id=tema_id)
+    
+    # Formatea los datos en un formato JSON
+    data = []
+    for puntuacion in puntuaciones:
+        data.append({
+            'tema': puntuacion.tema.nombre,  # Nombre del tema
+            'preguntas_respondidas': puntuacion.preguntas_respondidas,
+            'puntaje': str(puntuacion.puntaje),  # Convierte el puntaje a cadena
+            'fecha': puntuacion.fecha.strftime('%Y-%m-%d %H:%M:%S'),  # Formato de fecha
+            'tiempo_empleado': puntuacion.tiempo_empleado,
+        })
+    
+    return JsonResponse(data, safe=False)
 
 def buscar_youtube(request):
     videos = []
