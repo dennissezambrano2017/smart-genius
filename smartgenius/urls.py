@@ -143,6 +143,7 @@ urlpatterns = [
     path('perfil_alumno/', views.vwPerfilAlumno, name='perfil_alu'),
     path('avance_alumno/', views.vwAvanceAlumno, name="avance_alu"),
     path('obtener_puntuacion_por_tema/', views.obtener_puntuacion_por_tema, name='obtener_puntuacion_por_tema'),
+    path('registrar_practica/', views.RegistrarPractica, name='registrar_practica'),
 
     # Sección reportes
     path('inicio/create/', views.create_unidad, name='create_unidad'),

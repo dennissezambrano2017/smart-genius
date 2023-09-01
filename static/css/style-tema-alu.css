@@ -43,3 +43,7 @@
     transform: scale(1.05);
     background-color: #b8b2a6;
 }
+#list-tab {
+    pointer-events: none; /* Deshabilita eventos de puntero en el div */
+    opacity: 0.6; /* Cambia la opacidad para indicar que está deshabilitado*/
+}

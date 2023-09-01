@@ -23,6 +23,7 @@ import requests
 import random
 import pandas as pd
 import plotly.express as px
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def home(request):
@@ -875,7 +876,6 @@ def obtener_puntuacion_por_tema(request):
             'preguntas_respondidas': puntuacion.preguntas_respondidas,
             'puntaje': str(puntuacion.puntaje),  # Convierte el puntaje a cadena
             'fecha': puntuacion.fecha.strftime('%Y-%m-%d %H:%M:%S'),  # Formato de fecha
-            'tiempo_empleado': puntuacion.tiempo_empleado,
         })
     
     return JsonResponse(data, safe=False)
@@ -891,7 +891,7 @@ def buscar_youtube(request):
             'part' : 'snippet',
             'q' : request.POST.get('search'),
             'key' : settings.YOUTUBE_DATA_API_KEY,
-            'maxResults' : 9,
+            'maxResults' : 10,
             'type' : 'video'
         }
 
@@ -910,7 +910,7 @@ def buscar_youtube(request):
             'key' : settings.YOUTUBE_DATA_API_KEY,
             'part' : 'snippet,contentDetails',
             'id' : ','.join(selected_video_ids),
-            'maxResults' : 9
+            'maxResults' : 10
         }
 
         r = requests.get(video_url, params=video_params)
@@ -933,6 +933,30 @@ def buscar_youtube(request):
             'videos' : videos
         }
     return JsonResponse(context)
-    
 
+  
+@login_required
+def RegistrarPractica(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        
+        username = data.get('username')  # Obtén el nombre de usuario
+        tema_id = data.get('tema')
+        puntaje = data.get('puntaje')
+        preguntas_respondidas = data.get('preguntas_respondidas')
+        
+        print(username,tema_id,puntaje,preguntas_respondidas)
+        try:
+            usuario = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+        
+        tema = Tema.objects.get(pk=tema_id)
+        
+        puntuacion = Puntuacion(usuario=usuario, tema=tema, puntaje=puntaje, preguntas_respondidas=preguntas_respondidas)
+        puntuacion.save()
+        
+        return JsonResponse({'mensaje': 'Puntuación guardada exitosamente'})
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 

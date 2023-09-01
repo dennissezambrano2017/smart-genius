@@ -134,7 +134,7 @@
                     <div class="mb-3">
                         <div class="d-flex">
                             <div class="p-2 flex-fill">
-                                <label class="form-label">Nombre del Tema:</label>
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
                                 <select class="form-select" aria-label="Disabled select" disabled
                                     id="selectViewMaterial" required>
                                 </select>
@@ -146,7 +146,8 @@
                             <div class="p-2 flex-fill">
                                 <label class="form-label">Enlace de Youtube:</label>
                                 <textarea type="text" class="form-control" id="nombreEnlace" name="nombreEnlace"
-                                    maxlength="100" required disabled></textarea>
+                                    maxlength="100" required disabled
+                                    placeholder="Ingrese el enlace del video de youtube"></textarea>
                             </div>
                             <div class="p-2 flex-fill">
                                 <label for="pdfFileView" class="form-label">Archivo pdf:</label>
@@ -238,15 +239,14 @@
                     <div class="mb-3">
                         <div class="d-flex">
                             <div class="p-2 flex-fill">
-                                <label class="form-label">Nombre del Tema:</label>
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
                                 <select class="form-select" aria-label="Disabled select" id="selectViewTema-ma"
                                     required>
                                 </select>
                             </div>
                             <div class="p-2 flex-fill">
                                 <label for="pdfFileView" class="form-label">Archivo pdf:</label>
-                                <input type="file" class="form-control" id="inputGroupFile01" required>
-
+                                <input type="file" class="form-control" id="inputGroupFile01" required accept=".pdf">
                             </div>
 
                         </div>
@@ -254,7 +254,8 @@
                             <div class="p-2 flex-fill">
                                 <label class="form-label">Enlace de Youtube:</label>
                                 <input type="text" class="form-control" id="nombreEnlaceReg" name="nombreEnlaceReg"
-                                    maxlength="100" required>
+                                    maxlength="100" required
+                                    placeholder="Ingrese el enlace del video de youtube">
                             </div>
                         </div>
                     </div>
@@ -446,7 +447,7 @@
                     <div class="mb-3">
                         <div class="d-flex">
                             <div class="p-2 flex-fill">
-                                <label class="form-label">Nombre del Tema:</label>
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
                                 <select class="form-select" aria-label="Disabled select" 
                                     id="selectEditMaterial" required>
                                 </select>
@@ -463,7 +464,7 @@
                             <div class="col-md-6">
                                 <label for="pdfFileEdit" class="form-label" aria-describedby="Archivo">Archivo pdf:</label>
                                 <div id="pdfFileEdit" class="form-text"></div>
-                                <input type="file" class="form-control" id="inputGroupFile02" required>
+                                <input type="file" class="form-control" id="inputGroupFile02" required accept=".pdf">
                             </div>
                         </div>
                     </div>

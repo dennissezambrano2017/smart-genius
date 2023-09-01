@@ -400,17 +400,32 @@ $(document).on('submit', '#formRgEditejercicio', function (e) {
 $(".btnAñadirOpciones").click(function () {
     var opcion = $('#preguntaOpcion').val();
     var opcion2 = $('#preguntaOpcionEdit').val();
-    if (opcion.trim() !== '') {
-        opcionesDetalle.push(opcion);
-        actualizarOpcionesMostradas('#preguntaOpcion', '#preguntaOpciones');
-        $('#preguntaOpcion').val("");
-        autosize.update($('#preguntaOpciones'));
+    if (opcionesDetalle.length < 4) {
+        if (opcion.trim() !== '') {
+            opcionesDetalle.push(opcion);
+            actualizarOpcionesMostradas('#preguntaOpcion', '#preguntaOpciones');
+            $('#preguntaOpcion').val("");
+            autosize.update($('#preguntaOpciones'));
+        }
+        if (opcion2.trim() !== '') {
+            opcionesDetalle.push(opcion2);
+            actualizarOpcionesMostradas('#preguntaOpcionEdit', '#preguntaOpcionesEdit');
+            $('#preguntaOpcionEdit').val("");
+            autosize.update($('#preguntaOpcionesEdit'));
+        }
     }
-    if (opcion2.trim() !== '') {
-        opcionesDetalle.push(opcion2);
-        actualizarOpcionesMostradas('#preguntaOpcionEdit', '#preguntaOpcionesEdit');
-        $('#preguntaOpcionEdit').val("");
-        autosize.update($('#preguntaOpcionesEdit'));
+    if (opcionesDetalle.length === 4) {
+        if (opcion.trim() !== '') {
+            const preguntaOpcionInput = document.getElementById('preguntaOpcion');
+            $('#preguntaOpcion').val("");
+            preguntaOpcionInput.disabled = true;
+        }
+        if (opcion2.trim() !== '') {
+            const preguntaOpcionInput = document.getElementById('preguntaOpcionEdit');
+            $('#preguntaOpcionEdit').val("");
+            preguntaOpcionInput.disabled = true;
+        }
+
     }
 });
 
@@ -482,7 +497,7 @@ $(".btnEditMaterial").click(function () {
             // Limpiar las opciones previas (si las hay)
             selectUnidad.empty();
             var temaSeleccionadoId = d.temas[0].id;
-            idTema=temaSeleccionadoId
+            idTema = temaSeleccionadoId
             d.temas_list.forEach(function (tema) {
                 // Crear la opción y establecer los atributos
                 var option = $('<option>', {
@@ -541,7 +556,7 @@ $(".btnEditMaterial").click(function () {
     });
 });
 $(document).on('submit', '#formEditarMaterial', function (e) {
-    
+
 
     var material_id = idMaterial;
     var enlace = $('#nombreEnlaceEdit').val();

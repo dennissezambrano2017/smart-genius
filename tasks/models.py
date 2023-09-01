@@ -55,8 +55,7 @@ class Puntuacion(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     tema = models.ForeignKey(Tema, on_delete=models.CASCADE,default=9)
     fecha = models.DateTimeField(auto_now_add=True)
-    practice_count = models.PositiveIntegerField(default=0)
-    puntaje = models.DecimalField(max_digits=5, decimal_places=2)
+    puntaje = models.CharField(max_length=10, default='0/0')
     preguntas_respondidas = models.CharField(max_length=10, default='0/0')
     def __str__(self):
         return f"{self.usuario}"

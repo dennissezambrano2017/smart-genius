@@ -66,7 +66,6 @@ function filtrarPuntuacion() {
             <td style="text-align: center;">${puntuacion.preguntas_respondidas}</td>
             <td style="text-align: center;">${puntuacion.puntaje}</td>
             <td>${puntuacion.fecha}</td>
-            <td style="text-align: center;">${puntuacion.tiempo_empleado}</td>
           `;
             tableBody.appendChild(row);
           });

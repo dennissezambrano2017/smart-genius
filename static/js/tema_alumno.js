@@ -1,7 +1,7 @@
-var tema='';
+var tema = 0;
 var dataPreguntas = [];
-var totalpreguntas=0;
-$(".btn-tema").click(function (e) { 
+var totalpreguntas = 0;
+$(".btn-tema").click(function (e) {
     e.preventDefault();
     var id_tema = $(this).attr('id');
     $.ajax({
@@ -12,10 +12,10 @@ $(".btn-tema").click(function (e) {
         success: function (data) {
             if (data.result === '1') {
                 var enlace = data.enlace;
-                var shortLink=enlace.substring(32);
+                var shortLink = enlace.substring(32);
                 var pdf = data.pdf;
                 // Ajustar la ruta para que coincida con la estructura de carpetas
-               //pdfurl = pdf.replace('/pdfs/pdfs/', '/pdfs/'); 
+                //pdfurl = pdf.replace('/pdfs/pdfs/', '/pdfs/'); 
 
                 //pdfViewer.setDocument(pdf);
                 // Actualizar la URL del visor de PDF
@@ -32,9 +32,13 @@ $(".btn-tema").click(function (e) {
         }
     });
 
+
+    const listTab = document.getElementById('list-tab');
+    listTab.style.pointerEvents = 'auto';
+    listTab.style.opacity=1;
     // Colocar el nombre del tema
     var name_tema = $(this).text();
-    tema=name_tema;
+    tema = id_tema;
     $('#viewText').empty();
     $('#viewText').append("<h4 style='font-weight: bold; color: #fdb128;'>" + name_tema + "</h4>");
 });
@@ -59,14 +63,12 @@ let preguntas_correctas = 0;
 let preguntas_incorrectas = 0;
 
 function escogerPreguntaAleatoria() {
-    
+
     getDataDB = dataPreguntas;
-    console.log(getDataDB)
-    totalpreguntas=getDataDB.length;
+    totalpreguntas = getDataDB.length;
     let n;
     if (preguntas_aleatorias) {
         n = Math.floor(Math.random() * getDataDB.length);
-        console.log(n)
     } else {
         n = 0;
     }
@@ -77,13 +79,19 @@ function escogerPreguntaAleatoria() {
             n = 0;
         }
         if (npreguntas.length == getDataDB.length) {
+            var correct = preguntas_correctas;
             if (mostrar_pantalla_practica_terminada) {
                 swal.fire({
                     title: "Práctica finalizado",
-                    text: "Puntuación: " + ((preguntas_correctas/totalpreguntas)*10) + " / 10",
+                    text: "Puntuación: " + ((preguntas_correctas / totalpreguntas) * 10) + " / 10",
                     icon: "success"
+                }).then(async function () {
+                    // Guardar la práctica
+                    registrarPractica(tema, correct, totalpreguntas);
+
+                    // Redirigir a la página de contenido_alumno después de guardar la práctica
+                    window.location.href = '/contenido_alumno/';
                 });
-                console.log(tema,username,preguntas_correctas,totalpreguntas)
             }
             if (reiniciar_puntos_al_reiniciar_la_practica) {
                 preguntas_correctas = 0
@@ -99,13 +107,40 @@ function escogerPreguntaAleatoria() {
     escogerPregunta(getDataDB, n);
 }
 
+function registrarPractica(tema, preguntas_correctas, totalpreguntas) {
+    var csrftoken = getCookie('csrftoken');
+    var puntaje = ((preguntas_correctas / totalpreguntas) * 10).toFixed(2) + "/10";
+    var username = document.getElementById('name').textContent;
+    var data = {
+        'username': username,
+        'tema': tema,
+        'puntaje': puntaje,
+        'preguntas_respondidas': preguntas_correctas + "/" + totalpreguntas
+    };
+    fetch('/registrar_practica/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken // Asegúrate de obtener el valor correcto de la cookie CSRF
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.mensaje); // Mensaje de respuesta del servidor
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+
 function escogerPregunta(params, n) {
     pregunta = params[n];
     $("#pregunta").html(pregunta.enunciado);
     // $("#numero").html(n);
     let pc = preguntas_correctas;
-    var puntaje=(pc/totalpreguntas)*10;
-    console.log(pc,preguntas_correctas,totalpreguntas)
+    var puntaje = (pc / totalpreguntas) * 10;
     if (preguntas_hechas > 1) {
         $("#puntaje").html("Puntaje: " + puntaje.toFixed(2) + " / 10");
     } else {
@@ -115,7 +150,7 @@ function escogerPregunta(params, n) {
 }
 
 function desordenarRespuestas(pregunta) {
-    if(preguntas_correctas==0 && preguntas_incorrectas==0)
+    if (preguntas_correctas == 0 && preguntas_incorrectas == 0)
         $("#puntaje").html("Puntaje: 0.00 / 10");
 
     posibles_respuestas = [
@@ -156,18 +191,16 @@ function oprimir_btn(i) {
             break;
         }
     }
-    if(preguntas_incorrectas==3)
-    {
-        console.log('ejecutar la recomendacion')
+    if (preguntas_incorrectas == 3) {
         $('#exampleModal').modal('show'); // Mostrar el modal automáticamente
     }
-    else{
+    else {
         setTimeout(function () {
             reiniciar();
             suspender_botones = false;
         }, 2000);
     }
-    
+
 }
 
 function reiniciar() {
@@ -175,7 +208,7 @@ function reiniciar() {
     for (const btn of btn_correspondiente) {
         btn.css("background", "white");
     }
-    
+
     // Llamar a la función para escoger una nueva pregunta aleatoria
     escogerPreguntaAleatoria();
 }
@@ -196,7 +229,6 @@ $("#list-questions-list").click(function (e) {
 var openModalButton = document.getElementById('openModalButton');
 openModalButton.addEventListener('click', function () {
     var search = tema;
-    console.log(search)
     $.ajax({
         type: 'POST',
         url: '/recomendacion/',
@@ -238,8 +270,17 @@ openModalButton.addEventListener('click', function () {
                 var videoUrl = $(this).data('video-url');
                 window.open(videoUrl, '_blank'); // Abrir en nueva pestaña
             });
-        },error: function (xhr, textStatus, errorThrown) {
+        }, error: function (xhr, textStatus, errorThrown) {
             console.log('Error:', errorThrown);
         }
     });
+});
+
+var cancelarModalButton = document.getElementById('cancelarModalButton');
+cancelarModalButton.addEventListener('click', function () {
+    window.location.href = '/contenido_alumno/';
+});
+var close = document.getElementById('close');
+close.addEventListener('click', function () {
+    window.location.href = '/contenido_alumno/';
 });
