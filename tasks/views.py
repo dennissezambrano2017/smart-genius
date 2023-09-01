@@ -21,6 +21,9 @@ from django.conf import settings
 from isodate import parse_duration
 import requests
 import random
+import pandas as pd
+import plotly.express as px
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def home(request):
@@ -151,7 +154,43 @@ def signout(request):
 
 @login_required
 def inicio(request):
-    return render(request, 'inicio.html')
+    puntuaciones_usuario = Puntuacion.objects.all()
+    temas_practicados = {}    
+    for puntuacion in puntuaciones_usuario:
+        tema_id = puntuacion.tema.id
+        if tema_id in temas_practicados:
+            temas_practicados[tema_id] += 1
+        else:
+            temas_practicados[tema_id] = 1
+    temas_info = []     
+    for tema_id, practicas in temas_practicados.items():
+        tema = Tema.objects.get(id=tema_id) 
+        tema_dict = {
+            'id': tema_id,
+            'tema': tema.nombre,
+            'cantidad_estudiantes': practicas
+        }
+        temas_info.append(tema_dict)
+    
+    df = pd.DataFrame(temas_info)
+    fig = px.bar(df, x='tema', y='cantidad_estudiantes', title='Prácticas por Tema',
+                 color_discrete_sequence=['blue'], opacity=0.7)
+    fig.update_layout(title_x=0.5) 
+    fig.update_traces(marker_line_width=0.1)
+    fig.update_layout(yaxis_tickmode='linear', plot_bgcolor='white')  
+    fig.update_layout(
+    xaxis_title="Tema",
+    yaxis_title="Cantidad de Estudiantes",
+    yaxis_tickmode='linear',
+    plot_bgcolor='white',
+    font=dict(family="Arial", size=12, color="black"),
+    showlegend=False)
+    grafico_html = fig.to_html(full_html=False)
+    context = {
+        'grafico_html': grafico_html
+    }
+    return render(request, 'inicio.html', context)
+
 # Vista que renderiza la plantilla que lista los unidades registrados
 
 @login_required
@@ -766,7 +805,7 @@ def visualizar_puntuacion(request):
     usuario_actual = request.user
     unidades = Unidad.objects.all()
 
-    puntuaciones = Puntuacion.objects.filter(usuario=usuario_actual).select_related('ejercicio__material__tema')
+    puntuaciones = Puntuacion.objects.filter(usuario=usuario_actual).select_related('tema')
 
     context = {
         'unidades': unidades,
@@ -823,6 +862,24 @@ def visualizar_puntuacion_filtrada(request):
 
     return render(request, 'avance_alumno.html', context)
 
+def obtener_puntuacion_por_tema(request):
+    tema_id = request.GET.get('tema_id')
+    
+    # Filtra las puntuaciones por el tema_id proporcionado
+    puntuaciones = Puntuacion.objects.filter(tema_id=tema_id)
+    
+    # Formatea los datos en un formato JSON
+    data = []
+    for puntuacion in puntuaciones:
+        data.append({
+            'tema': puntuacion.tema.nombre,  # Nombre del tema
+            'preguntas_respondidas': puntuacion.preguntas_respondidas,
+            'puntaje': str(puntuacion.puntaje),  # Convierte el puntaje a cadena
+            'fecha': puntuacion.fecha.strftime('%Y-%m-%d %H:%M:%S'),  # Formato de fecha
+        })
+    
+    return JsonResponse(data, safe=False)
+
 def buscar_youtube(request):
     videos = []
 
@@ -834,7 +891,7 @@ def buscar_youtube(request):
             'part' : 'snippet',
             'q' : request.POST.get('search'),
             'key' : settings.YOUTUBE_DATA_API_KEY,
-            'maxResults' : 9,
+            'maxResults' : 10,
             'type' : 'video'
         }
 
@@ -853,7 +910,7 @@ def buscar_youtube(request):
             'key' : settings.YOUTUBE_DATA_API_KEY,
             'part' : 'snippet,contentDetails',
             'id' : ','.join(selected_video_ids),
-            'maxResults' : 9
+            'maxResults' : 10
         }
 
         r = requests.get(video_url, params=video_params)
@@ -876,6 +933,30 @@ def buscar_youtube(request):
             'videos' : videos
         }
     return JsonResponse(context)
-    
 
+  
+@login_required
+def RegistrarPractica(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        
+        username = data.get('username')  # Obtén el nombre de usuario
+        tema_id = data.get('tema')
+        puntaje = data.get('puntaje')
+        preguntas_respondidas = data.get('preguntas_respondidas')
+        
+        print(username,tema_id,puntaje,preguntas_respondidas)
+        try:
+            usuario = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+        
+        tema = Tema.objects.get(pk=tema_id)
+        
+        puntuacion = Puntuacion(usuario=usuario, tema=tema, puntaje=puntaje, preguntas_respondidas=preguntas_respondidas)
+        puntuacion.save()
+        
+        return JsonResponse({'mensaje': 'Puntuación guardada exitosamente'})
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 

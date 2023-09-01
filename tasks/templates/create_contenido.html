@@ -7,7 +7,9 @@
 <section class="row pl-5 w-100">
   <section class="form-group justify-content-center">
     <section class="col-sm-12">
-      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegister-Contenido">
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegister-Contenido"
+        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+        title="Haz clic aquí para registrar un nuevo Contenido.">
         <i class="fa fa-plus-circle"></i> Nuevo Contendio
       </button>
       <div id="alertContainer" class="position-absolute top-0 end-0" style="padding-top: 20px;padding-right: 10px;">
@@ -39,9 +41,11 @@
           <td class="unidad-contenido">{{ u.unidad }}</td>
           <td class="btnAc">
             <a class="btn btn-danger" href="javascript:confi_delet_contenido({{u.id}});"><i class="fa fa-trash"
-                aria-hidden="true"></i></a>
+                aria-hidden="true" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                title="Haz clic aquí para eliminar el Contenido."></i></a>
             <button type="button" vid="{{ u.id }}" class="btnObtenerContenido btn btn-warning" data-bs-toggle="modal"
-              data-bs-target="#modalEdit-Contenido">
+              data-bs-target="#modalEdit-Contenido" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+              title="Haz clic aquí para editar el Contenido.">
               <i class="fa-solid fa-pen"></i>
             </button>
           </td>
@@ -61,7 +65,7 @@
         {% endif %}
 
         <li class="page-item"><a class="page-link">
-          Página {{ contenido.number }} de {{ contenido.paginator.num_pages }}</a></li>
+            Página {{ contenido.number }} de {{ contenido.paginator.num_pages }}</a></li>
 
         {% if contenido.has_next %}
         <li class="page-item"><a class="page-link" href="?page={{ contenido.next_page_number }}">Sigiente</a></li>
@@ -81,7 +85,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="modalRegister-ContenidoLabel">Registro de Contenido</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="restablecer()"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            onclick="restablecer()"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
@@ -90,13 +95,14 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Nombre de la Contenido</label>
-            <input type="text" class="form-control" id="nombreContenido" name="nombreContenido" maxlength="100" required>
+            <label for="exampleFormControlInput1" class="form-label">Nombre del Contenido</label>
+            <input type="text" class="form-control" id="nombreContenido" placeholder="Ingrese el nombre del contenido"
+              name="nombreContenido" maxlength="100" required>
           </div>
           <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Descripcion</label>
-            <textarea type="text" class="form-control" id="descripcionContenido" name="descripcionContenido"
-              maxlength="5500"></textarea>
+            <textarea type="text" class="form-control" id="descripcionContenido"
+              placeholder="(Opcional) Ingrese una descripcion" name="descripcionContenido" maxlength="5500"></textarea>
             <div id="alertContainer" style="padding-top: 20px;padding-right: 10px;">
               <div id="alertMessageRegister" class="alert" style="display: none;"></div>
             </div>
@@ -121,85 +127,86 @@
 </div>
 
 <!-- Modal Modificar -->
-<div class="modal fade" id="modalEdit-Contenido" tabindex="-1" aria-labelledby="modalEdit-ContenidoLabel" aria-hidden="true"
-    data-backdrop="static" data-keyboard="false">
-    <form method="POST" class="was-validated" id="formModContenido">
-        {% csrf_token %}
-        <input type="hidden" id="txtIdContenido" name="txtIdContenido">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEdit-ContenidoLabel">Editar Contenido</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="restablecer()"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="mb-3">
-                    <label for="selectModContenido" class="form-label">Selecciona una unidad</label>
-                    <select class="form-select" aria-label="Default select example" id="selectModContenido" 
-                    name="selectModContenido" required>
-                      
-                    </select>
-                  </div>
-                    <div class="mb-3">
-                        <label for="nombreContenidoMod" class="form-label">Nombre del contenido</label>
-                        <input type="text" class="form-control" id="nombreContenidoMod" name="nombreContenidoMod"
-                            maxlength="100" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="exampleFormControlInput1" class="form-label">Descripcion</label>
-                      <textarea type="text" class="form-control" id="descripcionEdContenido" name="descripcionEdContenido"
-                        maxlength="100"></textarea>
-                      <div id="alertContainer" style="padding-top: 20px;padding-right: 10px;">
-                        <div id="alertMessageModif" class="alert" style="display: none;"></div>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
-                            data-bs-dismiss="modal" onclick="restablecer()">
-                            <i class="fa fa-ban"></i> Cancelar
-                        </button>
-                        <button type="submit" id="btnGuardarCmUnidad" class="btn btn-sm btn-success">
-                            <i class="fas fa-save"></i> Guardar cambios
-                        </button>
-                    </div>
-                </div>
-
-            </div>
+<div class="modal fade" id="modalEdit-Contenido" tabindex="-1" aria-labelledby="modalEdit-ContenidoLabel"
+  aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <form method="POST" class="was-validated" id="formModContenido">
+    {% csrf_token %}
+    <input type="hidden" id="txtIdContenido" name="txtIdContenido">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalEdit-ContenidoLabel">Editar Contenido</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            onclick="restablecer()"></button>
         </div>
-    </form>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="selectModContenido" class="form-label">Selecciona una unidad</label>
+            <select class="form-select" aria-label="Default select example" id="selectModContenido"
+              name="selectModContenido" required>
+
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="nombreContenidoMod" class="form-label">Nombre del contenido</label>
+            <input type="text" class="form-control" id="nombreContenidoMod" name="nombreContenidoMod" maxlength="100"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Descripcion</label>
+            <textarea type="text" class="form-control" id="descripcionEdContenido" name="descripcionEdContenido"
+              maxlength="100"></textarea>
+            <div id="alertContainer" style="padding-top: 20px;padding-right: 10px;">
+              <div id="alertMessageModif" class="alert" style="display: none;"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"
+              onclick="restablecer()">
+              <i class="fa fa-ban"></i> Cancelar
+            </button>
+            <button type="submit" id="btnGuardarCmUnidad" class="btn btn-sm btn-success">
+              <i class="fas fa-save"></i> Guardar cambios
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
 </div>
 
 <!--Modal Eliminar-->
 <div class="modal fade" id="modalDelet" tabindex="-1" aria-labelledby="modalDeletLabel" aria-hidden="true"
-    data-backdrop="static" data-keyboard="false">
-    <form class="was-validated" id="formDeletUnidad">
-        {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalDeletLabel">Eliminar Contenido</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
-                </div>
-                <div class="modal-body" id="modalContenido">
-                    <div class="mb-3">
-                        <p>¿Estás seguro de que deseas eliminar esta contenido?</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal">
-                        <i class="fa fa-ban"></i>
-                        Cancelar
-                    </button>
-                    <button type="submit" onclick='delete_contenido(" + idUnidad + ")' class="btn btn-sm btn-success">
-                        <i class="fas fa-save"></i>
-                        Aceptar
-                    </button>
-                    <div id="alerta">
-                    </div>
-                </div>
-            </div>
+  data-backdrop="static" data-keyboard="false">
+  <form class="was-validated" id="formDeletUnidad">
+    {% csrf_token %}
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalDeletLabel">Eliminar Contenido</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-    </form>
+        <div class="modal-body" id="modalContenido">
+          <div class="mb-3">
+            <p>¿Estás seguro de que deseas eliminar esta contenido?</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal">
+            <i class="fa fa-ban"></i>
+            Cancelar
+          </button>
+          <button type="submit" onclick='delete_contenido(" + idUnidad + ")' class="btn btn-sm btn-success">
+            <i class="fas fa-save"></i>
+            Aceptar
+          </button>
+          <div id="alerta">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
 {% endblock %}
 {% block js %}

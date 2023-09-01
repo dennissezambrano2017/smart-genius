@@ -8,7 +8,10 @@
 <section class="row pl-5 w-100">
     <section class="form-group justify-content-center">
         <section class="col-sm-12">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegist-material">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegist-material"
+            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para registrar un material.">
                 <i class="fa fa-plus-circle"></i> Nuevo Material
             </button>
             <div id="alertContainer" class="position-absolute top-0 end-0"
@@ -39,14 +42,23 @@
                     <td class="nombre-tema">{{ m.tema }}</td>
                     <td class="btnAc">
                         <button type="button" vid="{{ m.id }}" class="btnViewMaterial btn btn-secondary"
-                            data-bs-toggle="modal" data-bs-target="#modalView-material">
+                            data-bs-toggle="modal" data-bs-target="#modalView-material"
+                            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para visualizar la información del material.">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                         <button type="button" vid="{{ m.id }}" class="btnEditMaterial btn btn-warning"
-                            data-bs-toggle="modal" data-bs-target="#modalEdit-material">
+                            data-bs-toggle="modal" data-bs-target="#modalEdit-material"
+                            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para editar la información del material.">
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <a class="btn btn-danger" href="javascript:confi_delet_material({{m.id}});">
+                        <a class="btn btn-danger" href="javascript:confi_delet_material({{m.id}});"
+                        data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para eliminar el material.">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </td>
@@ -122,7 +134,7 @@
                     <div class="mb-3">
                         <div class="d-flex">
                             <div class="p-2 flex-fill">
-                                <label class="form-label">Nombre del Tema:</label>
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
                                 <select class="form-select" aria-label="Disabled select" disabled
                                     id="selectViewMaterial" required>
                                 </select>
@@ -134,7 +146,8 @@
                             <div class="p-2 flex-fill">
                                 <label class="form-label">Enlace de Youtube:</label>
                                 <textarea type="text" class="form-control" id="nombreEnlace" name="nombreEnlace"
-                                    maxlength="100" required disabled></textarea>
+                                    maxlength="100" required disabled
+                                    placeholder="Ingrese el enlace del video de youtube"></textarea>
                             </div>
                             <div class="p-2 flex-fill">
                                 <label for="pdfFileView" class="form-label">Archivo pdf:</label>
@@ -226,15 +239,14 @@
                     <div class="mb-3">
                         <div class="d-flex">
                             <div class="p-2 flex-fill">
-                                <label class="form-label">Nombre del Tema:</label>
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
                                 <select class="form-select" aria-label="Disabled select" id="selectViewTema-ma"
                                     required>
                                 </select>
                             </div>
                             <div class="p-2 flex-fill">
                                 <label for="pdfFileView" class="form-label">Archivo pdf:</label>
-                                <input type="file" class="form-control" id="inputGroupFile01" required>
-
+                                <input type="file" class="form-control" id="inputGroupFile01" required accept=".pdf">
                             </div>
 
                         </div>
@@ -242,7 +254,8 @@
                             <div class="p-2 flex-fill">
                                 <label class="form-label">Enlace de Youtube:</label>
                                 <input type="text" class="form-control" id="nombreEnlaceReg" name="nombreEnlaceReg"
-                                    maxlength="100" required>
+                                    maxlength="100" required
+                                    placeholder="Ingrese el enlace del video de youtube">
                             </div>
                         </div>
                     </div>
@@ -284,7 +297,7 @@
                             <div class="p-2 flex-fill">
                                 <label class="form-label">Enunciado:</label>
                                 <textarea type="text" class="form-control" id="preguntaEnunciado"
-                                    name="preguntaEnunciado" maxlength="100" required></textarea>
+                                    name="preguntaEnunciado" maxlength="500" required></textarea>
                             </div>
                         </div>
                         <div class="d-flex">
@@ -434,7 +447,7 @@
                     <div class="mb-3">
                         <div class="d-flex">
                             <div class="p-2 flex-fill">
-                                <label class="form-label">Nombre del Tema:</label>
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
                                 <select class="form-select" aria-label="Disabled select" 
                                     id="selectEditMaterial" required>
                                 </select>
@@ -451,7 +464,7 @@
                             <div class="col-md-6">
                                 <label for="pdfFileEdit" class="form-label" aria-describedby="Archivo">Archivo pdf:</label>
                                 <div id="pdfFileEdit" class="form-text"></div>
-                                <input type="file" class="form-control" id="inputGroupFile02" required>
+                                <input type="file" class="form-control" id="inputGroupFile02" required accept=".pdf">
                             </div>
                         </div>
                     </div>

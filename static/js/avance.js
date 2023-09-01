@@ -1,6 +1,9 @@
+const unidadSelect = document.getElementById("unidad-select");
+const contenidoSelect = document.getElementById("contenido-select");
+const temaSelect = document.getElementById("tema-select");
+const mensajeVacio = document.getElementById("mensaje-vacio");
+const miBoton = document.getElementById("filtrar");
 function cargarContenidos() {
-  const unidadSelect = document.getElementById("unidad-select");
-  const contenidoSelect = document.getElementById("contenido-select");
 
   const unidadId = unidadSelect.value;
 
@@ -21,9 +24,6 @@ function cargarContenidos() {
 }
 
 function cargarTemas() {
-  const contenidoSelect = document.getElementById("contenido-select");
-  const temaSelect = document.getElementById("tema-select");
-
   const contenidoId = contenidoSelect.value;
 
   if (contenidoId) {
@@ -39,73 +39,41 @@ function cargarTemas() {
     temaSelect.innerHTML = "<option selected>Selecciona un tema</option>";
   }
 }
-function cargarMateriales() {
-  const ejercicioSelect = document.getElementById("ejercicio-select");
-  const temaSelect = document.getElementById("tema-select");
-  const temaId = temaSelect.value;
-  fetch(`/obtener_materiales/?tema_id=${temaId}`)
-    .then(async (response) => await response.json())
-    .then(async (data) => {
-      data.forEach((material) => {
-        if (material.id) {
-          return fetch(`/obtener_ejercicios/?material_id=${material.id}`)
-            .then((response) => response.json())
-            .then((data) => {
-              let optionsHTML =
-                "<option selected>Selecciona un ejercicio</option>";
-              data.forEach((ejercicio) => {
-                optionsHTML += `<option value="${ejercicio.id}">${ejercicio.enunciado}</option>`;
-              });
-              ejercicioSelect.innerHTML = optionsHTML;
-            });
-        }
-      });
-    });
-}
+unidadSelect.addEventListener("change", function () {
+  miBoton.disabled = true;
+});
+contenidoSelect.addEventListener("change", function () {
+  miBoton.disabled = true;
+});
+temaSelect.addEventListener("change", function () {
+  miBoton.disabled = false;
+});
 
 function filtrarPuntuacion() {
-  const ejercicioSelect = document.getElementById("ejercicio-select");
-  const ejercicioId = ejercicioSelect.value;
-  if (ejercicioId > 0) {
-    const url = `/visualizar_puntuacion_filtrada/?ejercicio_id=${ejercicioId}`;
-    window.location.href = url;
-  } else {
-    ejercicioId = 0;
-    const url = `/visualizar_puntuacion_filtrada/?ejercicio_id=${ejercicioId}`;
-    window.location.href = url;
+  const temaId = temaSelect.value;
+  if (temaId) {
+    fetch(`/obtener_puntuacion_por_tema/?tema_id=${temaId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const tableBody = document.querySelector("tbody");
+        tableBody.innerHTML = "";  // Limpia la tabla antes de actualizarla
+        if (data.length > 0) {
+          mensajeVacio.style.display = "none";
+          data.forEach((puntuacion) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td>${puntuacion.tema}</td>
+            <td style="text-align: center;">${puntuacion.preguntas_respondidas}</td>
+            <td style="text-align: center;">${puntuacion.puntaje}</td>
+            <td>${puntuacion.fecha}</td>
+          `;
+            tableBody.appendChild(row);
+          });
+        } else {
+          mensajeVacio.style.display = "block";
+        }
+      });
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const btnsViewMaterial = document.querySelectorAll(
-    "#btn_visualizar_ejercicio"
-  );
-  btnsViewMaterial.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const vid = this.getAttribute("data-vid");
-      visualizarPuntuacion(vid);
-    });
-  });
-});
 
-function visualizarPuntuacion(idPuntuacion) {
-  fetch(`/visualizar_ejercicio_user/?ejercicio_id=${idPuntuacion}`)
-    .then(async (response) => await response.json())
-    .then(async (data) => {
-      const ejercicio = data[0];
-
-      document.getElementById("enunciado").value = ejercicio.enunciado;
-
-      const opcionesInput = document.getElementById("opciones");
-      opcionesInput.value = ejercicio.opciones.join(", "); // Unimos las opciones en un string
-
-      const respuestaInput = document.getElementById("respuesta");
-      const respuestaSeleccionada = ejercicio.respuesta_correcta;
-      respuestaInput.value = ejercicio.opciones[respuestaSeleccionada - 1];
-
-      const modal = new bootstrap.Modal(
-        document.getElementById("modalView-material")
-      );
-      modal.show();
-    });
-}
