@@ -7,7 +7,10 @@
 <section class="row pl-5 w-100">
   <section class="form-group justify-content-center">
     <section class="col-sm-12">
-      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegister-Contenido">
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegister-Contenido"
+      data-bs-placement="top"
+      data-bs-custom-class="custom-tooltip"
+      title="Haz clic aquí para registrar un nuevo Contenido.">
         <i class="fa fa-plus-circle"></i> Nuevo Contendio
       </button>
       <div id="alertContainer" class="position-absolute top-0 end-0" style="padding-top: 20px;padding-right: 10px;">
@@ -39,9 +42,15 @@
           <td class="unidad-contenido">{{ u.unidad }}</td>
           <td class="btnAc">
             <a class="btn btn-danger" href="javascript:confi_delet_contenido({{u.id}});"><i class="fa fa-trash"
-                aria-hidden="true"></i></a>
+                aria-hidden="true"
+                data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para eliminar el Contenido."></i></a>
             <button type="button" vid="{{ u.id }}" class="btnObtenerContenido btn btn-warning" data-bs-toggle="modal"
-              data-bs-target="#modalEdit-Contenido">
+              data-bs-target="#modalEdit-Contenido"
+              data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para editar el Contenido.">
               <i class="fa-solid fa-pen"></i>
             </button>
           </td>

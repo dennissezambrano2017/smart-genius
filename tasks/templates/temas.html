@@ -8,7 +8,10 @@
 <section class="row pl-5 w-100">
     <section class="form-group justify-content-center">
         <section class="col-sm-12">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegister-Tema">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegister-Tema"
+            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para registrar nuevos temas.">
                 <i class="fa fa-plus-circle"></i> Nuevo Tema
             </button>
             <div id="alertContainer" class="position-absolute top-0 end-0"
@@ -38,10 +41,16 @@
                     <td class="nombre-tema">{{ u.nombre }}</td>
                     <td class="contenido-tema">{{ u.contenido }}</td>
                     <td style="text-align: center;">
-                        <a class="btn btn-danger" href="javascript:confi_delet_tema({{u.id}});"><i
+                        <a class="btn btn-danger" href="javascript:confi_delet_tema({{u.id}});"
+                        data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para eliminar este tema."><i
                                 class="fa fa-trash" aria-hidden="true"></i></a>
                         <button type="button" vid="{{ u.id }}" class="btnObtenerTema btn btn-warning"
-                            data-bs-toggle="modal" data-bs-target="#modalEdit-Tema">
+                            data-bs-toggle="modal" data-bs-target="#modalEdit-Tema"
+                            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para editar este tema.">
                             <i class="fa-solid fa-pen"></i>
                         </button>
                     </td>

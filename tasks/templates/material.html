@@ -8,7 +8,10 @@
 <section class="row pl-5 w-100">
     <section class="form-group justify-content-center">
         <section class="col-sm-12">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegist-material">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegist-material"
+            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para registrar un material.">
                 <i class="fa fa-plus-circle"></i> Nuevo Material
             </button>
             <div id="alertContainer" class="position-absolute top-0 end-0"
@@ -39,14 +42,23 @@
                     <td class="nombre-tema">{{ m.tema }}</td>
                     <td class="btnAc">
                         <button type="button" vid="{{ m.id }}" class="btnViewMaterial btn btn-secondary"
-                            data-bs-toggle="modal" data-bs-target="#modalView-material">
+                            data-bs-toggle="modal" data-bs-target="#modalView-material"
+                            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para visualizar la información del material.">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                         <button type="button" vid="{{ m.id }}" class="btnEditMaterial btn btn-warning"
-                            data-bs-toggle="modal" data-bs-target="#modalEdit-material">
+                            data-bs-toggle="modal" data-bs-target="#modalEdit-material"
+                            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para editar la información del material.">
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <a class="btn btn-danger" href="javascript:confi_delet_material({{m.id}});">
+                        <a class="btn btn-danger" href="javascript:confi_delet_material({{m.id}});"
+                        data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para eliminar el material.">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </td>
