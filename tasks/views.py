@@ -21,6 +21,8 @@ from django.conf import settings
 from isodate import parse_duration
 import requests
 import random
+import pandas as pd
+import plotly.express as px
 
 # Create your views here.
 def home(request):
@@ -151,7 +153,43 @@ def signout(request):
 
 @login_required
 def inicio(request):
-    return render(request, 'inicio.html')
+    puntuaciones_usuario = Puntuacion.objects.all()
+    temas_practicados = {}    
+    for puntuacion in puntuaciones_usuario:
+        tema_id = puntuacion.tema.id
+        if tema_id in temas_practicados:
+            temas_practicados[tema_id] += 1
+        else:
+            temas_practicados[tema_id] = 1
+    temas_info = []     
+    for tema_id, practicas in temas_practicados.items():
+        tema = Tema.objects.get(id=tema_id) 
+        tema_dict = {
+            'id': tema_id,
+            'tema': tema.nombre,
+            'cantidad_estudiantes': practicas
+        }
+        temas_info.append(tema_dict)
+    
+    df = pd.DataFrame(temas_info)
+    fig = px.bar(df, x='tema', y='cantidad_estudiantes', title='Prácticas por Tema',
+                 color_discrete_sequence=['blue'], opacity=0.7)
+    fig.update_layout(title_x=0.5) 
+    fig.update_traces(marker_line_width=0.1)
+    fig.update_layout(yaxis_tickmode='linear', plot_bgcolor='white')  
+    fig.update_layout(
+    xaxis_title="Tema",
+    yaxis_title="Cantidad de Estudiantes",
+    yaxis_tickmode='linear',
+    plot_bgcolor='white',
+    font=dict(family="Arial", size=12, color="black"),
+    showlegend=False)
+    grafico_html = fig.to_html(full_html=False)
+    context = {
+        'grafico_html': grafico_html
+    }
+    return render(request, 'inicio.html', context)
+
 # Vista que renderiza la plantilla que lista los unidades registrados
 
 @login_required
