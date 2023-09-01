@@ -2,13 +2,6 @@
 {% load static %}
 {% block title %}Contenido{% endblock %}
 
-{% block css %}
-<link rel="stylesheet" href="{% static 'css/style-tema-alu.css' %}">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-
-{% endblock css %}
-
 {% block content %}
 <div>
     <span class="fw-bold fs-4" style="color: #fdb128">TEMAS</span>
@@ -131,7 +124,4 @@
 <script src="{% static 'js/tema_alumno.js'%}"></script>
 <script src="{% static 'js/global.js'%}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.all.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
 {% endblock js %}
