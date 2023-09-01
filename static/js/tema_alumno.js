@@ -1,4 +1,5 @@
 var tema = 0;
+var nombreTema='';
 var dataPreguntas = [];
 var totalpreguntas = 0;
 $(".btn-tema").click(function (e) {
@@ -39,6 +40,7 @@ $(".btn-tema").click(function (e) {
     // Colocar el nombre del tema
     var name_tema = $(this).text();
     tema = id_tema;
+    nombreTema = name_tema;
     $('#viewText').empty();
     $('#viewText').append("<h4 style='font-weight: bold; color: #fdb128;'>" + name_tema + "</h4>");
 });
@@ -228,7 +230,8 @@ $("#list-questions-list").click(function (e) {
 });
 var openModalButton = document.getElementById('openModalButton');
 openModalButton.addEventListener('click', function () {
-    var search = tema;
+    var search = nombreTema;
+    console.log(search);
     $.ajax({
         type: 'POST',
         url: '/recomendacion/',
