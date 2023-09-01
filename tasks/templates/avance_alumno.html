@@ -3,7 +3,6 @@
 {% load static %}
 {% block content %}
 <span class="fw-bold fs-4" style="color: #fdb128">MI AVANCE</span>
-<span  id="name">{% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</span>
 <div class="d-flex">
     <div class="p-2 flex-fill" style="max-width: 200px">
         <select id="unidad-select" class="form-select" aria-label="Unidad select" onchange="cargarContenidos()">

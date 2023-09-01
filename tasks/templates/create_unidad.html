@@ -10,8 +10,7 @@
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegister-Unidad"
                     data-bs-placement="top"
                     data-bs-custom-class="custom-tooltip"
-                    title="Haz clic aquí para registrar nuevas unidades."
-            >
+                    title="Haz clic aquí para registrar nuevas unidades.">
                 <i class="fa fa-plus-circle"></i> Nueva Unidad
             </button>
             <div id="alertContainer" class="position-absolute top-0 end-0"
@@ -115,35 +114,37 @@
 
 
 <!-- Modal Agregar -->
-<div class="modal fade" id="modalView-material" tabindex="-1" aria-labelledby="modalRegister-UnidadLabel"
-    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalRegister-Unidad" tabindex="-1" aria-labelledby="modalRegister-UnidadLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <form method="POST" class="was-validated" id="formRgUnidad" novalidate>
         {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalRegister-UnidadLabel">Ejercicio</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                <div class="modal-header"><h1 class="modal-title fs-5" id="modalRegister-UnidadLabel">Registro de Unidad</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="restablecer()"></button></div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="enunciado" class="form-label">Enunciado del ejercicio</label>
-                        <input type="text" class="form-control" id="enunciado" name="enunciado" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="opciones" class="form-label">Opciones del ejercicio</label>
-                        <input type="text" class="form-control" id="opciones" name="opciones" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="respuesta" class="form-label">Opción seleccionada</label>
-                        <input type="text" class="form-control" id="respuesta" name="respuesta" disabled>
-                    </div>
+                        <label for="exampleFormControlInput1" class="form-label">Nombre de la Unidad</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" maxlength="100">
+                        <div id="alertContainer" style="padding-top: 20px;padding-right: 10px;">
+                            <div id="alertMessageRegister" class="alert" style="display: none;"></div>
+                        </div></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal" 
+                    onclick="restablecer()"><i
+                            class="fa fa-ban"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="fas fa-save"></i>
+                        Guardar
+                    </button>
+                    <div id="alerta"> </div>
                 </div>
             </div>
         </div>
-    </form>
+    </form>
 </div>
-
 <!-- Modal Modificar -->
 <div class="modal fade" id="modalEdit-Unidad" tabindex="-1" aria-labelledby="modalEdit-UnidadLabel" aria-hidden="true"
     data-backdrop="static" data-keyboard="false">

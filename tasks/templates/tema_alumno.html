@@ -10,7 +10,7 @@
 <div>
     <span class="fw-bold fs-4" style="color: #fdb128">TEMAS</span>
 </div>
-
+<span  id="name">{% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</span>
 {% if temas %}
 <div class="row">
     <div class="btn-group mt-2 col-4">
