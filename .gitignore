@@ -64,3 +64,4 @@ tasks/migrations/__pycache__/0002_alter_contenido_id_alter_material_id_and_more.
 tasks/migrations/__pycache__/__init__.cpython-310.pyc
 smartgenius/__pycache__/urls.cpython-310.pyc
 tasks/migrations/__pycache__/__init__.cpython-310.pyc
+db.sqlite3
