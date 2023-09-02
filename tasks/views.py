@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate,update_session_auth_hash
 from django.db import IntegrityError
 from .models import Unidad, Contenido, Material, Tema,Ejercicio,Puntuacion
+from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import  JsonResponse, HttpResponse
 from django.contrib import messages
@@ -14,7 +15,6 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Table, Table
 from reportlab.lib.styles import getSampleStyleSheet 
 from reportlab.lib import colors
 from django.core.files.base import ContentFile
-from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 import json
 from django.conf import settings
@@ -23,7 +23,7 @@ import requests
 import random
 import pandas as pd
 import plotly.express as px
-from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count
 
 # Create your views here.
 def home(request):
@@ -620,15 +620,36 @@ def vwEliminarMaterial(request):
 @login_required
 def visualizar_reporte(request):
     busqueda_estudiante = request.GET.get('busqueda_estudiante')
-    
+    ultimas_practicas_json = []
+    hace_30_dias = timezone.now() - timezone.timedelta(days=30)
+
     if busqueda_estudiante:
         usuarios_no_administradores = User.objects.filter(
-            is_staff=False, username__icontains=busqueda_estudiante
+            is_staff=False, username__icontains=busqueda_estudiante.lower()
         )
     else:
-        usuarios_no_administradores = User.objects.filter(is_staff=False)
-    
-    paginator = Paginator(usuarios_no_administradores, 5)
+        usuarios_no_administradores = User.objects.filter(is_staff=False)       
+    # Itera a través de los usuarios no administradores
+    for usuario in usuarios_no_administradores:
+        # Obtén la última práctica de cada usuario
+        ultima_practica = Puntuacion.objects.filter(usuario=usuario).order_by('-fecha').first()
+        esta_activo = usuario.last_login >= hace_30_dias if usuario.last_login else False
+
+        # Agrega la última práctica y el estado de actividad a la lista
+        if ultima_practica:
+            
+            data = {
+                'usuario': usuario.username,  # Supongo que deseas el nombre de usuario en lugar del objeto User
+                'tema': ultima_practica.tema.nombre,
+                'fecha': ultima_practica.fecha,
+                'puntaje': ultima_practica.puntaje,
+                'preguntas': ultima_practica.preguntas_respondidas,
+                'esta_activo': esta_activo  # Agrega el estado de actividad
+            }
+            ultimas_practicas_json.append(data)
+
+    print(usuarios_no_administradores)
+    paginator = Paginator(ultimas_practicas_json, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -732,9 +753,9 @@ def vwContenidoAlumno(request):
 
 def vwTemaAlumno(request):
     id = request.POST.get('id')
-    temas = Tema.objects.filter(contenido_id=id)
-    materiales = Material.objects.prefetch_related('tema').all()
-    ejercicios = Ejercicio.objects.select_related('tema').all()
+    temas = Tema.objects.annotate(num_ejercicios=Count('material__ejercicio')).filter(num_ejercicios__gt=0, contenido_id=id)
+    materiales = Material.objects.select_related('tema').filter(tema__in=temas)
+    ejercicios = Ejercicio.objects.select_related('material__tema').filter(material__in=materiales)
 
     context = {
         'id_contenido': id,
