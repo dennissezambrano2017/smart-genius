@@ -158,8 +158,8 @@ def get_user_data(request):
 
 
 @login_required
-def profile(request):
-    return render(request, 'profile.html')
+def inicio(request):
+    return render(request, 'inicio.html')
 
 
 @login_required
@@ -169,7 +169,7 @@ def signout(request):
 
 
 @login_required
-def inicio(request):
+def profile(request):
     puntuaciones_usuario = Puntuacion.objects.all()
     temas_practicados = {}
     for puntuacion in puntuaciones_usuario:
@@ -205,7 +205,7 @@ def inicio(request):
     context = {
         'grafico_html': grafico_html
     }
-    return render(request, 'inicio.html', context)
+    return render(request, 'profile.html', context)
 
 # Vista que renderiza la plantilla que lista los unidades registrados
 
