@@ -17,6 +17,7 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = os.path.join(BASE_DIR,"static")
 
 MEDIA_URL = '/pdfs/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'pdfs')
@@ -136,8 +137,6 @@ if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 
 # Default primary key field type
