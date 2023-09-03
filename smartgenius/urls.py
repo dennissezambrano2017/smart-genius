@@ -107,3 +107,5 @@ urlpatterns = [
 
 handler500 = 'tasks.views.server_error'
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

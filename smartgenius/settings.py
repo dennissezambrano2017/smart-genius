@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,7 +32,7 @@ SECRET_KEY = 'django-insecure-vf@=!i-@qkw&o&)n#0z36+3lb2jmx!_lm-2w)zmy3u(^2oldf$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -91,11 +90,18 @@ WSGI_APPLICATION = 'smartgenius.wsgi.application'
 #        conn_max_age=600
 #    )
 #}
-from decouple import config
-DATABASE = {
-    'default' : dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
+#from decouple import config
+#DATABASE = {
+#    'default' : dj_database_url.config(
+#        default=config('DATABASE_URL')
+#    )
+#}
+DATABASES = {
+    'default': {
+        # Feel free to alter this value to suit your needs.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), 
+    }
 }
 
 # Password validation
@@ -133,12 +139,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_TMP = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
+os.makedirs(STATIC_TMP,exist_ok=True)
+os.makedirs(STATIC_ROOT,exist_ok=True)
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 
 # Default primary key field type
