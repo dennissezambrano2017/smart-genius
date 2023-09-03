@@ -102,8 +102,8 @@ urlpatterns = [
 
 
     path('recomendacion/', views.buscar_youtube, name='recomendacion'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
 
 handler500 = 'tasks.views.server_error'
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
