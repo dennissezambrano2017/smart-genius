@@ -1,15 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Home{% endblock %}
-{% block css %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-{% endblock css %}
+
 {% block content %}
 <div class="container-fluid">
     <section class="seccion_2">
         <div class="contenedor-1_img">
-            <img src="{% static '../static/img/Estudiante.png' %}" alt="" class="img-fluid">
+            <img src="{% static '../static/img/Estudiante.png' %}" class="img-fluid">
         </div>
         <div class="contenedor-1_text">
             <h4>Para cada estudiante, <br>un Tutor Inteligente</h4>
@@ -19,9 +16,4 @@
     </section>
     
 </div>
-{% block javascript %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
-{% endblock %}
 {% endblock %}
