@@ -1,214 +1,368 @@
-{% extends 'profile.html' %}
-{% block title %}Contenido{% endblock %}
+<!DOCTYPE html>
+<html>
 {% load static %}
-{% block content %}
-<h2 class="dash-title">Listado de Contenido</h2>
-<section class="row pl-5 w-100">
-  <section class="form-group justify-content-center">
-    <section class="col-sm-12">
-      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegister-Contenido"
-        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-        title="Haz clic aquí para registrar un nuevo Contenido.">
-        <i class="fa fa-plus-circle"></i> Nuevo Contendio
-      </button>
-      <div id="alertContainer" class="position-absolute top-0 end-0" style="padding-top: 20px;padding-right: 10px;">
-        <div id="alertMessage" class="alert" style="display: none;"></div>
-      </div>
-    </section>
+<link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
 
-  </section>
-</section>
-<div class="row">
-  <div class="col-md-12 tabla-unidad mt-3">
-    <table class="table table-bordered">
-      <thead class="table-primary fixed-column-width">
-        <tr class="encabezados-tabla">
-          <th scope="col">Id</th>
-          <th scope="col">Nombre</th>
-          <th class="descripcion" scope="col">Descripción</th>
-          <th scope="col">Unidad</th>
-          <th scope="col">Acciones</th>
-        </tr>
-      </thead>
-      <tbody class="table-group-divider ">
-        {% if contenido %}
-        {% for u in contenido %}
-        <tr class="cuerpo-tabla" data-id="{{ u.id }}">
-          <th scope="row">{{ u.id }}</th>
-          <td class="nombre-contenido">{{ u.nombre }}</td>
-          <td class="descripcion-contenido">{{ u.descripcion }}</td>
-          <td class="unidad-contenido">{{ u.unidad }}</td>
-          <td class="btnAc">
-            <a class="btn btn-danger" href="javascript:confi_delet_contenido({{u.id}});"><i class="fa fa-trash"
-                aria-hidden="true" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                title="Haz clic aquí para eliminar el Contenido."></i></a>
-            <button type="button" vid="{{ u.id }}" class="btnObtenerContenido btn btn-warning" data-bs-toggle="modal"
-              data-bs-target="#modalEdit-Contenido" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-              title="Haz clic aquí para editar el Contenido.">
-              <i class="fa-solid fa-pen"></i>
-            </button>
-          </td>
-        </tr>
-        {% endfor %}
+<head>
+  <link rel="icon" href="{% static '../static/img/Logo-Page.png' %}" type="image/png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Contenido</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js"></script>
+</head>
+
+<body>
+
+  <input type="checkbox" id="panel-izquierdo-boton">
+  <div class="panel-izquierdo">
+    {% csrf_token %}
+    <div class="panel-izquierdo-encabezados">
+      <h3>
+        <span class="fa-solid fa-square-root-variable"></span>
+        <span> <a href="{% url 'inicio' %}">Smart Genius</a></span>
+      </h3>
+      <label for="panel-izquierdo-boton" class="fa-solid fa-bars"></label>
+    </div>
+    <div class="panel-izquierdo-opciones">
+      <ul>
+        {% if user.is_authenticated %}
+        {% if perms.tasks.add_unidad %}
+        <li>
+          <a class="btn-opcion {{ btnUnidad }}" href="{% url 'unidad' %}">
+            <span class="fas fa-clipboard-check"></span>
+            <span>Unidad</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'contenido' %}">
+            <span class="fas fa-book-open"></span>
+            <span>Contenido</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'temas' %}">
+
+            <span class="fas fa-lightbulb"></span>
+            <span>Temas</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'material' %}">
+            <span class="fas fa-file-alt"></span>
+            <span>Material</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'visualizar_reporte' %}">
+            <span class="fa-solid fa-clipboard-user"></span>
+            <span>Reportes Estudiantes</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'aula_documento' %}">
+            <span class="fa-solid fa-file"></span>
+            <span>Reportes Contenido</span>
+          </a>
+        </li>
         {% else %}
-        <p>No se encontraron contenido registradas.</p>
+        <li>
+          <a href="{% url 'contenido_alu' %}">
+            <span class="fa-solid fa-book-open"></span>
+            <span>Contenido</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'perfil_alu' %}">
+            <span class="fa-solid fa-user"></span>
+            <span>Perfil</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'avance_alu' %}">
+            <span class="fa-solid fa-layer-group"></span>
+            <span>Mi Avance</span>
+          </a>
+        </li>
+        <!--<li>
+                    <a href="{% url 'recomendacion' %}">
+                        <span class="fa-solid fa-layer-group"></span>
+                        <span>Recomendacion</span>
+                    </a>
+                </li>-->
         {% endif %}
-      </tbody>
-    </table>
-    <!-- Mostrar los enlaces de paginación -->
-    <div class="d-flex justify-content-center mt-3" class="page-link">
-      <div class="pagination">
-        {% if contenido.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
-        <li class="page-item"><a class="page-link" href="?page={{ contenido.previous_page_number }}">Anterior</a></li>
+        <li>
+          <a href="{% url 'logout' %}">
+            <span class="fa-solid fa-right-from-bracket"></span>
+            <span>Cerrar Sesión</span>
+          </a>
+        </li>
         {% endif %}
-
-        <li class="page-item"><a class="page-link">
-            Página {{ contenido.number }} de {{ contenido.paginator.num_pages }}</a></li>
-
-        {% if contenido.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ contenido.next_page_number }}">Sigiente</a></li>
-        <li class="page-item"><a class="page-link" href="?page={{ contenido.paginator.num_pages }}">Ultimo</a></li>
-        {% endif %}
-      </div>
+      </ul>
     </div>
   </div>
-</div>
 
-<!-- Modal Agregar -->
-<div class="modal fade" id="modalRegister-Contenido" tabindex="-1" aria-labelledby="modalRegister-ContenidoLabel"
-  aria-hidden="true" data-backdrop="static" data-keyboard="false">
-  <form method="POST" class="was-validated" id="formRgContenido" novalidate>
-    {% csrf_token %}
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="modalRegister-ContenidoLabel">Registro de Contenido</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-            onclick="restablecer()"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Selecciona una unidad</label>
-            <select class="form-select" aria-label="Default select example" id="selectRegisterContenido" required>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Nombre del Contenido</label>
-            <input type="text" class="form-control" id="nombreContenido" placeholder="Ingrese el nombre del contenido"
-              name="nombreContenido" maxlength="100" required>
-          </div>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Descripcion</label>
-            <textarea type="text" class="form-control" id="descripcionContenido"
-              placeholder="(Opcional) Ingrese una descripcion" name="descripcionContenido" maxlength="5500"></textarea>
-            <div id="alertContainer" style="padding-top: 20px;padding-right: 10px;">
-              <div id="alertMessageRegister" class="alert" style="display: none;"></div>
+  <div class="main-content">
+
+    <header class="encabezados-contenido">
+      <div class="search-wrapper">
+
+      </div>
+
+      <div class="social-icons me-4">
+        <span class="fa-solid fa-user"></span>
+        <span>{% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</span>
+      </div>
+    </header>
+
+    <main>
+
+      <h2 class="dash-title">Listado de Contenido</h2>
+      <section class="row pl-5 w-100">
+        <section class="form-group justify-content-center">
+          <section class="col-sm-12">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+              data-bs-target="#modalRegister-Contenido" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+              title="Haz clic aquí para registrar un nuevo Contenido.">
+              <i class="fa fa-plus-circle"></i> Nuevo Contendio
+            </button>
+            <div id="alertContainer" class="position-absolute top-0 end-0"
+              style="padding-top: 20px;padding-right: 10px;">
+              <div id="alertMessage" class="alert" style="display: none;"></div>
+            </div>
+          </section>
+
+        </section>
+      </section>
+      <div class="row">
+        <div class="col-md-12 tabla-unidad mt-3">
+          <table class="table table-bordered">
+            <thead class="table-primary fixed-column-width">
+              <tr class="encabezados-tabla">
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th class="descripcion" scope="col">Descripción</th>
+                <th scope="col">Unidad</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider ">
+              {% if contenido %}
+              {% for u in contenido %}
+              <tr class="cuerpo-tabla" data-id="{{ u.id }}">
+                <th scope="row">{{ u.id }}</th>
+                <td class="nombre-contenido">{{ u.nombre }}</td>
+                <td class="descripcion-contenido">{{ u.descripcion }}</td>
+                <td class="unidad-contenido">{{ u.unidad }}</td>
+                <td class="btnAc">
+                  <a class="btn btn-danger" href="javascript:confi_delet_contenido({{u.id}});"><i class="fa fa-trash"
+                      aria-hidden="true" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                      title="Haz clic aquí para eliminar el Contenido."></i></a>
+                  <button type="button" vid="{{ u.id }}" class="btnObtenerContenido btn btn-warning"
+                    data-bs-toggle="modal" data-bs-target="#modalEdit-Contenido" data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip" title="Haz clic aquí para editar el Contenido.">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <p>No se encontraron contenido registradas.</p>
+              {% endif %}
+            </tbody>
+          </table>
+          <!-- Mostrar los enlaces de paginación -->
+          <div class="d-flex justify-content-center mt-3" class="page-link">
+            <div class="pagination">
+              {% if contenido.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ contenido.previous_page_number }}">Anterior</a>
+              </li>
+              {% endif %}
+
+              <li class="page-item"><a class="page-link">
+                  Página {{ contenido.number }} de {{ contenido.paginator.num_pages }}</a></li>
+
+              {% if contenido.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ contenido.next_page_number }}">Sigiente</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ contenido.paginator.num_pages }}">Ultimo</a>
+              </li>
+              {% endif %}
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"
-            onclick="restablecer()">
-            <i class="fa fa-ban"></i>
-            Cancelar
-          </button>
-          <button type="submit" class="btn btn-sm btn-success">
-            <i class="fas fa-save"></i>
-            Guardar
-          </button>
-          <div id="alerta">
-          </div>
-        </div>
       </div>
-    </div>
-  </form>
-</div>
 
-<!-- Modal Modificar -->
-<div class="modal fade" id="modalEdit-Contenido" tabindex="-1" aria-labelledby="modalEdit-ContenidoLabel"
-  aria-hidden="true" data-backdrop="static" data-keyboard="false">
-  <form method="POST" class="was-validated" id="formModContenido">
-    {% csrf_token %}
-    <input type="hidden" id="txtIdContenido" name="txtIdContenido">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="modalEdit-ContenidoLabel">Editar Contenido</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-            onclick="restablecer()"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="selectModContenido" class="form-label">Selecciona una unidad</label>
-            <select class="form-select" aria-label="Default select example" id="selectModContenido"
-              name="selectModContenido" required>
-
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="nombreContenidoMod" class="form-label">Nombre del contenido</label>
-            <input type="text" class="form-control" id="nombreContenidoMod" name="nombreContenidoMod" maxlength="100"
-              required>
-          </div>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Descripcion</label>
-            <textarea type="text" class="form-control" id="descripcionEdContenido" name="descripcionEdContenido"
-              maxlength="100"></textarea>
-            <div id="alertContainer" style="padding-top: 20px;padding-right: 10px;">
-              <div id="alertMessageModif" class="alert" style="display: none;"></div>
+      <!-- Modal Agregar -->
+      <div class="modal fade" id="modalRegister-Contenido" tabindex="-1" aria-labelledby="modalRegister-ContenidoLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <form method="POST" class="was-validated" id="formRgContenido" novalidate>
+          {% csrf_token %}
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalRegister-ContenidoLabel">Registro de Contenido</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                  onclick="restablecer()"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Selecciona una unidad</label>
+                  <select class="form-select" aria-label="Default select example" id="selectRegisterContenido" required>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Nombre del Contenido</label>
+                  <input type="text" class="form-control" id="nombreContenido"
+                    placeholder="Ingrese el nombre del contenido" name="nombreContenido" maxlength="100" required>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Descripcion</label>
+                  <textarea type="text" class="form-control" id="descripcionContenido"
+                    placeholder="(Opcional) Ingrese una descripcion" name="descripcionContenido"
+                    maxlength="5500"></textarea>
+                  <div id="alertContainer" style="padding-top: 20px;padding-right: 10px;">
+                    <div id="alertMessageRegister" class="alert" style="display: none;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"
+                  onclick="restablecer()">
+                  <i class="fa fa-ban"></i>
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-sm btn-success">
+                  <i class="fas fa-save"></i>
+                  Guardar
+                </button>
+                <div id="alerta">
+                </div>
+              </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"
-              onclick="restablecer()">
-              <i class="fa fa-ban"></i> Cancelar
-            </button>
-            <button type="submit" id="btnGuardarCmUnidad" class="btn btn-sm btn-success">
-              <i class="fas fa-save"></i> Guardar cambios
-            </button>
-          </div>
-        </div>
-
+        </form>
       </div>
-    </div>
-  </form>
-</div>
 
-<!--Modal Eliminar-->
-<div class="modal fade" id="modalDelet" tabindex="-1" aria-labelledby="modalDeletLabel" aria-hidden="true"
-  data-backdrop="static" data-keyboard="false">
-  <form class="was-validated" id="formDeletUnidad">
-    {% csrf_token %}
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalDeletLabel">Eliminar Contenido</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="modalContenido">
-          <div class="mb-3">
-            <p>¿Estás seguro de que deseas eliminar esta contenido?</p>
+      <!-- Modal Modificar -->
+      <div class="modal fade" id="modalEdit-Contenido" tabindex="-1" aria-labelledby="modalEdit-ContenidoLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <form method="POST" class="was-validated" id="formModContenido">
+          {% csrf_token %}
+          <input type="hidden" id="txtIdContenido" name="txtIdContenido">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalEdit-ContenidoLabel">Editar Contenido</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                  onclick="restablecer()"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label for="selectModContenido" class="form-label">Selecciona una unidad</label>
+                  <select class="form-select" aria-label="Default select example" id="selectModContenido"
+                    name="selectModContenido" required>
+
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="nombreContenidoMod" class="form-label">Nombre del contenido</label>
+                  <input type="text" class="form-control" id="nombreContenidoMod" name="nombreContenidoMod"
+                    maxlength="100" required>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Descripcion</label>
+                  <textarea type="text" class="form-control" id="descripcionEdContenido" name="descripcionEdContenido"
+                    maxlength="100"></textarea>
+                  <div id="alertContainer" style="padding-top: 20px;padding-right: 10px;">
+                    <div id="alertMessageModif" class="alert" style="display: none;"></div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"
+                    onclick="restablecer()">
+                    <i class="fa fa-ban"></i> Cancelar
+                  </button>
+                  <button type="submit" id="btnGuardarCmUnidad" class="btn btn-sm btn-success">
+                    <i class="fas fa-save"></i> Guardar cambios
+                  </button>
+                </div>
+              </div>
+
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal">
-            <i class="fa fa-ban"></i>
-            Cancelar
-          </button>
-          <button type="submit" onclick='delete_contenido(" + idUnidad + ")' class="btn btn-sm btn-success">
-            <i class="fas fa-save"></i>
-            Aceptar
-          </button>
-          <div id="alerta">
-          </div>
-        </div>
+        </form>
       </div>
-    </div>
-  </form>
-</div>
-{% endblock %}
-{% block js %}
-<script src="{% static 'js/contenido.js'%}"></script>
-<script src="{% static 'js/unidad.js'%}"></script>
-{% endblock %}
+
+      <!--Modal Eliminar-->
+      <div class="modal fade" id="modalDelet" tabindex="-1" aria-labelledby="modalDeletLabel" aria-hidden="true"
+        data-backdrop="static" data-keyboard="false">
+        <form class="was-validated" id="formDeletUnidad">
+          {% csrf_token %}
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalDeletLabel">Eliminar Contenido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="modalContenido">
+                <div class="mb-3">
+                  <p>¿Estás seguro de que deseas eliminar esta contenido?</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal">
+                  <i class="fa fa-ban"></i>
+                  Cancelar
+                </button>
+                <button type="submit" onclick='delete_contenido(" + idUnidad + ")' class="btn btn-sm btn-success">
+                  <i class="fas fa-save"></i>
+                  Aceptar
+                </button>
+                <div id="alerta">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+    </main>
+
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      // Verificar si hay elementos en la selección
+      var headerContent = $('.main-content .encabezados-contenido').children().length;
+      var mainContent = $('.main-content main').children().length;
+
+      if (headerContent === 0 || mainContent === 0) {
+        // Redirigir a la página de inicio
+        window.location.href = '/inicio/';
+      }
+      $("li").click(function () {
+        var link = $(this).find("a").attr("href");
+        if (link) {
+          window.location.href = link;
+        }
+      });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+  <script src="{% static 'js/global.js'%}"></script>
+  <script src="{% static 'js/contenido.js'%}"></script>
+  <script src="{% static 'js/unidad.js'%}"></script>
+</body>
+
+</html>

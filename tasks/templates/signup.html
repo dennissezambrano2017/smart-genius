@@ -1,48 +1,125 @@
-{% extends 'base.html' %}
-{% block title %}Registro{% endblock %}
-{% block content %}
-<div class="container-fluid-signup">
-   <form action="/signup/" method="POST">
-      {% csrf_token %}
-      <div class="container-form-signup">
-         <div class="information">
-            <div class="info-childs">
-               <h2>Bienvenido</h2>
-               <p>Para unirte a nuestra comunidad por favor Inicia Sesión con tus datos</p>
-               <a href="{% url 'signin' %}">
-                  <span>Iniciar Sesión</span>
-              </a>
-            </div>
-         </div>
-         <div class="form-information">
-            <div class="form-information-childs">
-               <h2>Crear una cuenta</h2>
-               <div class="form-div">
-                  <label >
-                     <i class="fa-solid fa-user" style="color: #fdb128;"></i>
-                     <input type="username" name="email" id="email" placeholder="Nombre de usuario" required>
-                  </label>
-                  <label >
-                     <i class="fa-solid fa-envelope" style="color: #fdb128;"></i>
-                     <input type="email" name="username" id="username" placeholder="Correo Electronico" required>
-                  </label>
-                  <label >
-                     <i class="fa-solid fa-unlock-keyhole" style="color: #fdb128;"></i>
-                     <input type="password" name="password1" id="password1" placeholder="Contraseña" required>
-                  </label>
-                  <label >
-                     <i class="fa-solid fa-unlock-keyhole" style="color: #fdb128;"></i>
-                     <input type="password" name="password2" id="password2" placeholder="Repetir Contraseña" required>
-                  </label>
-                  {% if error %}
-                  <p class="error-message">{{ error }}</p>
-                  {% endif %}
-                  <button >Registrarse</button>
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Registro</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather&family=PT+Sans&family=Playfair+Display:wght@500&display=swap"
+      rel="stylesheet">
+   <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+   <main>
+      <header>
+         <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+               <img src="{% static 'img/logo.png' %}">
+               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                  aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/"
+                           style="color: #FDB128;font-weight: bold">Home</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="/signup" style="color: #FDB128;font-weight: bold">Regístrate</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="/signin" style="color: #FDB128;font-weight: bold">Inicia
+                           Sesión</a>
+                     </li>
+                  </ul>
                </div>
             </div>
-         </div>
+         </nav>
+      </header>
+      <div class="container-fluid-signup">
+         <form action="/signup/" method="POST">
+            {% csrf_token %}
+            <div class="container-form-signup">
+               <div class="information">
+                  <div class="info-childs">
+                     <h2>Bienvenido</h2>
+                     <p>Para unirte a nuestra comunidad por favor Inicia Sesión con tus datos</p>
+                     <a href="{% url 'signin' %}">
+                        <span>Iniciar Sesión</span>
+                     </a>
+                  </div>
+               </div>
+               <div class="form-information">
+                  <div class="form-information-childs">
+                     <h2>Crear una cuenta</h2>
+                     <div class="form-div">
+                        <label>
+                           <i class="fa-solid fa-user" style="color: #fdb128;"></i>
+                           <input type="username" name="email" id="email" placeholder="Nombre de usuario" required>
+                        </label>
+                        <label>
+                           <i class="fa-solid fa-envelope" style="color: #fdb128;"></i>
+                           <input type="email" name="username" id="username" placeholder="Correo Electronico" required>
+                        </label>
+                        <label>
+                           <i class="fa-solid fa-unlock-keyhole" style="color: #fdb128;"></i>
+                           <input type="password" name="password1" id="password1" placeholder="Contraseña" required>
+                        </label>
+                        <label>
+                           <i class="fa-solid fa-unlock-keyhole" style="color: #fdb128;"></i>
+                           <input type="password" name="password2" id="password2" placeholder="Repetir Contraseña"
+                              required>
+                        </label>
+                        {% if error %}
+                        <p class="error-message">{{ error }}</p>
+                        {% endif %}
+                        <button>Registrarse</button>
+                     </div>
+                  </div>
+               </div>
 
+            </div>
+         </form>
       </div>
-   </form>
-</div>
-{% endblock %}
+      <footer class="section-footer">
+         <div class="container_footer">
+            <div class="box_footer">
+               <div class="logo">
+                  <img src="{% static 'img/logo.png' %}">
+               </div>
+               <div class="terms">
+                  <p style="font-family: 'PT Sans', sans-serif;">Nuestra plataforma interactiva y personalizada
+                     está diseñada
+                     para brindar una
+                     experiencia educativa efectiva, accesible para cualquier persona, en cualquier lugar.</p>
+               </div>
+            </div>
+            <div class="box_footer">
+               <h4>Redes Sociales</h4>
+               <a href="#"><i class="fab fa-brands fa-facebook" style="color: #fdb128;"></i> Facebook</a>
+               <a href="#"><i class="fab fa-brands fa-x-twitter" style="color: #fdb128;"></i> Twitter</a>
+               <a href="#"><i class="fab fa-brands fa-instagram" style="color: #fdb128;"></i> Instagram</a>
+            </div>
+         </div>
+         <div class="box_copy">
+            <hr>
+            <p>
+               &copy; Smart Genius 2023.
+               <b>Todos los derechos reservados</b>
+            </p>
+         </div>
+      </footer>
+   </main>
+
+</body>
+
+</html>
