@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/style-profile.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style-profile.css' %}" type="text/css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    <input type="checkbox" id="panel-izquierdo-boton">
+    
     <div class="panel-izquierdo">
         {% csrf_token %}
         <div class="panel-izquierdo-encabezados">
@@ -31,6 +31,7 @@
                 <span> <a href="{% url 'inicio' %}">Smart Genius</a></span>
             </h3>
             <label for="panel-izquierdo-boton" class="fa-solid fa-bars"></label>
+            <input type="checkbox" id="panel-izquierdo-boton">
         </div>
         <div class="panel-izquierdo-opciones">
             <ul>
@@ -136,8 +137,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
-    <script src="{% static 'js/global.js'%}"></script>
-    <script src="{% static 'js/unidad.js'%}"></script>
+    <script src="{% static 'js/global.js'%}" type="text/css"></script>
+    <script src="{% static 'js/unidad.js'%}" type="application/javascript"></script>
 </body>
 
 </html>
