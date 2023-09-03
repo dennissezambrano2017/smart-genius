@@ -100,27 +100,7 @@
     </div>
 
     <div class="main-content">
-        <header class="encabezados-contenido">
-            <div class="search-wrapper">
         
-            </div>
-        
-            <div class="social-icons me-4">
-                <span class="fa-solid fa-user"></span>
-                <span>{% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</span>
-            </div>
-        </header>
-        
-        <main>
-        
-            <di class="container by-5">
-                {% csrf_token %}
-                <h4>Bienvenid@ a Smart Genius {% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</h4>
-        
-                
-            </div>
-        
-        </main>
     </div>
 
     <script>
