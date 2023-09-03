@@ -1,761 +1,594 @@
-<!DOCTYPE html>
-<html>
+{% extends 'profile.html' %}
+{% block title %}Material{% endblock %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
-
-<head>
-    <link rel="icon" href="{% static '../static/img/Logo-Page.png' %}" type="image/png" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Material</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js"></script>
-</head>
-
-<body>
-
-    <input type="checkbox" id="panel-izquierdo-boton">
-    <div class="panel-izquierdo">
-        {% csrf_token %}
-        <div class="panel-izquierdo-encabezados">
-            <h3>
-                <span class="fa-solid fa-square-root-variable"></span>
-                <span> <a href="{% url 'inicio' %}">Smart Genius</a></span>
-            </h3>
-            <label for="panel-izquierdo-boton" class="fa-solid fa-bars"></label>
-        </div>
-        <div class="panel-izquierdo-opciones">
-            <ul>
-                {% if user.is_authenticated %}
-                {% if perms.tasks.add_unidad %}
-                <li>
-                    <a class="btn-opcion {{ btnUnidad }}" href="{% url 'unidad' %}">
-                        <span class="fas fa-clipboard-check"></span>
-                        <span>Unidad</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'contenido' %}">
-                        <span class="fas fa-book-open"></span>
-                        <span>Contenido</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'temas' %}">
-
-                        <span class="fas fa-lightbulb"></span>
-                        <span>Temas</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'material' %}">
-                        <span class="fas fa-file-alt"></span>
-                        <span>Material</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'visualizar_reporte' %}">
-                        <span class="fa-solid fa-clipboard-user"></span>
-                        <span>Reportes Estudiantes</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'aula_documento' %}">
-                        <span class="fa-solid fa-file"></span>
-                        <span>Reportes Contenido</span>
-                    </a>
-                </li>
-                {% else %}
-                <li>
-                    <a href="{% url 'contenido_alu' %}">
-                        <span class="fa-solid fa-book-open"></span>
-                        <span>Contenido</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'perfil_alu' %}">
-                        <span class="fa-solid fa-user"></span>
-                        <span>Perfil</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'avance_alu' %}">
-                        <span class="fa-solid fa-layer-group"></span>
-                        <span>Mi Avance</span>
-                    </a>
-                </li>
-                <!--<li>
-                    <a href="{% url 'recomendacion' %}">
-                        <span class="fa-solid fa-layer-group"></span>
-                        <span>Recomendacion</span>
-                    </a>
-                </li>-->
-                {% endif %}
-                <li>
-                    <a href="{% url 'logout' %}">
-                        <span class="fa-solid fa-right-from-bracket"></span>
-                        <span>Cerrar Sesión</span>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-
-    <div class="main-content">
-
-        <header class="encabezados-contenido">
-            <div class="search-wrapper">
-
+{% block content %}
+<h2 class="dash-title">Listado de Material</h2>
+<section class="row pl-5 w-100">
+    <section class="form-group justify-content-center">
+        <section class="col-sm-12">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegist-material"
+            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para registrar un material.">
+                <i class="fa fa-plus-circle"></i> Nuevo Material
+            </button>
+            <div id="alertContainer" class="position-absolute top-0 end-0"
+                style="padding-top: 20px;padding-right: 10px;">
+                <div id="alertMessage" class="alert" style="display: none;"></div>
             </div>
-
-            <div class="social-icons me-4">
-                <span class="fa-solid fa-user"></span>
-                <span>{% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</span>
-            </div>
-        </header>
-
-        <main>
-
-            <h2 class="dash-title">Listado de Material</h2>
-            <section class="row pl-5 w-100">
-                <section class="form-group justify-content-center">
-                    <section class="col-sm-12">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                            data-bs-target="#modalRegist-material" data-bs-placement="top"
-                            data-bs-custom-class="custom-tooltip" title="Haz clic aquí para registrar un material.">
-                            <i class="fa fa-plus-circle"></i> Nuevo Material
+        </section>
+    </section>
+</section>
+<div class="row">
+    <div class="col-md-12 tabla-tema mt-3">
+        <table class="table table-bordered">
+            <thead class="table-primary fixed-column-width">
+                <tr class="encabezados-tabla">
+                    <th scope="col">Id</th>
+                    <th scope="col">Tema</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% if material %}
+                <!-- Mostrar materiales no relacionados -->
+                {% for m in material %}
+                {% if m.ejercicio_set.all.count == 0 %}
+                <tr class="cuerpo-tabla" data-id="{{ m.id }}">
+                    <th scope="row">{{ m.id }}</th>
+                    <td class="nombre-tema">{{ m.tema }}</td>
+                    <td class="btnAc">
+                        <button type="button" vid="{{ m.id }}" class="btnViewMaterial btn btn-secondary"
+                            data-bs-toggle="modal" data-bs-target="#modalView-material"
+                            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para visualizar la información del material.">
+                            <i class="fa-solid fa-eye"></i>
                         </button>
-                        <div id="alertContainer" class="position-absolute top-0 end-0"
-                            style="padding-top: 20px;padding-right: 10px;">
-                            <div id="alertMessage" class="alert" style="display: none;"></div>
-                        </div>
-                    </section>
+                        <button type="button" vid="{{ m.id }}" class="btnEditMaterial btn btn-warning"
+                            data-bs-toggle="modal" data-bs-target="#modalEdit-material"
+                            data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para editar la información del material.">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <a class="btn btn-danger" href="javascript:confi_delet_material({{m.id}});"
+                        data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="Haz clic aquí para eliminar el material.">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
 
-                </section>
-            </section>
-            <div class="row">
-                <div class="col-md-12 tabla-tema mt-3">
-                    <table class="table table-bordered">
-                        <thead class="table-primary fixed-column-width">
-                            <tr class="encabezados-tabla">
-                                <th scope="col">Id</th>
-                                <th scope="col">Tema</th>
-                                <th scope="col">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            {% if material %}
-                            <!-- Mostrar materiales no relacionados -->
-                            {% for m in material %}
-                            {% if m.ejercicio_set.all.count == 0 %}
-                            <tr class="cuerpo-tabla" data-id="{{ m.id }}">
-                                <th scope="row">{{ m.id }}</th>
-                                <td class="nombre-tema">{{ m.tema }}</td>
-                                <td class="btnAc">
-                                    <button type="button" vid="{{ m.id }}" class="btnViewMaterial btn btn-secondary"
-                                        data-bs-toggle="modal" data-bs-target="#modalView-material"
-                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                        title="Haz clic aquí para visualizar la información del material.">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                    <button type="button" vid="{{ m.id }}" class="btnEditMaterial btn btn-warning"
-                                        data-bs-toggle="modal" data-bs-target="#modalEdit-material"
-                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                        title="Haz clic aquí para editar la información del material.">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-                                    <a class="btn btn-danger" href="javascript:confi_delet_material({{m.id}});"
-                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                        title="Haz clic aquí para eliminar el material.">
-                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endif %}
-                            {% endfor %}
+                <!-- Mostrar materiales relacionados -->
+                {% for m in material %}
+                {% if m.ejercicio_set.all.count > 0 %}
+                <tr class="cuerpo-tabla" data-id="{{ m.id }}">
+                    <th scope="row">{{ m.id }}</th>
+                    <td class="nombre-tema">{{ m.tema }}</td>
+                    <td class="btnAc">
+                        <button type="button" vid="{{ m.id }}" class="btnViewMaterial btn btn-secondary"
+                            data-bs-toggle="modal" data-bs-target="#modalView-material">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <button type="button" vid="{{ m.id }}" class="btnEditMaterial btn btn-warning"
+                            data-bs-toggle="modal" data-bs-target="#modalEdit-material">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <p>No se encontraron contenidos registrados.</p>
+                {% endif %}
+            </tbody>
+        </table>
+        <!-- Mostrar los enlaces de paginación -->
+        <div class="d-flex justify-content-center mt-3" class="page-link">
+            <div class="pagination">
+                {% if material.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ material.previous_page_number }}">Anterior</a>
+                </li>
+                {% endif %}
 
-                            <!-- Mostrar materiales relacionados -->
-                            {% for m in material %}
-                            {% if m.ejercicio_set.all.count > 0 %}
-                            <tr class="cuerpo-tabla" data-id="{{ m.id }}">
-                                <th scope="row">{{ m.id }}</th>
-                                <td class="nombre-tema">{{ m.tema }}</td>
-                                <td class="btnAc">
-                                    <button type="button" vid="{{ m.id }}" class="btnViewMaterial btn btn-secondary"
-                                        data-bs-toggle="modal" data-bs-target="#modalView-material">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                    <button type="button" vid="{{ m.id }}" class="btnEditMaterial btn btn-warning"
-                                        data-bs-toggle="modal" data-bs-target="#modalEdit-material">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endif %}
-                            {% endfor %}
-                            {% else %}
-                            <p>No se encontraron contenidos registrados.</p>
-                            {% endif %}
-                        </tbody>
-                    </table>
-                    <!-- Mostrar los enlaces de paginación -->
-                    <div class="d-flex justify-content-center mt-3" class="page-link">
-                        <div class="pagination">
-                            {% if material.has_previous %}
-                            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
-                            <li class="page-item"><a class="page-link"
-                                    href="?page={{ material.previous_page_number }}">Anterior</a>
-                            </li>
-                            {% endif %}
+                <li class="page-item"><a class="page-link">
+                        Página {{ material.number }} de {{ material.paginator.num_pages }}</a></li>
 
-                            <li class="page-item"><a class="page-link">
-                                    Página {{ material.number }} de {{ material.paginator.num_pages }}</a></li>
-
-                            {% if material.has_next %}
-                            <li class="page-item"><a class="page-link"
-                                    href="?page={{ material.next_page_number }}">Sigiente</a>
-                            </li>
-                            <li class="page-item"><a class="page-link"
-                                    href="?page={{ material.paginator.num_pages }}">Ultimo</a>
-                            </li>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+                {% if material.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ material.next_page_number }}">Sigiente</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="?page={{ material.paginator.num_pages }}">Ultimo</a>
+                </li>
+                {% endif %}
             </div>
-
-            <!-- Modal View -->
-            <div class="modal fade" id="modalView-material" tabindex="-1" aria-labelledby="modalView-materialLabel"
-                aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <form method="POST" class="was-validated" id="formViewMaterial" novalidate>
-                    {% csrf_token %}
-                    <input type="hidden" id="txtIdMaterial" name="txtIdMaterial">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="modalView-materialLabel">Información del material</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                                    onclick="restablecer()"></button>
-                                <div id="alertContainer" class="position-absolute top-0 end-0"
-                                    style="padding-top: 20px;padding-right: 10px;">
-                                    <div id="alertMessage" class="alert" style="display: none;"></div>
-                                </div>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Seleccione el nombre del Tema:</label>
-                                            <select class="form-select" aria-label="Disabled select" disabled
-                                                id="selectViewMaterial" required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Enlace de Youtube:</label>
-                                            <textarea type="text" class="form-control" id="nombreEnlace"
-                                                name="nombreEnlace" maxlength="100" required disabled
-                                                placeholder="Ingrese el enlace del video de youtube"></textarea>
-                                        </div>
-                                        <div class="p-2 flex-fill">
-                                            <label for="pdfFileView" class="form-label">Archivo pdf:</label>
-                                            <textarea type="text" class="form-control" id="pdfFileView"
-                                                disabled></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill" id="miDiv">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="row">
-                                        <div class="col-md-12 tabla-tema mt-3">
-                                            <table class="table table-bordered">
-                                                <thead class="table-primary fixed-column-width">
-                                                    <tr style="text-align: center; padding: 4px 8px;">
-                                                        <th scope="col">Id</th>
-                                                        <th scope="col">Enunciado</th>
-                                                        <th scope="col">Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="table-group-divider" id="tablaEjercicios">
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
-                                    data-bs-dismiss="modal" onclick="restablecer()">
-                                    <i class="fa fa-ban"></i>
-                                    Cancelar
-                                </button>
-                                <div id="alerta">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- Modal View Respuesta -->
-            <div class="modal fade" id="modalViewRespue-material" tabindex="-1" aria-hidden="true"
-                aria-labelledby="modalViewRespue-materialLabel" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content ">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="modalViewRespue-materialLabel">Información del ejercicio
-                            </h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-
-                                <label for="ejercicioEnunciado" class="form-label">Enunciado:</label>
-                                <textarea type="text" class="form-control" id="ejercicioEnunciado" disabled></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="ejercicioOpciones" class="form-label">Opciones:</label>
-                                <textarea type="text" class="form-control" id="ejercicioOpciones" disabled></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="respuestaCorrecta" class="form-label">Respuesta Correcta:</label>
-                                <textarea type="text" class="form-control" id="respuestaCorrecta" disabled></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal Registrar -->
-            <div class="modal fade" id="modalRegist-material" tabindex="-1" aria-labelledby="modalView-materialLabel"
-                aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <form method="POST" class="was-validated" id="formRgMaterial" novalidate>
-                    {% csrf_token %}
-                    <input type="hidden" id="txtIdMaterial" name="txtIdMaterial">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="modalView-materialLabel">Información del material</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                                    onclick="restablecer()"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Seleccione el nombre del Tema:</label>
-                                            <select class="form-select" aria-label="Disabled select"
-                                                id="selectViewTema-ma" required>
-                                            </select>
-                                        </div>
-                                        <div class="p-2 flex-fill">
-                                            <label for="pdfFileView" class="form-label">Archivo pdf:</label>
-                                            <input type="file" class="form-control" id="inputGroupFile01" required
-                                                accept=".pdf">
-                                        </div>
-
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Enlace de Youtube:</label>
-                                            <input type="text" class="form-control" id="nombreEnlaceReg"
-                                                name="nombreEnlaceReg" maxlength="100" required
-                                                placeholder="Ingrese el enlace del video de youtube">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"
-                                    onclick="restablecer()">
-                                    <i class="fa fa-ban"></i>
-                                    Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-sm btn-success">
-                                    <i class="fas fa-save"></i>
-                                    Guardar
-                                </button>
-                                <div id="alerta">
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- Modal Registrar Ejercicios-->
-            <div class="modal fade" id="modalRegist-ejercicio" tabindex="-1" aria-labelledby="modalView-ejercicioLabel"
-                aria-hidden="true">
-                <form method="POST" class="was-validated" id="formRgejercicio" novalidate>
-                    {% csrf_token %}
-                    <input type="hidden" id="txtIdejercicio" name="txtIdejercicio">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="modalView-ejercicioLabel">Información del ejercicio
-                                </h1>
-                                <button type="button" class="btn-close" data-bs-target="#modalView-material"
-                                    data-bs-toggle="modal" onclick="restablecer()"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Enunciado:</label>
-                                            <textarea type="text" class="form-control" id="preguntaEnunciado"
-                                                name="preguntaEnunciado" maxlength="500" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Opciones:</label>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <input type="text" class="form-control" id="preguntaOpcion"
-                                                name="preguntaOpcion" maxlength="100" required
-                                                aria-describedby="opcionesdHelpBlock">
-                                            <div id="opcionesdHelpBlock" class="form-text">
-                                                Ingrese la opción como en el ejemplo: respuesta 1 , despues de click en
-                                                añadir
-                                            </div>
-                                        </div>
-                                        <div class="p-2 flex-fill">
-                                            <button type="button" class="btnAñadirOpciones btn btn-sm btn-success">
-                                                <i class="fa-solid fa-file-circle-plus"></i>
-                                                Añadir
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <textarea type="text" class="form-control" id="preguntaOpciones"
-                                                name="preguntaOpciones" maxlength="100" disabled></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Respuesta correcta:</label>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <input type="text" class="form-control" id="preguntaCorrecta"
-                                                name="preguntaCorrecta" maxlength="100" required>
-                                        </div>
-                                        <div class="p-2 flex-fill">
-                                            <div id="opcionesdHelpBlock" class="form-text">
-                                                Ingrese el número de la opción correcta, ejemplo: 1
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-target="#modalView-material"
-                                    data-bs-toggle="modal" onclick="restablecer()">
-                                    <i class="fa fa-ban"></i>
-                                    Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-sm btn-success">
-                                    <i class="fas fa-save"></i>
-                                    Guardar
-                                </button>
-                                <div id="alerta">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!--Modal Eliminar-->
-            <div class="modal fade" id="modalDeletMaterial" tabindex="-1" aria-labelledby="modalDeletLabel"
-                aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <form class="was-validated" id="formDeletTema">
-                    {% csrf_token %}
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalDeletLabel">Eliminar ejercicio</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body" id="modalContenido">
-                                <div class="mb-3">
-                                    <p>¿Estás seguro de que deseas eliminar este ejercicio?</p>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
-                                    data-bs-dismiss="modal">
-                                    <i class="fa fa-ban"></i>
-                                    Cancelar
-                                </button>
-                                <button type="submit" onclick='delete_material(" + idListMaterial + ")'
-                                    class="btn btn-sm btn-success">
-                                    <i class="fas fa-save"></i>
-                                    Aceptar
-                                </button>
-                                <div id="alerta">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!--Modal Eliminar-->
-            <div class="modal fade" id="modalDelet" tabindex="-1" aria-labelledby="modalDeletLabel" aria-hidden="true"
-                data-backdrop="static" data-keyboard="false">
-                <form class="was-validated" id="formDeletTema">
-                    {% csrf_token %}
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalDeletLabel">Eliminar ejercicio</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body" id="modalContenido">
-                                <div class="mb-3">
-                                    <p>¿Estás seguro de que deseas eliminar este ejercicio?</p>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
-                                    data-bs-dismiss="modal">
-                                    <i class="fa fa-ban"></i>
-                                    Cancelar
-                                </button>
-                                <button type="submit" onclick='delete_ejercicio(" + idEjercicio + ")'
-                                    class="btn btn-sm btn-success">
-                                    <i class="fas fa-save"></i>
-                                    Aceptar
-                                </button>
-                                <div id="alerta">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Modal Editar Material -->
-            <div class="modal fade" id="modalEdit-material" tabindex="-1" aria-labelledby="modalEdit-materialLabel"
-                aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <form method="POST" class="was-validated" id="formEditarMaterial" novalidate>
-                    {% csrf_token %}
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="modalEdit-materialLabel">Información del material</h1>
-                                <button type="button" class="btnEditMaterial btn-close" data-dismiss="modal"
-                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                <div id="alertContainer" class="position-absolute top-0 end-0"
-                                    style="padding-top: 20px;padding-right: 10px;">
-                                    <div id="alertMessage" class="alert" style="display: none;"></div>
-                                </div>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Seleccione el nombre del Tema:</label>
-                                            <select class="form-select" aria-label="Disabled select"
-                                                id="selectEditMaterial" required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Enlace de Youtube:</label>
-                                            <textarea type="text" class="form-control" id="nombreEnlaceEdit"
-                                                name="nombreEnlaceEdit" maxlength="100" required></textarea>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="pdfFileEdit" class="form-label"
-                                                aria-describedby="Archivo">Archivo pdf:</label>
-                                            <div id="pdfFileEdit" class="form-text"></div>
-                                            <input type="file" class="form-control" id="inputGroupFile02" required
-                                                accept=".pdf">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill" id="miDivEdit">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="row">
-                                        <div class="col-md-12 tabla-tema mt-3">
-                                            <table class="table table-bordered">
-                                                <thead class="table-primary fixed-column-width">
-                                                    <tr style="text-align: center; padding: 4px 8px;">
-                                                        <th scope="col">Id</th>
-                                                        <th scope="col">Enunciado</th>
-                                                        <th scope="col">Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="table-group-divider" id="tablaEjerciciosEdit">
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
-                                    data-bs-dismiss="modal">
-                                    <i class="fa fa-ban"></i>
-                                    Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-sm btn-success">
-                                    <i class="fas fa-save"></i>
-                                    Guardar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- Modal Registrar Ejercicios-->
-            <div class="modal fade" id="modalRegistEdit-ejercicio" tabindex="-1"
-                aria-labelledby="modalRegistEdit-ejercicioLabel" aria-hidden="true">
-                <form method="POST" class="was-validated" id="formRgEditejercicio" novalidate>
-                    {% csrf_token %}
-                    <input type="hidden" id="txtIdejercicio" name="txtIdejercicio">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="modalRegistEdit-ejercicioLabel">Información del
-                                    ejercicio</h1>
-                                <button type="button" class="btn-close" data-bs-target="#modalEdit-material"
-                                    data-bs-toggle="modal" onclick="restablecer()"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Enunciado:</label>
-                                            <textarea type="text" class="form-control" id="preguntaEnunciadoEdit"
-                                                name="preguntaEnunciadoEdit" maxlength="100" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Opciones:</label>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <input type="text" class="form-control" id="preguntaOpcionEdit"
-                                                name="preguntaOpcionEdit" maxlength="100"
-                                                aria-describedby="opcionesdHelpBlock">
-                                            <div id="opcionesdHelpBlock" class="form-text">
-                                                Ingrese la opción como en el ejemplo: respuesta 1 , despues de click en
-                                                añadir
-                                            </div>
-                                        </div>
-                                        <div class="p-2 flex-fill">
-                                            <button type="button" class="btnAñadirOpciones btn btn-sm btn-success">
-                                                <i class="fa-solid fa-file-circle-plus"></i>
-                                                Añadir
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <textarea type="text" class="form-control" id="preguntaOpcionesEdit"
-                                                name="preguntaOpcionesEdit" maxlength="100" disabled></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <label class="form-label">Respuesta correcta:</label>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="p-2 flex-fill">
-                                            <input type="text" class="form-control" id="preguntaCorrectaEdit"
-                                                name="preguntaCorrectaEdit" maxlength="100" required>
-                                        </div>
-                                        <div class="p-2 flex-fill">
-                                            <div id="opcionesdHelpBlock" class="form-text">
-                                                Ingrese el número de la opción correcta, ejemplo: 1
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-target="#modalEdit-material""
-                        data-bs-toggle=" modal" onclick="restablecer()">
-                                    <i class="fa fa-ban"></i>
-                                    Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-sm btn-success">
-                                    <i class="fas fa-save"></i>
-                                    Guardar
-                                </button>
-                                <div id="alerta">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-
-        </main>
-
+        </div>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function () {
-            // Verificar si hay elementos en la selección
-            var headerContent = $('.main-content .encabezados-contenido').children().length;
-            var mainContent = $('.main-content main').children().length;
+<!-- Modal View -->
+<div class="modal fade" id="modalView-material" tabindex="-1" aria-labelledby="modalView-materialLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <form method="POST" class="was-validated" id="formViewMaterial" novalidate>
+        {% csrf_token %}
+        <input type="hidden" id="txtIdMaterial" name="txtIdMaterial">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalView-materialLabel">Información del material</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="restablecer()"></button>
+                    <div id="alertContainer" class="position-absolute top-0 end-0"
+                        style="padding-top: 20px;padding-right: 10px;">
+                        <div id="alertMessage" class="alert" style="display: none;"></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
+                                <select class="form-select" aria-label="Disabled select" disabled
+                                    id="selectViewMaterial" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Enlace de Youtube:</label>
+                                <textarea type="text" class="form-control" id="nombreEnlace" name="nombreEnlace"
+                                    maxlength="100" required disabled
+                                    placeholder="Ingrese el enlace del video de youtube"></textarea>
+                            </div>
+                            <div class="p-2 flex-fill">
+                                <label for="pdfFileView" class="form-label">Archivo pdf:</label>
+                                <textarea type="text" class="form-control" id="pdfFileView" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill" id="miDiv">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-12 tabla-tema mt-3">
+                                <table class="table table-bordered">
+                                    <thead class="table-primary fixed-column-width">
+                                        <tr style="text-align: center; padding: 4px 8px;">
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Enunciado</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider" id="tablaEjercicios">
 
-            if (headerContent === 0 || mainContent === 0) {
-                // Redirigir a la página de inicio
-                window.location.href = '/inicio/';
-            }
-            $("li").click(function () {
-                var link = $(this).find("a").attr("href");
-                if (link) {
-                    window.location.href = link;
-                }
-            });
-        });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
-    <script src="{% static 'js/global.js'%}"></script>
-    <script src="{% static 'js/material.js'%}"></script>
-    <script src="{% static 'js/tema.js'%}"></script>
-</body>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"
+                        onclick="restablecer()">
+                        <i class="fa fa-ban"></i>
+                        Cancelar
+                    </button>
+                    <div id="alerta">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Modal View Respuesta -->
+<div class="modal fade" id="modalViewRespue-material" tabindex="-1" aria-hidden="true"
+    aria-labelledby="modalViewRespue-materialLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalViewRespue-materialLabel">Información del ejercicio</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
 
-</html>
+                    <label for="ejercicioEnunciado" class="form-label">Enunciado:</label>
+                    <textarea type="text" class="form-control" id="ejercicioEnunciado" disabled></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="ejercicioOpciones" class="form-label">Opciones:</label>
+                    <textarea type="text" class="form-control" id="ejercicioOpciones" disabled></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="respuestaCorrecta" class="form-label">Respuesta Correcta:</label>
+                    <textarea type="text" class="form-control" id="respuestaCorrecta" disabled></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Registrar -->
+<div class="modal fade" id="modalRegist-material" tabindex="-1" aria-labelledby="modalView-materialLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <form method="POST" class="was-validated" id="formRgMaterial" novalidate>
+        {% csrf_token %}
+        <input type="hidden" id="txtIdMaterial" name="txtIdMaterial">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalView-materialLabel">Información del material</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="restablecer()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
+                                <select class="form-select" aria-label="Disabled select" id="selectViewTema-ma"
+                                    required>
+                                </select>
+                            </div>
+                            <div class="p-2 flex-fill">
+                                <label for="pdfFileView" class="form-label">Archivo pdf:</label>
+                                <input type="file" class="form-control" id="inputGroupFile01" required accept=".pdf">
+                            </div>
+
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Enlace de Youtube:</label>
+                                <input type="text" class="form-control" id="nombreEnlaceReg" name="nombreEnlaceReg"
+                                    maxlength="100" required
+                                    placeholder="Ingrese el enlace del video de youtube">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"
+                        onclick="restablecer()">
+                        <i class="fa fa-ban"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="fas fa-save"></i>
+                        Guardar
+                    </button>
+                    <div id="alerta">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Modal Registrar Ejercicios-->
+<div class="modal fade" id="modalRegist-ejercicio" tabindex="-1" aria-labelledby="modalView-ejercicioLabel"
+    aria-hidden="true">
+    <form method="POST" class="was-validated" id="formRgejercicio" novalidate>
+        {% csrf_token %}
+        <input type="hidden" id="txtIdejercicio" name="txtIdejercicio">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalView-ejercicioLabel">Información del ejercicio</h1>
+                    <button type="button" class="btn-close" data-bs-target="#modalView-material" data-bs-toggle="modal"
+                        onclick="restablecer()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Enunciado:</label>
+                                <textarea type="text" class="form-control" id="preguntaEnunciado"
+                                    name="preguntaEnunciado" maxlength="500" required></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Opciones:</label>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <input type="text" class="form-control" id="preguntaOpcion" name="preguntaOpcion"
+                                    maxlength="100" required aria-describedby="opcionesdHelpBlock">
+                                <div id="opcionesdHelpBlock" class="form-text">
+                                    Ingrese la opción como en el ejemplo: respuesta 1 , despues de click en añadir
+                                </div>
+                            </div>
+                            <div class="p-2 flex-fill">
+                                <button type="button" class="btnAñadirOpciones btn btn-sm btn-success">
+                                    <i class="fa-solid fa-file-circle-plus"></i>
+                                    Añadir
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <textarea type="text" class="form-control" id="preguntaOpciones" name="preguntaOpciones"
+                                    maxlength="100" disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Respuesta correcta:</label>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <input type="text" class="form-control" id="preguntaCorrecta" name="preguntaCorrecta"
+                                    maxlength="100" required>
+                            </div>
+                            <div class="p-2 flex-fill">
+                                <div id="opcionesdHelpBlock" class="form-text">
+                                    Ingrese el número de la opción correcta, ejemplo: 1
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-target="#modalView-material"
+                        data-bs-toggle="modal" onclick="restablecer()">
+                        <i class="fa fa-ban"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="fas fa-save"></i>
+                        Guardar
+                    </button>
+                    <div id="alerta">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--Modal Eliminar-->
+<div class="modal fade" id="modalDeletMaterial" tabindex="-1" aria-labelledby="modalDeletLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <form class="was-validated" id="formDeletTema">
+        {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDeletLabel">Eliminar ejercicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalContenido">
+                    <div class="mb-3">
+                        <p>¿Estás seguro de que deseas eliminar este ejercicio?</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal">
+                        <i class="fa fa-ban"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" onclick='delete_material(" + idListMaterial + ")'
+                        class="btn btn-sm btn-success">
+                        <i class="fas fa-save"></i>
+                        Aceptar
+                    </button>
+                    <div id="alerta">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--Modal Eliminar-->
+<div class="modal fade" id="modalDelet" tabindex="-1" aria-labelledby="modalDeletLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <form class="was-validated" id="formDeletTema">
+        {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDeletLabel">Eliminar ejercicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalContenido">
+                    <div class="mb-3">
+                        <p>¿Estás seguro de que deseas eliminar este ejercicio?</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal">
+                        <i class="fa fa-ban"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" onclick='delete_ejercicio(" + idEjercicio + ")'
+                        class="btn btn-sm btn-success">
+                        <i class="fas fa-save"></i>
+                        Aceptar
+                    </button>
+                    <div id="alerta">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Editar Material -->
+<div class="modal fade" id="modalEdit-material" tabindex="-1" aria-labelledby="modalEdit-materialLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <form method="POST" class="was-validated" id="formEditarMaterial" novalidate>
+        {% csrf_token %}
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalEdit-materialLabel">Información del material</h1>
+                    <button type="button" class="btnEditMaterial btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div id="alertContainer" class="position-absolute top-0 end-0"
+                        style="padding-top: 20px;padding-right: 10px;">
+                        <div id="alertMessage" class="alert" style="display: none;"></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Seleccione el nombre del Tema:</label>
+                                <select class="form-select" aria-label="Disabled select" 
+                                    id="selectEditMaterial" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Enlace de Youtube:</label>
+                                <textarea type="text" class="form-control" id="nombreEnlaceEdit" name="nombreEnlaceEdit"
+                                    maxlength="100" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pdfFileEdit" class="form-label" aria-describedby="Archivo">Archivo pdf:</label>
+                                <div id="pdfFileEdit" class="form-text"></div>
+                                <input type="file" class="form-control" id="inputGroupFile02" required accept=".pdf">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill" id="miDivEdit">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-12 tabla-tema mt-3">
+                                <table class="table table-bordered">
+                                    <thead class="table-primary fixed-column-width">
+                                        <tr style="text-align: center; padding: 4px 8px;">
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Enunciado</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider" id="tablaEjerciciosEdit">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal">
+                        <i class="fa fa-ban"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="fas fa-save"></i>
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Modal Registrar Ejercicios-->
+<div class="modal fade" id="modalRegistEdit-ejercicio" tabindex="-1" aria-labelledby="modalRegistEdit-ejercicioLabel"
+    aria-hidden="true">
+    <form method="POST" class="was-validated" id="formRgEditejercicio" novalidate>
+        {% csrf_token %}
+        <input type="hidden" id="txtIdejercicio" name="txtIdejercicio">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalRegistEdit-ejercicioLabel">Información del ejercicio</h1>
+                    <button type="button" class="btn-close" data-bs-target="#modalEdit-material" data-bs-toggle="modal"
+                        onclick="restablecer()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Enunciado:</label>
+                                <textarea type="text" class="form-control" id="preguntaEnunciadoEdit"
+                                    name="preguntaEnunciadoEdit" maxlength="100" required></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Opciones:</label>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <input type="text" class="form-control" id="preguntaOpcionEdit" name="preguntaOpcionEdit"
+                                    maxlength="100" aria-describedby="opcionesdHelpBlock">
+                                <div id="opcionesdHelpBlock" class="form-text">
+                                    Ingrese la opción como en el ejemplo: respuesta 1 , despues de click en añadir
+                                </div>
+                            </div>
+                            <div class="p-2 flex-fill">
+                                <button type="button" class="btnAñadirOpciones btn btn-sm btn-success">
+                                    <i class="fa-solid fa-file-circle-plus"></i>
+                                    Añadir
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <textarea type="text" class="form-control" id="preguntaOpcionesEdit" name="preguntaOpcionesEdit"
+                                    maxlength="100" disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <label class="form-label">Respuesta correcta:</label>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="p-2 flex-fill">
+                                <input type="text" class="form-control" id="preguntaCorrectaEdit" name="preguntaCorrectaEdit"
+                                    maxlength="100" required>
+                            </div>
+                            <div class="p-2 flex-fill">
+                                <div id="opcionesdHelpBlock" class="form-text">
+                                    Ingrese el número de la opción correcta, ejemplo: 1
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-target="#modalEdit-material""
+                        data-bs-toggle="modal" onclick="restablecer()">
+                        <i class="fa fa-ban"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="fas fa-save"></i>
+                        Guardar
+                    </button>
+                    <div id="alerta">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/material.js'%}"></script>
+<script src="{% static 'js/tema.js'%}"></script>
+{% endblock %}
