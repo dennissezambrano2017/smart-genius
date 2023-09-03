@@ -9,6 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import requires_csrf_token
 from io import BytesIO
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
@@ -1076,5 +1077,15 @@ def RegistrarPractica(request):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+@requires_csrf_token
 def server_error(request):
-    return render(request, '500.html', status=500)
+    # Captura la excepción que causó el error 500
+    try:
+        # Tu código que genera la excepción
+        # Por ejemplo, raise Exception("Error interno")
+        raise Exception("Ocurrió un error interno en el servidor.")
+    except Exception as e:
+        # Obtén información adicional de la excepción
+        error_message = str(e)  # Usa el mensaje de la excepción como información adicional
+
+    return render(request, '500.html', {'error_message': error_message}, status=500)
