@@ -1,160 +1,316 @@
-{% extends 'profile.html' %}
-{% block title %}Perfil{% endblock %}
+<!DOCTYPE html>
+<html>
 {% load static %}
-{% block content %}
+<link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
 
-<span class="fw-bold fs-4" style="color: #fdb128">Información personal</span>
-<section class="row pl-5 w-100">
-    <section class="form-group justify-content-center">
-        <section class="col-sm-12">
-            <div id="alertContainer" class="position-absolute top-0 end-0"
-                style="padding-top: 20px;padding-right: 10px;">
-                <div id="alertMessage" class="alert" style="display: none;"></div>
-            </div>
-        </section>
-    </section>
-</section>
-<div class="profile-container">
-    <div class="profile-heading">Datos Personales<i class="fa-solid fa-address-card"></i></div>
-    <div class="mb-3 row">
-        <label for="username" class="col-sm-2 col-form-label">
-            Usuario:
-        </label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="username" name="username" value="{{ user_email }}" disabled>
-        </div>
-    </div>
-    <div class="mb-3 row">
-        <label for="firstname" class="col-sm-2 col-form-label">Nombres:</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ user_first_name }}" disabled>
-        </div>
-    </div>
-    <div class="mb-3 row">
-        <label for="lastname" class="col-sm-2 col-form-label">Apellidos:</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="lastname" name="lastname" value="{{ user_last_name }}" disabled>
-        </div>
-    </div>
-    <div class="profile-heading">Datos de Sesión <i class="fa-solid fa-id-card"></i></div>
-    <div class="mb-3 row">
-        <label for="email" class="col-sm-2 col-form-label">Email:</label>
-        <div class="col-sm-10">
-            <input type="email" class="form-control" id="email" name="email" value="{{ user_username }}" disabled>
-        </div>
-    </div>
-    <div class="row g-3">
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                data-bs-target="#cambiarContraseña"
-                data-bs-placement="top"
-                    data-bs-custom-class="custom-tooltip"
-                    title="Haz clic aquí para cambiar su contraseña.">
-                <i class="fa-solid fa-unlock-keyhole"></i>
-                Cambiar contraseña
-            </button>
-        </div>
-    </div>
-    <div class="row g-3">
-        <div class="col-auto">
-            <button type="submit" class="searchButton btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#EditarUsuario"
-            data-bs-placement="top"
-                    data-bs-custom-class="custom-tooltip"
-                    title="Haz clic aquí para modificar la información personal.">
-                <i class="fa-solid fa-user-pen"></i>
-                Editar Perfil
-            </button>
-        </div>
-    </div>
-</div>
+<head>
+    <link rel="icon" href="{% static '../static/img/Logo-Page.png' %}" type="image/png" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Perfil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js"></script>
+</head>
 
-<div class="modal fade" id="cambiarContraseña" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <form class="was-validated" id="formCanbiarContra" novalidate method="POST">
+<body>
+
+    <input type="checkbox" id="panel-izquierdo-boton">
+    <div class="panel-izquierdo">
         {% csrf_token %}
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar Contraseña</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="panel-izquierdo-encabezados">
+            <h3>
+                <span class="fa-solid fa-square-root-variable"></span>
+                <span> <a href="{% url 'inicio' %}">Smart Genius</a></span>
+            </h3>
+            <label for="panel-izquierdo-boton" class="fa-solid fa-bars"></label>
+        </div>
+        <div class="panel-izquierdo-opciones">
+            <ul>
+                {% if user.is_authenticated %}
+                {% if perms.tasks.add_unidad %}
+                <li>
+                    <a class="btn-opcion {{ btnUnidad }}" href="{% url 'unidad' %}">
+                        <span class="fas fa-clipboard-check"></span>
+                        <span>Unidad</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'contenido' %}">
+                        <span class="fas fa-book-open"></span>
+                        <span>Contenido</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'temas' %}">
+
+                        <span class="fas fa-lightbulb"></span>
+                        <span>Temas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'material' %}">
+                        <span class="fas fa-file-alt"></span>
+                        <span>Material</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'visualizar_reporte' %}">
+                        <span class="fa-solid fa-clipboard-user"></span>
+                        <span>Reportes Estudiantes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'aula_documento' %}">
+                        <span class="fa-solid fa-file"></span>
+                        <span>Reportes Contenido</span>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'contenido_alu' %}">
+                        <span class="fa-solid fa-book-open"></span>
+                        <span>Contenido</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'perfil_alu' %}">
+                        <span class="fa-solid fa-user"></span>
+                        <span>Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'avance_alu' %}">
+                        <span class="fa-solid fa-layer-group"></span>
+                        <span>Mi Avance</span>
+                    </a>
+                </li>
+                <!--<li>
+                    <a href="{% url 'recomendacion' %}">
+                        <span class="fa-solid fa-layer-group"></span>
+                        <span>Recomendacion</span>
+                    </a>
+                </li>-->
+                {% endif %}
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <span class="fa-solid fa-right-from-bracket"></span>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <header class="encabezados-contenido">
+            <div class="search-wrapper">
+
+            </div>
+
+            <div class="social-icons me-4">
+                <span class="fa-solid fa-user"></span>
+                <span>{% if user_email %}{{ user_email }}{% else %}Invitado{% endif %}</span>
+            </div>
+        </header>
+
+        <main>
+
+            <span class="fw-bold fs-4" style="color: #fdb128">Información personal</span>
+            <section class="row pl-5 w-100">
+                <section class="form-group justify-content-center">
+                    <section class="col-sm-12">
+                        <div id="alertContainer" class="position-absolute top-0 end-0"
+                            style="padding-top: 20px;padding-right: 10px;">
+                            <div id="alertMessage" class="alert" style="display: none;"></div>
+                        </div>
+                    </section>
+                </section>
+            </section>
+            <div class="profile-container">
+                <div class="profile-heading">Datos Personales<i class="fa-solid fa-address-card"></i></div>
+                <div class="mb-3 row">
+                    <label for="username" class="col-sm-2 col-form-label">
+                        Usuario:
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="username" name="username" value="{{ user_email }}"
+                            disabled>
+                    </div>
                 </div>
-                <div class="modal-body">
-
-                    <label>Nueva Contraseña:</label>
-
-                    <input type="new-password" class="form-control" name="password1" id="password1"
-                        placeholder="Contraseña" required>
-
+                <div class="mb-3 row">
+                    <label for="firstname" class="col-sm-2 col-form-label">Nombres:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="firstname" name="firstname"
+                            value="{{ user_first_name }}" disabled>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"><i
-                            class="fa fa-ban"></i>
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-sm btn-success">
-                        <i class="fas fa-save"></i>
-                        Guardar
-                    </button>
+                <div class="mb-3 row">
+                    <label for="lastname" class="col-sm-2 col-form-label">Apellidos:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="lastname" name="lastname"
+                            value="{{ user_last_name }}" disabled>
+                    </div>
+                </div>
+                <div class="profile-heading">Datos de Sesión <i class="fa-solid fa-id-card"></i></div>
+                <div class="mb-3 row">
+                    <label for="email" class="col-sm-2 col-form-label">Email:</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user_username }}"
+                            disabled>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                            data-bs-target="#cambiarContraseña" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip" title="Haz clic aquí para cambiar su contraseña.">
+                            <i class="fa-solid fa-unlock-keyhole"></i>
+                            Cambiar contraseña
+                        </button>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-auto">
+                        <button type="submit" class="searchButton btn btn-warning mb-3" data-bs-toggle="modal"
+                            data-bs-target="#EditarUsuario" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            title="Haz clic aquí para modificar la información personal.">
+                            <i class="fa-solid fa-user-pen"></i>
+                            Editar Perfil
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
-</div>
 
-<div class="modal fade" id="EditarUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <form method="POST" class="was-validated" id="formEditarUser" novalidate>
-        {% csrf_token %}
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Información personal</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal fade" id="cambiarContraseña" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <form class="was-validated" id="formCanbiarContra" novalidate method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar Contraseña</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
 
-                    <div class="profile-heading">Datos Personales</div>
-                    <div class="mb-3 row">
-                        <label for="username" class="col-sm-2 col-form-label">Usuario:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="usernameEdit" id="usernameEdit" required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="firstname" class="col-sm-2 col-form-label">Nombres:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="firstnameEdit" id="firstnameEdit">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="lastname" class="col-sm-2 col-form-label">Apellidos:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="lastnameEdit" id="lastnameEdit">
-                        </div>
-                    </div>
-                    <div class="profile-heading">Datos de Sesión</div>
-                    <div class="mb-3 row">
-                        <label for="email" class="col-sm-2 col-form-label">Email:</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" name="emailEdit" id="emailEdit" required>
-                        </div>
-                    </div>
+                                <label>Nueva Contraseña:</label>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" data-bs-dismiss="modal"><i
-                            class="fa fa-ban"></i>
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-sm btn-success">
-                        <i class="fas fa-save"></i>
-                        Guardar
-                    </button>
-                </div>
+                                <input type="new-password" class="form-control" name="password1" id="password1"
+                                    placeholder="Contraseña" required>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
+                                    data-bs-dismiss="modal"><i class="fa fa-ban"></i>
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fas fa-save"></i>
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </div>
-    </form>
-</div>
-{% endblock %}
-{% block js %}
-<script src="{% static 'js/perfil.js'%}"></script>
-<script src="{% static 'js/unidad.js'%}"></script>
-{% endblock %}
+
+            <div class="modal fade" id="EditarUsuario" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <form method="POST" class="was-validated" id="formEditarUser" novalidate>
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Información personal</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="profile-heading">Datos Personales</div>
+                                <div class="mb-3 row">
+                                    <label for="username" class="col-sm-2 col-form-label">Usuario:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="usernameEdit" id="usernameEdit"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="firstname" class="col-sm-2 col-form-label">Nombres:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="firstnameEdit" id="firstnameEdit">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="lastname" class="col-sm-2 col-form-label">Apellidos:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="lastnameEdit" id="lastnameEdit">
+                                    </div>
+                                </div>
+                                <div class="profile-heading">Datos de Sesión</div>
+                                <div class="mb-3 row">
+                                    <label for="email" class="col-sm-2 col-form-label">Email:</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" name="emailEdit" id="emailEdit"
+                                            required>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
+                                    data-bs-dismiss="modal"><i class="fa fa-ban"></i>
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fas fa-save"></i>
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Verificar si hay elementos en la selección
+            var headerContent = $('.main-content .encabezados-contenido').children().length;
+            var mainContent = $('.main-content main').children().length;
+
+            if (headerContent === 0 || mainContent === 0) {
+                // Redirigir a la página de inicio
+                window.location.href = '/inicio/';
+            }
+            $("li").click(function () {
+                var link = $(this).find("a").attr("href");
+                if (link) {
+                    window.location.href = link;
+                }
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'js/global.js'%}"></script>
+
+    <script src="{% static 'js/perfil.js'%}"></script>
+    <script src="{% static 'js/unidad.js'%}"></script>
+</body>
+
+</html>

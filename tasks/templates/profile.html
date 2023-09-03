@@ -136,13 +136,9 @@
                         </div>
                     </div>
                 </div>
-                {% endif %}
-                {% endif %}
 
                 <!-- Barra de progreso circular -->
                 <div class="circle-progress">
-                    {% if user.is_authenticated %}
-                    {% if perms.tasks.add_unidad %}
                     <div class="circle-container">
                         <div class="circle">
                             <i class="fas fa-clipboard-check circle-icon"></i>
