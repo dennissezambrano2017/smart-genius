@@ -25,6 +25,7 @@ import random
 import pandas as pd
 import plotly.express as px
 from django.db.models import Count
+from firebase_admin import storage
 
 # Create your views here.
 
@@ -611,6 +612,7 @@ def vwCreate_material(request):
         enlace = request.POST.get('enlace')
         archivo = request.FILES.get('archivo_pdf')
         tema_id = request.POST.get('tema_id')
+
         if not enlace or not archivo or not tema_id:
             return JsonResponse({'result': 'error', 'message': 'Por favor ingrese todo los datos'})
         try:
@@ -619,6 +621,24 @@ def vwCreate_material(request):
             material = Material(enlace=enlace, tema=tema)
             material.archivo_pdf.save(
                 archivo.name, ContentFile(archivo.read()), save=True)
+            
+            try:
+                if archivo:
+                    print("Hola")
+                    bucket = storage.bucket()
+                    blob = bucket.blob(archivo.name)
+                    archivo.seek(0)
+                    blob.upload_from_file(archivo, content_type="application/pdf")
+                    material.archivo_pdf = blob.public_url
+                    url_publica = blob.public_url
+
+                    # Verifica si la URL pública está disponible
+                    if url_publica:
+                        print("URL pública del archivo:", url_publica)
+                    else:
+                        print("La URL pública no está disponible para este archivo.")
+            except Exception as e:
+                print("Ocurrió un error:", str(e))
 
             return JsonResponse({'result': 'success', 'message': 'Tema registrado exitosamente.'})
         except Exception as e:
