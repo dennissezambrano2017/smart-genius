@@ -25,7 +25,6 @@ import random
 import pandas as pd
 import plotly.express as px
 from django.db.models import Count
-from firebase_admin import storage
 
 # Create your views here.
 
